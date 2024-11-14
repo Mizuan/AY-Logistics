@@ -1,0 +1,141 @@
+﻿@model AYLogistics.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "Add New Employee";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-900">Add New Employee</h2>
+
+    <!-- Back Button -->
+    <div class="mb-6">
+        <a href="@Url.Action("Index", "Employee")" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+            <i class="fas fa-arrow-left mr-2"></i> Back
+        </a>
+    </div>
+
+    <!-- Form Section -->
+    @using (Html.BeginForm("AddNewEmployee", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+        <div class="bg-white rounded-lg shadow p-6">
+            <!-- Basic Information Section -->
+            <fieldset class="mb-6">
+                <legend class="text-lg font-semibold mb-4">Basic Information</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- NIC -->
+                    <div>
+                        <label for="NIC" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.NIC)
+                        </label>
+                        @Html.TextBoxFor(model => model.NIC, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                        @Html.ValidationMessageFor(model => model.NIC, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+
+                    <!-- Employee ID -->
+                    <div>
+                        <label for="EmpId" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.EmpId)
+                        </label>
+                        @Html.TextBoxFor(model => model.EmpId, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                    </div>
+
+                    <!-- First Name -->
+                    <div>
+                        <label for="FirstName" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.FirstName)
+                        </label>
+                        @Html.TextBoxFor(model => model.FirstName, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+
+                    <!-- Middle Name -->
+                    <div>
+                        <label for="MiddleName" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.MiddleName)
+                        </label>
+                        @Html.TextBoxFor(model => model.MiddleName, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label for="LastName" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.LastName)
+                        </label>
+                        @Html.TextBoxFor(model => model.LastName, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                    </div>
+
+                    <!-- Gender -->
+                    <div>
+                        <label for="GenderId" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.GenderId)
+                        </label>
+                        @Html.DropDownListFor(m => m.GenderId, new SelectList(AYLogistics.Models.GenderModel.GetGenders(), "GenderId", "GenderName"), "--Please Select--", 
+                            new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                        @Html.ValidationMessageFor(model => model.GenderId, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+
+                    <!-- Designation -->
+                    <div>
+                        <label for="DesignationId" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.DesignationId)
+                        </label>
+                        @Html.DropDownListFor(m => m.DesignationId, new SelectList(AYLogistics.Models.EmployeeModel.GetEmployeeDesignation(), "DesignationId", "Designation"), "--Please Select--", 
+                            new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Address and Contact Section -->
+            <fieldset class="mb-6">
+                <legend class="text-lg font-semibold mb-4">Permanent Address and Contacts</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Permanent Address -->
+                    <div>
+                        <label for="PermanentAddress" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.PermanentAddress)
+                        </label>
+                        @Html.TextBoxFor(model => model.PermanentAddress, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                    </div>
+
+                    <!-- Contact -->
+                    <div>
+                        <label for="Contact" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.Contact)
+                        </label>
+                        @Html.TextBoxFor(model => model.Contact, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                        @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="Email" class="block text-sm font-medium text-gray-700 mb-1">
+                            @Html.LabelFor(model => model.Email)
+                        </label>
+                        @Html.TextBoxFor(model => model.Email, new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Employee Status Section -->
+            <fieldset>
+                <legend class="text-lg font-semibold mb-4">Employee Status</legend>
+                <div>
+                    <label for="EmployeeStatusId" class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.EmployeeStatusId)
+                    </label>
+                    @Html.DropDownListFor(m => m.EmployeeStatusId, new SelectList(AYLogistics.Models.EmployeeModel.GetEmployeeStatus(), "EmployeeStatusId", "EmployeeStatusName"), "--Please Select--", 
+                        new { @class = "w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" })
+                </div>
+            </fieldset>
+
+            <!-- Submit Button -->
+            <div class="mt-6">
+                <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+                    Save
+                </button>
+            </div>
+        </div>
+    }
+</div>

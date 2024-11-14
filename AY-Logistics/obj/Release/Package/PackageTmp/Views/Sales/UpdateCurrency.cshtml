@@ -1,0 +1,25 @@
+﻿@model AYLogistics.Models.SalesCurrency
+@using (Html.BeginForm("UpdateCurrency", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+        <fieldset>
+            <legend>Update Currency</legend>
+                 @Html.HiddenFor(model => model.Id)
+                <div class="control pull-left">
+                    @Html.LabelFor(model => model.Currency)
+                    @Html.TextBoxFor(model => model.Currency)
+                    @Html.ValidationMessageFor(model => model.Currency)
+                </div>
+                 <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.ExchangeRate)
+                    @Html.TextBoxFor(model => model.ExchangeRate)
+                    @Html.ValidationMessageFor(model => model.ExchangeRate)
+                </div>
+        </fieldset>
+    </div>
+    <p>
+       <input type="submit" value="Save" class="btn btn-success" />
+    </p>
+}
+

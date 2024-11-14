@@ -1,0 +1,420 @@
+﻿@model AYLogistics.Models.Party
+@{
+    ViewBag.Title = "Manage Party";  
+}
+ @Html.HiddenFor(m => m.AddressId)
+ @Html.HiddenFor(m => m.ContactId)
+
+
+<div class="form_control_line mb-4">
+    <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 text-sm hover:bg-blue-700" id="btnAddParty">
+        <i class="fas fa-plus"></i>
+        <span>Legal Body / Individual</span>
+    </button>
+</div>
+
+<div class="" id="dialogParty">
+    <div class="formControlContainer p-6 bg-white rounded shadow-lg space-y-4">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Party</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Type *</label>
+                @Html.DropDownListFor(
+                    m => m.PartyTypeId,
+                    new SelectList(AYLogistics.Models.Party.GetPartyType(), "PartyTypeId", "PartyTypeName"),
+                    "-select-",
+                    new { @class = "block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" }
+                )
+                @Html.ValidationMessageFor(model => model.PartyTypeId, "", new { @class = "text-red-500 text-xs mt-1" })
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+                <input type="text" id="PartyName" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">RegNo/NIC</label>
+                <input type="text" id="RegNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tin No.</label>
+                <input type="text" id="TinNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">CNumber (Import/Export)</label>
+                <input type="text" id="CNumber" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Country *</label>
+                @Html.DropDownListFor(
+                    m => m.NationalityId,
+                    new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"),
+                    "-Select-",
+                    new { @class = "block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" }
+                )
+                @Html.ValidationMessageFor(model => model.NationalityId, "", new { @class = "text-red-500 text-xs mt-1" })
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Address 1 *</label>
+                <input type="text" id="Address1" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">TEL No.</label>
+                    <input type="text" id="TelNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="Email" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mobile No</label>
+                    <input type="text" id="MobileNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-blue-700 mb-2">MYBANDHARU user</label>
+                <input type="text" id="MBuser" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-green-700 mb-2">CUSTOMS user</label>
+                <input type="text" id="CustomUser" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-green-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-orange-700 mb-2">ASYCUDA user</label>
+                <input type="text" id="ACuser" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-orange-500" />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-blue-700 mb-2">Password</label>
+                <input type="password" id="MBpassword" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-green-700 mb-2">Password</label>
+                <input type="password" id="CustomPwd" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-green-500" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-orange-700 mb-2">Password</label>
+                <input type="password" id="ACpassword" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-orange-500" />
+            </div>
+        </div>
+
+        <div class="flex justify-end space-x-3 mt-6">
+            <!-- Cancel Button -->
+            <button type="button" id="btnCancel" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm py-1.5 px-4 rounded">
+                Cancel
+            </button>
+
+            <!-- Save Button -->
+            <button type="button" id="btnSave" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm py-1.5 px-4 rounded">
+                Save
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var $dialige = $(".dialogParty");
+
+    $(document).ready(function () {
+        // Initialize the dialog
+        $("#dialogParty").dialog({
+            autoOpen: false, // Do not open on page load
+            width: 760,
+            modal: true,
+            height: 505,
+        });
+
+        // Show dialog when the button is clicked
+        $("#btnAddParty").click(function () {
+            $("#dialogParty").dialog("open");
+        });
+
+        // Save button functionality
+        $("#btnSave").click(function () {
+            if ($('#PartyName').val() === "" || $('#PartyTypeId').val() === "0") {
+                $.pnotify({
+                    title: 'Validation Error',
+                    text: 'Please fill the required information!',
+                    type: 'error',
+
+                });
+            } else {
+                $.pnotify({
+                    title: 'Success',
+                    text: 'Party saved successfully!',
+                    type: 'success',
+
+                });
+                $("#dialogParty").dialog("close");
+            }
+        });
+
+        // Cancel button functionality
+        $("#btnCancel").click(function () {
+            $.pnotify({
+                title: 'Cancelled',
+                text: 'Operation cancelled by the user.',
+                type: 'info',
+            });
+            $("#dialogParty").dialog("close");
+        });
+    });
+
+    function ClearDialog() {
+        $('#PartyName').val("");
+        $('#RegNo').val("");
+        $('#TinNo').val("");
+        $('#CNumber').val("");
+        $('#Atoll').val("");
+        $('#Island').val("");
+        $('#Address1').val("");
+       // $('#Address2').val("");
+        $('#TelNo').val("");
+        $('#FaxNo').val("");
+        $('#Email').val("");
+        $('#ContactName').val("");
+        $('#MobileNo').val("");
+        $('#MBuser').val("");
+        $('#ACuser').val("");
+        $('#MBpassword').val("");
+        $('#ACpassword').val("");
+        $('#CustomUser').val("");
+        $('#CustomPwd').val("");
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $('#PartyTypeId').val(0);
+        $('#NationalityId').val(0);
+        $(".chosen_select_L").chosen(); //~
+    }
+
+    $("#btnAddParty").click(function (e) {
+        ClearDialog();
+        $dialige.dialog({
+            width: 760,
+            modal: true,
+            height: 505,
+            title: "Add New Party",
+            buttons: [{
+                text: "Save",
+                'class': 'btn btn-primary',
+                click: function () {
+                    if ($('#PartyName').val() == null || $('#NationalityId').val() == 0) {
+                        $.pnotify({
+                            title: 'Add Party',
+                            text: ' Please fill the required information!',
+                            type: 'warning'
+                        });
+                    } else {
+                        //  e.preventDefault();
+                        SaveParty();
+                        $dialige.dialog('close');
+                        // window.location.href = "/Manifest/Create";
+                    }
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $(".chosen_select_L").chosen(); //~
+    });
+
+    function EditParty(Id) {
+        $dialige.dialog({
+            width: 760,
+            modal: true,
+            height: 505,
+            title: "Edit Party",
+            buttons: [{
+                text: "Update",
+                'class': 'btn btn-primary',
+                click: function () {
+                    /*TO DO: give a condition with Role to disable update button*/
+                    UpdateParty(Id);
+                    $dialige.dialog('close');
+
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        GetSelectedParty(Id);
+    }
+
+    function SaveParty(e) {
+        var PartyTypeId = $('#PartyTypeId').val();
+        var PartyName = $('#PartyName').val();
+        var RegNo = $('#RegNo').val();
+        var TinNo = $('#TinNo').val();
+        var CNumber = $('#CNumber').val();
+        var NationalityId = $('#NationalityId').val();
+        var Atoll = $('#Atoll').val();
+        var Island = $('#Island').val();
+        var Address1 = $('#Address1').val();
+       // var Address2 = $('#Address2').val();
+        var TelNo = $('#TelNo').val();
+        var FaxNo = $('#FaxNo').val();
+        var Email = $('#Email').val();
+        var ContactName = $('#ContactName').val();
+        var MobileNo = $('#MobileNo').val();
+        var MBuser = $('#MBuser').val();
+        var ACuser = $('#ACuser').val();
+        var MBpassword = $('#MBpassword').val();
+        var ACpassword = $('#ACpassword').val();
+        var CustomUser = $('#CustomUser').val();
+        var CustomPwd = $('#CustomPwd').val();
+
+
+        var PartyInfo = { PartyTypeId: PartyTypeId, PartyName: PartyName, RegNo: RegNo, TinNo: TinNo, CNumber: CNumber, NationalityId: NationalityId,
+            Atoll: Atoll, Island: Island, Address1: Address1, TelNo: TelNo, FaxNo: FaxNo, Email: Email, ContactName: ContactName, MobileNo: MobileNo,
+            MBuser: MBuser, MBpassword: MBpassword, CustomUser: CustomUser, CustomPwd: CustomPwd,ACuser: ACuser, ACpassword: ACpassword,
+        };
+
+        var json = JSON.stringify(PartyInfo);
+
+        $.ajax({
+            url: '/Party/SaveParty',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Add Party',
+                    text: ' New Party has been Saved!',
+                    type: 'success'
+                });
+                ClearDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Add Party',
+                    text: 'Party has not been save, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    function GetSelectedParty(Id) {
+         ClearDialog();
+        var URL = '/Party/GetSelectedParty';
+
+        $.getJSON(URL + '/?PartyId=' + Id, function (data) {
+            try {
+                $('#PartyName').val(data.PartyName);
+                $('#RegNo').val(data.RegNo);
+                $('#TinNo').val(data.TinNo);
+                $('#CNumber').val(data.CNumber);
+                $('#Atoll').val(data.Atoll);
+                $('#Island').val(data.Island);
+                $('#Address1').val(data.Address1);
+              //  $('#Address2').val(data.Address2);
+                $('#TelNo').val(data.TelNo);
+                $('#FaxNo').val(data.FaxNo);
+                $('#Email').val(data.Email);
+                $('#ContactName').val(data.ContactName);
+                $('#MobileNo').val(data.MobileNo);
+                $('#MBuser').val(data.MyBandharuUser);
+                $('#MBpassword').val(data.MyBandharuPwd);
+                $('#CustomUser').val(data.CustomUser);
+                $('#CustomPwd').val(data.CustomPwd);
+                $('#ACuser').val(data.AsycudaUser);
+                $('#ACpassword').val(data.AsycudaPwd);
+                $(".chosen_select_L").chosen('destroy'); // reset chosen
+                $('#PartyTypeId').val(data.PartyTypeId);
+                $('#AddressId').val(data.AddressId);
+                $('#ContactId').val(data.ContactId);
+                $('#NationalityId').val(data.NationalityId);
+                $(".chosen_select_L").chosen(); //~
+            }
+            catch (e) {
+                ClearDialog();
+            }
+        });
+    }
+
+    function UpdateParty(Id) {
+        var PartyId = Id;
+        var PartyTypeId = $('#PartyTypeId').val();
+        var PartyName = $('#PartyName').val();
+        var RegNo = $('#RegNo').val();
+        var TinNo = $('#TinNo').val();
+        var CNumber = $('#CNumber').val();
+        var NationalityId = $('#NationalityId').val();
+        var Atoll = $('#Atoll').val();
+        var Island = $('#Island').val();
+        var Address1 = $('#Address1').val();
+       // var Address2 = $('#Address2').val();
+        var TelNo = $('#TelNo').val();
+        var FaxNo = $('#FaxNo').val();
+        var Email = $('#Email').val();
+        var ContactName = $('#ContactName').val();
+        var MobileNo = $('#MobileNo').val();
+        var AddressId = $('#AddressId').val();
+        var ContactId = $('#ContactId').val();
+        var MBuser = $('#MBuser').val();
+        var ACuser = $('#ACuser').val();
+        var MBpassword = $('#MBpassword').val();
+        var ACpassword = $('#ACpassword').val();
+        var CustomUser = $('#CustomUser').val();
+        var CustomPwd = $('#CustomPwd').val();
+
+        var PartyInfo = { AddressId: AddressId, ContactId: ContactId, PartyId: PartyId, PartyTypeId: PartyTypeId, PartyName: PartyName, RegNo: RegNo, TinNo: TinNo, CNumber: CNumber, NationalityId: NationalityId,
+            Atoll: Atoll, Island: Island, Address1: Address1, TelNo: TelNo, FaxNo: FaxNo, Email: Email, ContactName: ContactName, MobileNo: MobileNo,
+            MBuser: MBuser, MBpassword: MBpassword, CustomUser: CustomUser, CustomPwd: CustomPwd, ACuser: ACuser, ACpassword: ACpassword,
+        };
+
+        var json = JSON.stringify(PartyInfo);
+
+        $.ajax({
+            url: '/Party/UpdateParty',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Update Party',
+                    text: ' Party has been Updated!',
+                    type: 'success'
+                });
+                ClearDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Update Party',
+                    text: 'Party has not been updated, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+</script>

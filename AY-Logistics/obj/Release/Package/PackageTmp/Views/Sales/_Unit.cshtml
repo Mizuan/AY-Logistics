@@ -1,0 +1,132 @@
+﻿@model AYLogistics.Models.SalesUnit
+@using (Html.BeginForm("AddSalesUnit", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+        <fieldset>
+            <legend>Add Unit</legend>
+                <div class="control pull-left">
+                    @Html.LabelFor(model => model.UnitName)
+                    @Html.EditorFor(model => model.UnitName)
+                    @Html.ValidationMessageFor(model => model.UnitName)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.UnitDescription)
+                    @Html.EditorFor(model => model.UnitDescription)
+                    @Html.ValidationMessageFor(model => model.UnitDescription)
+                </div>
+        </fieldset>
+    </div>
+    <p>
+       <input type="submit" value="Save" class="btn btn-success" />
+    </p>
+}
+
+<div class="formControlContainer margin-right35">
+    <table id="UnitTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th style="width: 4px;"class="tableHeadFont hide">Id</th>
+                @*<th style="width: 4px;" class="tableHeadFont"></th>*@
+                <th style="width: 100px;" class="tableHeadFont">UNIT</th>
+                <th style="width: 40px;" class="tableHeadFont">DESCRIPTION</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        UnitDataTable();
+        init();
+    });
+
+    $('#UnitTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+
+    function UnitDataTable() {
+        try {
+
+            var oTable = $('#UnitTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": "/Sales/GetUnits",
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Sales/GetUnits',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#UnitTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#UnitTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    //{ "mDataProp": null, "sDefaultContent": "", "sClass": "" },
+                    { "mDataProp": "Name", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Description", "sDefaultContent": "-", "sClass": "eng" }
+                    /*{
+                        "mDataProp": null, "sDefaultContent": "", "fnRender": function (o)
+                        {
+                       // return "<a href='../Employee/EditEmployee?id=" + o.aData.Id + "'><i class='icon-edit icon-2x' style='margin-left: 14px;'></i></a></span>"
+                        }
+                    }*/
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#UnitTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+
+    }
+     
+</script>

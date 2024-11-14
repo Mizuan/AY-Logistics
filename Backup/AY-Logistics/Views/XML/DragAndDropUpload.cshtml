@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Drag and Drop";
+   // Layout = "~/Views/Shared/_NoMenuSmall.cshtml";
+}
+<style type="text/css">
+    #dropZone {
+        background: gray;
+        border: black dashed 3px;
+        width: 363px;
+        padding: 50px;
+        text-align: center;
+        color: white;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#dropZone').filedrop({
+            url: '@Url.Action("UploadFiles")',
+           // allowedfiletypes: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'application/doc'],
+            allowedfileextensions: ['.xml'],
+            paramname: 'files',
+            maxfiles: 1, //Maximum Number of Files allowed at a time
+            maxfilesize: 5, //Maximum File Size in MB.
+            dragOver: function () {
+                $('#dropZone').css('background', 'blue');
+            },
+            dragLeave: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            drop: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            afterAll: function () {
+              //  $('#dropZone').html('The XML file have been uploaded successfully!');
+            },
+            uploadFinished: function (i, file, response, time) {
+                $('#uploadResult').append('<li>' + file.name +" -------> " +response + '</li>');
+            }
+        });
+    });
+
+</script>
+<div>
+    <h2>Drag & Drop XML file to Upload</h2>
+    <div id="dropZone">Drop your XML files here</div>
+    <br/>
+    Uploaded Files:
+    <ul id="uploadResult">
+
+    </ul>
+</div>

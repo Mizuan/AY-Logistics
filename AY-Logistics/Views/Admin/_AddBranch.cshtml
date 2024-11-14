@@ -1,0 +1,192 @@
+﻿@model AYLogistics.Models.MyCompany
+@{
+    ViewBag.Title = "Add Branch";  
+}
+@*<div class="SubHeading">
+   <h4>Manage Supplier</h4>
+</div>*@
+
+@Html.HiddenFor(m => m.CompanyAddressModel.Id)
+<div class="form_control_line ">
+    <div class="singleControlContainer width200 margins" style="padding-top: 25px;">
+        <button type="button" class="btn btn-primary" id="btnAddBranch">
+            <i class="icon-plus-sign-alt"></i>
+            <span>Add Branches</span>
+        </button>
+    </div>
+</div>
+
+<div class="formControlContainer dialogBranch" id="dialogBranch">
+    <div class="form_control_line">
+        <div class="control pull-left">
+        <div class="form_newLabel"><label>Company Name</label></div>
+           @* <input type="text" id="Name" class="eng" style="width: 430px;" />*@
+            @Html.DropDownListFor(m => m.CompanyId, new SelectList(AYLogistics.Models.MyCompany.GetMyCompanies(), "CompanyId", "CompanyName"), "--please Select--", new { style = "width: 350px;", OnChange = "GetSelectCompanyId_A(this.value)" })
+            @Html.ValidationMessageFor(model => model.CompanyId)
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel"><label>Branch Name</label></div>
+            <input type="text" id="BranchNameAdd" class="eng" style="width: 305px;" />
+        </div>
+        <div class="control pull-left clear">
+            <div class="form_newLabel marginRight"><label>Country</label></div>
+            @*<input type="text" id="CountryId" class="eng" style="color:blue" />*@
+            @Html.DropDownListFor(m => m.CompanyAddressModel.CountryId, new SelectList(AYLogistics.Models.CompanyAddressModel.GetCountries(), "CountryId", "CountryName"), "--please Select--", new {OnChange = "GetSelectCountryId_A(this.value)" })
+            @Html.ValidationMessageFor(model => model.CompanyAddressModel.CountryId)
+        </div>
+         <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>State</label></div>
+            <input type="text" id="StateAdd" class="eng"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>City</label></div>
+             <input type="text" id="CityAdd" class="eng"/>
+        </div>
+        <div class="control pull-left clear">
+            <div class="form_newLabel marginRight"><label>Street</label></div>
+            <input type="text" id="StreetAdd" class="eng" />
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Building</label></div>
+            <input type="text" id="BuildingAdd" class="eng" />
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Floor</label></div>
+            <input type="text" id="FloorAdd" class="eng" />
+        </div>
+         <div class="control pull-left clear">
+            <div class="form_newLabel marginRight"><label>Email</label></div>
+            <input type="text" id="EmailAdd" class="eng"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Land Line</label></div>
+            <input type="text" id="LandLineAdd" class="eng"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Fax</label></div>
+             <input type="text" id="FaxAdd" class="eng"/>
+        </div>
+        <div class="control pull-left clear">
+            <div class="form_newLabel marginRight"><label>Contact Person</label></div>
+             <input type="text" id="ContactPersonAdd" class="eng"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Phone</label></div>
+            <input type="text" id="PhoneAdd" class="eng"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Zip/Postal Code</label></div>
+            <input type="text" id="PostalCodeAdd" class="eng" />
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var $dialige = $(".dialogBranch");
+    var selectedCompanyIdAdd = "";
+    var selectedCountryIdAdd = "";
+
+    $(document).ready(function () {
+        $(".dialogBranch").hide();
+    });
+
+
+    function GetSelectCompanyId_A(value) {
+        selectedCompanyIdAdd = value;
+    }
+
+    function GetSelectCountryId_A(cid) {
+        selectedCountryIdAdd = cid;
+    }
+
+    $("#btnAddBranch").click(function () {
+        ClearDialog();
+        $dialige.dialog({
+            width: 710,
+            modal: true,
+            height: 440,
+            title: "Add New Branch",
+            buttons: [{
+                text: "Save",
+                'class': 'btn btn-primary',
+                click: function () {
+                    if ($('#BranchNameAdd').val() == "" || selectedCompanyIdAdd == 0 || selectedCountryIdAdd == 0) {
+                        $.pnotify({
+                            title: 'Add Branch',
+                            text: ' Company Name, Branch Name, Country is Required!',
+                            type: 'warning'
+                        });
+                    } else {
+                        SaveBranch();
+                        $dialige.dialog('close');
+                    }
+                }
+            }]
+        });
+    });
+
+    function ClearDialog() {
+        $('#BranchNameAdd').val("");
+        $('#CompanyAddressModel_CountryId').val(0);
+        $('#PostalCodeAdd').val("");
+        $('#StateAdd').val("");
+        $('#CityAdd').val("");
+        $('#StreetAdd').val("");
+        $('#BuildingAdd').val("");
+        $('#FloorAdd').val("");
+        $('#EmailAdd').val("");
+        $('#LandLineAdd').val("");
+        $('#FaxAdd').val("");
+        $('#ContactPersonAdd').val("");
+        $('#PhoneAdd').val("");
+    }
+
+    function SaveBranch() {
+        var BranchName = $('#BranchNameAdd').val();
+        var CompanyId = selectedCompanyIdAdd;
+
+        var CompanyAddressModel = Object();
+        CompanyAddressModel.CountryId = selectedCountryIdAdd;
+        CompanyAddressModel.PostalCode = $('#PostalCodeAdd').val();
+        CompanyAddressModel.State = $('#StateAdd').val();
+        CompanyAddressModel.City = $('#CityAdd').val();
+        CompanyAddressModel.Street = $('#StreetAdd').val();
+        CompanyAddressModel.Building = $('#BuildingAdd').val();
+        CompanyAddressModel.Floor = $('#FloorAdd').val();
+        CompanyAddressModel.Email = $('#EmailAdd').val();
+        CompanyAddressModel.LandLine = $('#LandLineAdd').val();
+        CompanyAddressModel.Fax = $('#FaxAdd').val();
+        CompanyAddressModel.ContactPerson = $('#ContactPersonAdd').val();
+        CompanyAddressModel.Phone = $('#PhoneAdd').val();
+
+
+        var CompanyInfo = { BranchName: BranchName, CompanyId: CompanyId, CompanyAddressModel: CompanyAddressModel };
+
+        var json = JSON.stringify(CompanyInfo);
+
+        $.ajax({
+            url: '/Admin/SaveBranch',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Manage Company',
+                    text: ' New Branch has been Saved!',
+                    type: 'success'
+                });
+                // window.location.href = "/Purchase/NewPurchaseOrder"; //redirect to page
+                setTimeout('window.location.href="/Admin/MyCompany"', 500) /*redirect to page in 2 seconds */
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Manage Company',
+                    text: 'New Branch has not been save, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+</script>

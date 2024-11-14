@@ -1,0 +1,183 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Reports</h2>
+
+<div class="formControlContainer margin-right35">
+    <div>
+        <fieldset>
+            <div id="searchBlock">
+                    <div class="control pull-left space-right">
+                        FROM: <input type="text" id="StartDate" class="eng input-small"/> @*data-date-format="dd/mm/yyyy"*@
+                    </div>
+                    <div class="control pull-left space-right">
+                        TO: <input type="text" id="EndDate" class="eng input-small"/>
+                    </div>
+                    <div class="control pull-left space-right">
+                        <button id="searchAD" class="btn btn-primary" ><i class="icon-search"></i></button>
+                    </div>
+            </div>
+        </fieldset>
+    </div>
+
+     <table id="AllDataFilter" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:11px;">
+        <thead>
+            <tr>
+                <th style="width: auto"class="tableHeadFont">MANIFEST #</th>
+                <th style="width: auto"class="tableHeadFont">JOB #</th>
+                <th style="width: auto" class="tableHeadFont">VESSEL</th>
+                <th style="width: auto"class="tableHeadFont">VOYAGE</th>
+                <th style="width: auto"class="tableHeadFont">DATE ARRIVAL</th>
+                <th style="width: auto" class="tableHeadFont">DATE DISCH.</th>
+                <th style="width: auto" class="tableHeadFont">DATE REG.</th>
+                <th style="width: auto" class="tableHeadFont">D.O. APPROVED</th>
+                <th style="width:auto" class="tableHeadFont">DATE CLEARANCE</th>
+                <th style="width:auto" class="tableHeadFont">DATE DEMURR.</th>
+                <th style="width:auto" class="tableHeadFont">MODE.OF SHIP</th>
+                <th style="width:auto" class="tableHeadFont">PORT LOADING</th>
+                <th style="width:auto" class="tableHeadFont">PORT UNLOADING</th>
+                <th style="width:auto" class="tableHeadFont">DELIVERY PLACE</th>
+                <th style="width:auto" class="tableHeadFont">MASTER BL</th>
+                <th style="width:auto" class="tableHeadFont">HOUSE BL</th>
+                <th style="width:auto" class="tableHeadFont">SHIPPER</th>
+                <th style="width:auto" class="tableHeadFont">CUSTOMER</th>
+                <th style="width:auto" class="tableHeadFont">NOTIFY PARTY</th>
+                <th style="width:auto" class="tableHeadFont">SHIPPING AGENT</th>
+                <th style="width:auto" class="tableHeadFont">BL NATURE</th>
+                <th style="width:auto" class="tableHeadFont">FREIGHT INDICATOR</th>
+                <th style="width:auto" class="tableHeadFont">CONTAINER#</th>
+                <th style="width:auto" class="tableHeadFont">CONTAINET TYPE</th>
+                <th style="width:auto" class="tableHeadFont">CONTAINER SIZE</th>
+                <th style="width:auto" class="tableHeadFont">CONTAINER INDICATOR</th>
+                <th style="width:auto" class="tableHeadFont">NO.OF PACK</th>
+                <th style="width:auto" class="tableHeadFont">TYPE.OF PACK</th>
+                <th style="width:auto" class="tableHeadFont">DESC</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        $('#StartDate').datepicker('setDate', firstDay);
+        $('#EndDate').datepicker('setDate', lastDay);
+        AllDataFilter();
+    });
+
+    $('#AllDataFilter tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    $("#searchAD").click(function () {
+        AllDataFilter();
+    });
+
+    function AllDataFilter() {
+        try {
+            var oTable = $('#AllDataFilter').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Statistics/AllData/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Statistics/AllData/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#AllDataFilter').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#AllDataFilter').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischarge", "sDefaultContent": "-", "sClass": "eng" },
+                    { "RegistrationDate": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DOPayApproved", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrage", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipment", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "PortOfLoading", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "PortOfUnloading", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DeliveryPlace", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Shipper", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "NotifyParty", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShippingAgent", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "BLNature", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "FreightIndicator", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerType", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerSize", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerIndicator", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "NoOfPackage", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "TypeofPackage", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Description", "sDefaultContent": "-", "sClass": "eng" },
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#AllDataFilter').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+
+    function init() {
+    }
+
+</script>

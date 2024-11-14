@@ -1,0 +1,127 @@
+﻿@model AYLogistics.Models.SalesCategory
+
+<!-- Form Section -->
+@using (Html.BeginForm("AddSalesCategory", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+    <div class="w-full bg-white rounded-lg shadow p-6">
+        <fieldset>
+            <legend class="text-lg font-semibold mb-4">Add Category</legend>
+
+            <!-- Category Name Input -->
+            <div class="grid grid-cols-1">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.SalesCatName)
+                    </label>
+                    @Html.TextBoxFor(
+                        m => m.SalesCatName,
+                        new {
+                            @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        }
+                    )
+                    @Html.ValidationMessageFor(model => model.SalesCatName, "", new { @class = "text-red-500 text-sm" })
+                </div>
+            </div>
+        </fieldset>
+        <button type="submit" id="catUpdate" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+            Save
+        </button>
+    </div>
+}
+
+<!-- Card Layout for Categories -->
+<div id="category-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <!-- Cards will be dynamically inserted here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        fetchCategories();
+
+        // Fetch Categories from the server
+        function fetchCategories() {
+            $.ajax({
+                url: '/Sales/GetCategories',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    renderCategoryCards(response.aaData);
+                },
+                error: function () {
+                    alert('Failed to load categories.');
+                }
+            });
+        }
+
+        // Render Categories as cards
+        function renderCategoryCards(categories) {
+            const container = $('#category-cards-container');
+            container.empty();
+
+            if (categories.length === 0) {
+                container.html('<p class="text-gray-500">No categories found.</p>');
+                return;
+            }
+
+            categories.forEach(category => {
+                const isChecked = category.INACTIVE == 1 ? 'checked' : '';
+                const card = `
+                    <div class="border rounded-lg shadow p-4 bg-white">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-base font-semibold text-gray-800">${category.Name}</h3>
+                            <input type="checkbox" class="toggle-inactive" data-id="${category.Id}" ${isChecked} />
+                        </div>
+                    </div>
+                `;
+            container.append(card);
+        });
+
+        // Attach event listeners for toggle
+        $('.toggle-inactive').on('change', function () {
+            const categoryId = $(this).data('id');
+            const isActive = $(this).is(':checked') ? 1 : 0;
+            toggleCategoryStatus(categoryId, isActive);
+        });
+    }
+
+        // Toggle Category Status
+    function toggleCategoryStatus(categoryId, status) {
+        $.ajax({
+            url: `/Sales/UpdateCategoryStatus/?CATid=${categoryId}&StatusId=${status}`,
+    type: 'POST',
+        success: function () {
+            alert('Category status updated.');
+            fetchCategories();
+        },
+    error: function () {
+        alert('Failed to update category status.');
+    }
+    });
+    }
+
+    // Save Category
+    $('#catUpdate').on('click', function (e) {
+        e.preventDefault();
+        const categoryName = $('#SalesCatName').val().trim();
+
+        if (!categoryName) {
+            alert('Category name cannot be empty.');
+            return;
+        }
+
+        $.ajax({
+            url: `/Sales/AddSalesCategory/?SalesCatName=${categoryName}`,
+            type: 'POST',
+        success: function () {
+            alert('Category added successfully.');
+            $('#SalesCatName').val('');
+            fetchCategories();
+        },
+        error: function () {
+            alert('Failed to add category.');
+        }
+    });
+    });
+    });
+</script>

@@ -1,0 +1,76 @@
+﻿@model AYLogistics.Models.SalesDiscount
+
+<!-- Form Section -->
+@using (Html.BeginForm("AddSalesDiscount", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+    <div class="w-full bg-white rounded-lg shadow p-6">
+        <fieldset>
+            <legend class="text-lg font-semibold mb-4">Add Discount Rate</legend>
+
+            <!-- Discount Rate Input -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    @Html.LabelFor(model => model.Rate)
+                </label>
+                @Html.TextBoxFor(
+                    m => m.Rate,
+                    new {
+                        @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    }
+                )
+                @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-red-500 text-sm" })
+            </div>
+        </fieldset>
+        <button type="submit" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+            Save
+        </button>
+    </div>
+}
+
+<!-- Card Layout for Discounts -->
+<div id="discount-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <!-- Cards will be dynamically inserted here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        fetchDiscounts();
+
+        // Fetch Discounts from the server
+        function fetchDiscounts() {
+            $.ajax({
+                url: '/Sales/GetDiscounts',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    renderDiscountCards(response.aaData);
+                },
+                error: function () {
+                    alert('Failed to load discounts.');
+                }
+            });
+        }
+
+        // Render Discounts as cards
+        function renderDiscountCards(discounts) {
+            const container = $('#discount-cards-container');
+            container.empty();
+
+            if (discounts.length === 0) {
+                container.html('<p class="text-gray-500">No discounts found.</p>');
+                return;
+            }
+
+            discounts.forEach(discount => {
+                const card = `
+                    <div class="border rounded-lg shadow p-4 bg-white">
+                        <h3 class="text-lg font-semibold text-gray-800">Discount Rate</h3>
+                        <p class="text-sm text-gray-600"><strong>Rate:</strong> ${discount.Rate}%</p>
+                    </div>
+                `;
+            container.append(card);
+        });
+    }
+    });
+</script>

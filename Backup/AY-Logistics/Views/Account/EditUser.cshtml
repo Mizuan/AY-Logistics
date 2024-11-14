@@ -1,0 +1,85 @@
+﻿@model AYLogistics.Models.EditUserVM
+@{
+    ViewBag.Title = "Edit User";
+}
+
+<div class="">
+    <h4>Edit user</h4>
+</div>
+ 
+    <div class="" >
+        <div class="">
+            <div class="btn-group"> 
+                <a href="@Url.Action("ViewUser", "Account")" class="btn btn-primary" >Back<i class="icon-list"></i></a>
+            </div>
+        </div>
+
+        @using (Ajax.BeginForm("EditUser", "Account", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess" }))
+        {
+        <div class="">
+
+             <div class="">
+                 <span class="" style="width: 130px;">@Html.LabelFor(m => m.UserName)</span>
+                  @Html.TextBoxFor(m => m.UserName, new { @class = "" })
+                  @Html.ValidationMessageFor(m => m.UserName)
+             </div>
+                
+            <div class="">
+                 <span class="" style="width: 130px;">@Html.LabelFor(m => m.Email)</span>
+                  @Html.TextBoxFor(m => m.Email, new { @class = "" })
+                  @Html.ValidationMessageFor(m => m.Email)
+             </div>
+        </div>
+       <fieldset>
+          <legend>  
+                <div class="clear">
+                    <span class="control pull-left clear">@Html.LabelFor(m => m.Roles)</span>
+                </div>
+        </legend>   
+       </fieldset>
+       <div class="clear">
+                @foreach (string roleName in Roles.GetAllRoles())
+                {
+                    string checkboxId = "checkbox_" + roleName;
+
+                    if (Roles.IsUserInRole(Model.UserName, roleName))
+                    { 
+                         <div class="control pull-left clear">
+                            <input type="checkbox"  id="@checkboxId" value="@roleName" name="Roles" checked=checked />
+                        </div>  
+                        <div class="control pull-left space-right">
+                            <label for="@checkboxId">@roleName</label>
+                        </div>
+                    }
+                    else
+                    {
+                    <div class="control pull-left clear">
+                       <input type="checkbox"  id="@checkboxId" value="@roleName" name="Roles" />
+                    </div>
+                    <div class="control pull-left space-right">
+                          <label for="@checkboxId">@roleName</label>
+                    </div>
+
+                    }
+
+                }  
+               
+        </div>
+            
+        <fieldset class="clear">
+          <legend>  
+            <div class="control pull-left clear">
+              <input type="submit" class="btn btn-info" value="Update" />
+            </div>
+        </legend>   
+       </fieldset>
+        }
+    </div>
+ 
+
+<script type="text/javascript">
+    $(function () {
+        $('#subUser').show(); // expand the sub menu
+        $('#slideDown').trigger('click');
+    });
+</script>

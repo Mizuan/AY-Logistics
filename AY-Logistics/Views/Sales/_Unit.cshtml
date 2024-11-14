@@ -1,0 +1,94 @@
+﻿@model AYLogistics.Models.SalesUnit
+
+<!-- Form Section -->
+@using (Html.BeginForm("AddSalesUnit", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+    <div class="w-full bg-white rounded-lg shadow p-6">
+        <fieldset>
+            <legend class="text-lg font-semibold mb-4">Add Unit</legend>
+
+            <!-- Two-Column Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Unit Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.UnitName)
+                    </label>
+                    @Html.TextBoxFor(
+                        m => m.UnitName,
+                        new {
+                            @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        }
+                    )
+                    @Html.ValidationMessageFor(model => model.UnitName, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- Unit Description -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.UnitDescription)
+                    </label>
+                    @Html.TextBoxFor(
+                        m => m.UnitDescription,
+                        new {
+                            @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        }
+                    )
+                    @Html.ValidationMessageFor(model => model.UnitDescription, "", new { @class = "text-red-500 text-sm" })
+                </div>
+            </div>
+
+        </fieldset>
+        <button type="submit" class="mt-4 px-4 py-1.5 text-sm bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+            Save
+        </button>
+    </div>
+}
+
+<!-- Card Layout for Units -->
+<div id="unit-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <!-- Cards will be dynamically inserted here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        fetchUnits();
+
+        // Fetch Units from the server
+        function fetchUnits() {
+            $.ajax({
+                url: '/Sales/GetUnits',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    renderUnitCards(response.aaData);
+                },
+                error: function () {
+                    alert('Failed to load units.');
+                }
+            });
+        }
+
+        // Render Units as cards
+        function renderUnitCards(units) {
+            const container = $('#unit-cards-container');
+            container.empty();
+
+            if (units.length === 0) {
+                container.html('<p class="text-gray-500">No units found.</p>');
+                return;
+            }
+
+            units.forEach(unit => {
+                const card = `
+                    <div class="border rounded-lg shadow p-4 bg-white">
+                        <h3 class="text-lg font-semibold text-gray-800">${unit.Name}</h3>
+                        <p class="text-sm text-gray-600"><strong>Description:</strong> ${unit.Description || 'N/A'}</p>
+                    </div>
+                `;
+            container.append(card);
+        });
+    }
+    });
+</script>

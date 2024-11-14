@@ -1,0 +1,84 @@
+﻿@model AYLogistics.Models.Designation_Settings
+
+@{
+    ViewBag.Title = "Designation Settings";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-900">Designation Settings</h2>
+
+    <!-- Back Button -->
+    <div class="mb-6">
+        <a href="@Url.Action("Index", "Employee")" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+            <i class="fas fa-arrow-left mr-2"></i> Back
+        </a>
+    </div>
+
+    <!-- Add Designation Section -->
+    @using (Html.BeginForm("AddDesignation", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <fieldset>
+                <legend class="text-lg font-semibold mb-4">Add New Designation</legend>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Add Designation</label>
+                    @Html.TextBoxFor(
+                        model => model.EmpDesignation,
+                        new { @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.EmpDesignation, "", new { @class = "text-red-500 text-sm" })
+                </div>
+            </fieldset>
+            <button type="submit" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+                Add
+            </button>
+        </div>
+    }
+
+    <!-- Edit Designation Section -->
+    @using (Html.BeginForm("EditDesignation", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+        <div class="bg-white rounded-lg shadow p-6">
+            <fieldset>
+                <legend class="text-lg font-semibold mb-4">Update Existing Designation</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Existing Designation -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Existing Designation</label>
+                        @Html.DropDownListFor(
+                            m => m.DesignationId,
+                            new SelectList(AYLogistics.Models.Designation_Settings.GetAllDesignations(), "DesignationId", "EmpDesignation"),
+                            "--Please Select--",
+                            new {
+                                @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                                onchange = "GetDesignationTxt(this.value)"
+                            }
+                        )
+                        @Html.ValidationMessageFor(model => model.DesignationId, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+
+                    <!-- Update Designation -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Update Designation</label>
+                        @Html.TextBoxFor(
+                            model => model.UpdateDesignation,
+                            new { @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", id = "UpdateDesignation" }
+                        )
+                        @Html.ValidationMessageFor(model => model.UpdateDesignation, "", new { @class = "text-red-500 text-sm" })
+                    </div>
+                </div>
+            </fieldset>
+            <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+                Update
+            </button>
+        </div>
+    }
+</div>
+
+<script>
+    function GetDesignationTxt(value) {
+        document.getElementById('UpdateDesignation').value = document.querySelector('#DesignationId option:checked').textContent;
+    }
+</script>

@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "ManifestEntry";
+}
+
+<div class="p-6">
+    <!-- Heading -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Manifest Entry</h2>
+    
+    <!-- Button -->
+    <button type="button" 
+            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg py-3 px-6 rounded-lg flex items-center space-x-2">
+        <i class="fas fa-plus-circle"></i>
+        @Html.ActionLink("Add Manifest", "PreManifest", "Manifest", null, new { @class = "text-white no-underline hover:underline" })
+    </button>
+</div>

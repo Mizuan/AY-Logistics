@@ -1,0 +1,176 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "Manage User";
+}
+<div class="topMainHeading">
+    <h4 style="margin-left: 339px;">Manage User</h4>
+</div>
+<div class="formControlContainer margin-right35">
+    <div class="PageMenu">
+        <div class="control pull-left">
+            <a href="@Url.Action("CreateUser", "Account")" class="btn btn-primary" ><i class="icon-plus-sign-alt"></i> Create user</a>
+        </div>
+    </div>
+    <table id="tbUsers" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="tableHeadFont">RealId</th>
+                <th class="tableHeadFont">NIC</th>
+                <th class="tableHeadFont">User Id</th>
+                <th style="width: 114px;" class="tableHeadFont">User Name</th>
+                <th style="width: 350px;" class="tableHeadFont">Full Name</th>
+                <th style="width: 75px;" class="tableHeadFont">Access</th>
+                <th style="width: 120px">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+<div id="dialog-deleteConfirm" title="Warning!!!" class="hide">
+    <p>
+        Do you want delete the user!!</p>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        loadDataTable();
+      //  init();
+    });
+
+    $('#tbUsers tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    $(function () {
+        $('#subUser').show(); // expand the sub menu
+        $('#slideDown').trigger('click');
+    });
+
+    function loadDataTable() {
+        try {
+
+            var oTable = $('#tbUsers').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": "/Account/getUser",
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": false,
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Account/getUser',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#Users').css('width', '100%');
+                            new init();
+                        },
+                        "error": function () {
+                            $('#tbUsers').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "NIC", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "UserId", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Username", "sClass": "eng", "sDefaultContent": "-" },
+                    { "mDataProp": "Name", "sClass": "eng", "sDefaultContent": "-" },
+                    {
+                        //"mDataProp": null, "sClass": "eng", "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+
+                            var value = row.Approve == true ? "checked=checked id='chk'" : " id='chk'";
+                        return "<input type='checkbox' class='chkbox' " + value + " />";
+                    }
+                    },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<span class='tbicon'><a href='../Account/EditUser?user=" + row.Username + "' class='edituser' ><i class='icon-edit icon-2x'></i></a></span><span class='tbicon'><a href='../Account/EditUserPassword?username=" + row.Username + "' class='changePass'><i class='icon-key icon-2x' style='margin-left: 14px;'></i></a></span><span class='tbicon'><a href='../Account/DeleteUser?username=" + row.Username + "' class='deleteuser'><i class='icon-remove-sign icon-2x' style='margin-left: 14px;'></i></a></span>"
+                    }
+                    }
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                 //  new init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#tbUsers').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+        $('.deleteuser > img').click(function (e) {
+            e.preventDefault();
+            var uname = $(this).parents('tr').find('td').eq(3).html();
+            var row = $(this).parents('tr');
+            $("#dialog-deleteConfirm").dialog({
+                resizable: false,
+                height: 140,
+                modal: true,
+                buttons: {
+                    "Delete": function () {
+                        $.ajax({
+                            url: '/Account/DeleteUser?username=' + uname,
+                            type: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function () {
+                                $(row).fadeOut(300).delay(300).remove();
+                                $.pnotify({
+                                title: 'User Management',
+                                text: 'User has been deleted',
+                                type: 'success'
+                                });
+                            }
+                        });
+                        $(this).dialog("close");
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+
+
+        $('.chkbox').click(function(e) {
+//            console.log(this)
+//            e.stopPropagation();
+            var username = $(this).parents('tr').find('td').eq(3).html();
+            console.log(username)
+            $.ajax({
+                url: '/Account/ActivateUser?username=' + username,
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data == true) {
+                        $.pnotify({
+                            title: 'User Management',
+                            text: 'User has been Activated',
+                            type: 'success'//info, fail, error
+                        });
+                    } else if (data == false) {
+                        $.pnotify({
+                            title: 'User Management',
+                            text: 'User has been Deactivated',
+                            type: 'success'
+                        });
+                    }
+                }
+            });
+        })
+    }
+     
+</script>

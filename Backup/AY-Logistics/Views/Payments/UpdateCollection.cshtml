@@ -1,0 +1,85 @@
+﻿@model AYLogistics.Models.PaymentModel
+
+@{
+    Layout = "~/Views/Shared/_blank2.cshtml";
+    ViewBag.Title = "UpdateCollection";
+}
+
+ <div class="control pull-left clear well" style="width: 1045px;">
+@Html.HiddenFor(mdoel => Model.HBLid)
+<fieldset style="width: 1045px;">
+    <legend>Payment Status:</legend>
+    <label style="color:gray;">Note: To Update the payment as Collected; tick Collected and Save</label>
+    <table class="table table-striped table-hover" id="PaymentStatus">
+    <thead class="">
+        <tr>
+            <th class="hide">#</th>
+            <th style="width: 125px">Payment Type</th>
+            <th style="width: 110px">Invoice No.</th>
+            <th style="width: 110px">Collected</th>
+            <th style="width: 110px">Collected Date</th>
+            <th style="width: 404px;">Collected By</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var list in Model.PaymentStatusList)
+        {
+            <tr>
+                <td class="PId hide">@list.PaymentTypeId</td>
+                <td>@list.PaymentName</td>
+                <td>@Html.TextBox("DocumentNo", @list.DocumentNo, new { @placeholder = "Invoice Number......", @style = "" }) </td>
+                @if(@list.PaymentStatus ==0)
+                {
+                 @*<td style="color:Red;">@list.PaymentStatus</td>*@
+                 <td><input type="checkbox" name="JobStatusValueName" value="@list.PaymentStatus" id="@list.PaymentStatus"/></td>
+                }
+                else
+                {
+                 @*<td style="color:blue;">@list.PaymentStatus</td>*@
+                 <td class="b"><input type="checkbox" name="JobStatusValueName" value="@list.PaymentStatus" id="@list.PaymentStatus" checked="checked" /></td>
+                }
+                <td>@list.UpdatedDate</td>
+                <td>@list.UpdatedBy</td>
+                <td><button class="btn btn-primary save-payment"><i class="icon-edit" ></i></button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+</fieldset>
+</div>
+
+<script type="text/javascript">
+
+$(".save-payment").click(function() {
+      var $row = $(this).closest("tr");    // Find the row
+      //Find the value
+      var $p_PaymentTypeId= $row.find(".PId").text();
+      var $p_DocumentNo= $row.find("input").val();
+            var $p_paymentStat = 0;
+            if ( $row.find('input:checkbox').is(':checked') ) 
+            {
+                $p_paymentStat = 1;
+            }else{
+                $p_paymentStat = 0;
+            }
+      //save data
+      if($p_DocumentNo=="")
+      {
+            $.pnotify({
+                title:'Payment',
+                text: "Please enter the Invoice No",
+                type: "Warning"
+            });
+      }else{
+          $.get('../Job/EditPaymentStat',{PTypeId: $p_PaymentTypeId, PDocumentNo: $p_DocumentNo, HBLId:$('#HBLid').val(), PaymentStat:$p_paymentStat},function(result){
+                $.pnotify({
+                    title:'Processing',
+                    text: result.Message,
+                    type: result.Status
+                });
+            });
+      }
+});
+
+    </script>

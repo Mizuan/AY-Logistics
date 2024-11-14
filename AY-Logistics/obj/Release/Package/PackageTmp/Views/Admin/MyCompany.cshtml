@@ -1,0 +1,62 @@
+﻿@model AYLogistics.Models.MyCompany
+@{
+    ViewBag.Title = "MyCompany";
+}
+
+<h4 style="margin-left: 339px;">Manage My Company</h4>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+
+@using (Html.BeginForm("AddMyCompany", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+        <fieldset>
+            <legend>Company Address Information</legend>
+            <div class="control pull-left">
+                <label>Enter New Company</label>
+                @Html.TextBoxFor(model => model.CompanyName)
+                @Html.ValidationMessageFor(model => model.CompanyName)
+            </div>
+            <div class="control pull-left space-right">
+                <input style="margin-top: 25px;" type="submit" value="Add" class="btn btn-primary"/>
+            </div>
+        </fieldset>
+    </div>
+}
+
+@using (Html.BeginForm("EditMyCompany", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+    <fieldset>
+         <div class="control pull-left">
+           <label>Select Companies</label>
+            @Html.DropDownListFor(m => m.CompanyId, new SelectList(AYLogistics.Models.MyCompany.GetMyCompanies(), "CompanyId", "CompanyName"), "--please Select--", new { @class = "", OnChange = "GetCompanyTxt(this.value)" })
+            @Html.ValidationMessageFor(model => model.CompanyId)
+        </div>
+         <div class="control pull-left space-right">
+                <label>Update Company</label>
+                @Html.TextBoxFor(model => model.UpdtCompanyName)
+        </div>
+         <div class="control pull-left space-right">
+            <input style="margin-top: 25px;" type="submit" value="Update" class="btn btn-success" />
+        </div>
+    </fieldset>
+    </div>
+}
+    <div class="control pull-left">
+        @{Html.RenderPartial("../Admin/_AddBranch");}
+    </div>
+    <div class="control pull-left space-right">
+        @{Html.RenderPartial("../Admin/_EditBranch");}
+    </div>
+
+<script type="text/javascript">
+
+    function GetCompanyTxt(value) {
+        $('#UpdtCompanyName').val($('#CompanyId option:selected').text());
+    }
+
+ </script>

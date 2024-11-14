@@ -1,0 +1,167 @@
+﻿@model AYLogistics.Models.SalesItems
+
+@using (Html.BeginForm("AddSalesItem", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+    <div class="w-full bg-white rounded-lg shadow p-6">
+        <fieldset>
+            <legend class="text-lg font-semibold mb-4">Add Item</legend>
+
+            <!-- Two-Column Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Category -->
+                <div>
+                    <div class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.SalesCAT)
+                    </div>
+                    @Html.DropDownListFor(
+                        m => m.SalesCAT,
+                        new SelectList(AYLogistics.Models.SalesCategory.GetCategoryDropD(), "SalesCatId", "SalesCatName"),
+                        "-Select-",
+                        new { @class = "p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.SalesCAT, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- GST -->
+                <div>
+                    <div class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.GST)
+                    </div>
+                    @Html.DropDownListFor(
+                        m => m.GST,
+                        new SelectList(AYLogistics.Models.SalesCurrency.GSTOption(), "Id", "Option"),
+                        "",
+                        new { @class = "p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.GST, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- Item Name -->
+                <div>
+                    <div class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.ItemName)
+                    </div>
+                    @Html.TextBoxFor(
+                        m => m.ItemName,
+                        new { @class = "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.ItemName, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- Unit -->
+                <div>
+                    <div class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.UnitId)
+                    </div>
+                    @Html.DropDownListFor(
+                        m => m.UnitId,
+                        new SelectList(AYLogistics.Models.SalesUnit.GetUnitList(), "Id", "UnitName"),
+                        "",
+                        new { @class = "p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.UnitId, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- Unit Price -->
+                <div>
+                    <div class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.UnitPrice)
+                    </div>
+                    @Html.TextBoxFor(
+                        m => m.UnitPrice,
+                        new { @class = "p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- Currency -->
+                <div>
+                    <div class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.CurrencyId)
+                    </div>
+                    @Html.DropDownListFor(
+                        m => m.CurrencyId,
+                        new SelectList(AYLogistics.Models.SalesCurrency.GetCurrencyList(), "Id", "Currency"),
+                        "",
+                        new { @class = "p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" }
+                    )
+                    @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-red-500 text-sm" })
+                </div>
+            </div>
+        </fieldset>
+        <button type="submit" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+            Save
+        </button>
+    </div>
+}
+
+<!-- Card Layout for Sales Items -->
+<div id="sales-items-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <!-- Cards will be dynamically inserted here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        fetchSalesItems();
+
+        // Fetch Sales Items from the server
+        function fetchSalesItems() {
+            $.ajax({
+                url: '/Sales/GetSalesItems',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    renderSalesItems(response.aaData);
+                },
+                error: function () {
+                    alert('Failed to load sales items.');
+                }
+            });
+        }
+
+        // Render Sales Items as cards
+        function renderSalesItems(items) {
+            const container = $('#sales-items-container');
+            container.empty();
+
+            if (items.length === 0) {
+                container.html('<p class="text-gray-500">No sales items found.</p>');
+                return;
+            }
+
+            items.forEach(item => {
+                const card = `
+                    <div class="border rounded-lg shadow p-4 bg-white">
+                        <h3 class="text-base font-semibold text-gray-800 mb-2">${item.ItemName}</h3>
+                        <p class="text-sm text-gray-600"><strong>Unit:</strong> ${item.Unit}</p>
+                        <p class="text-sm text-gray-600"><strong>Price:</strong> ${item.UnitPrice}</p>
+                        <p class="text-sm text-gray-600"><strong>Currency:</strong> ${item.CurrencyName}</p>
+                        <p class="text-sm text-gray-600"><strong>Status:</strong> ${(item.INACTIVE == 1 ? "Inactive" : "Active")}</p>
+                        <div class="mt-4">
+                            <button class="px-4 py-1.5 text-sm bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none" onclick="toggleStatus(${item.Id})">
+                                Toggle Status
+                            </button>
+                        </div>
+                    </div>
+                `;
+            container.append(card);
+        });
+    }
+
+        // Toggle Status for a Sales Item
+        window.toggleStatus = function (id) {
+            $.ajax({
+                url: '/Sales/UpdateItemStatus/?ITEMid=' + id,
+                type: 'POST',
+                success: function () {
+                    alert('Status updated!');
+                    fetchSalesItems();
+                },
+                error: function () {
+                    alert('Failed to update status.');
+                }
+            });
+        };
+    });
+</script>

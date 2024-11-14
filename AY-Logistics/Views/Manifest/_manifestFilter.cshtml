@@ -1,0 +1,1235 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models;
+
+<div class="formControlContainer margin-right35">
+    @*<table id="ManifestTable" class="select-highlight grtable">*@
+     <table id="ManifestPreAlertTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide" style="width: auto">ManifestId</th>
+                <th class="hide" style="width: auto">ShipmentId</th>
+                <th class="hide" style="width: auto">ModeOfShipment</th>
+                 <th style="width: auto" class="tableHeadFont">Entry Date</th>
+                <th style="width: auto"class="tableHeadFont">Manifest#</th>
+                <th style="width:auto" class="tableHeadFont">Customer</th>
+                <th style="width:auto" class="tableHeadFont">House BL</th>
+                <th style="width: auto"class="tableHeadFont">Voyage</th>
+                <th style="width:auto" class="tableHeadFont">Vessel / Flight</th>
+                @*<th style="width:" class="tableHeadFont">Shipping Agent</th>*@
+                <th style="width: auto" class="tableHeadFont">MODE</th>
+                <th style="width: auto" class="tableHeadFont">Enter By</th>
+                <th style="width: auto" class="tableHeadFont">Status</th>
+                <th style="width:10px" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <table id="ManifestTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide" style="width: auto">ManifestId</th>
+                <th class="hide" style="width: auto">ShipmentId</th>
+                <th class="hide" style="width: auto">ModeOfShipment</th>
+                <th style="width: auto" class="tableHeadFont">Entry Date</th>
+                <th style="width: auto"class="tableHeadFont">Manifest #</th>
+                <th style="width:auto" class="tableHeadFont">Customer</th>
+                <th style="width:auto" class="tableHeadFont">House BL</th>
+                <th style="width: auto"class="tableHeadFont">Voyage</th>
+                <th style="width:auto" class="tableHeadFont">Vessel / Flight</th>
+                @*<th style="width:" class="tableHeadFont">Shipping Agent</th>*@
+                <th style="width: auto" class="tableHeadFont">MODE</th>
+                <th style="width: auto" class="tableHeadFont">Enter By</th>
+                <th style="width: auto" class="tableHeadFont">Status</th>
+                <th style="width:10px" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+       @*<table id="BOLTable" class="select-highlight grtable">*@
+       <table id="BOLTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide">ManifestId</th>
+                <th class="hide">ShipmentId</th>
+                <th class="hide">HBLId</th>
+                <th class="hide">ModeOfShipment</th>
+                <th style="width:"class="tableHeadFont">HBL / AWBL #</th>
+                <th style="width: 10px" class="tableHeadFont">Entry Date</th>
+                <th style="width:"class="tableHeadFont">MasterBL #</th>
+                <th style="width:"class="tableHeadFont">Manifest #</th>
+                <th style="width:"class="tableHeadFont">Consignee / Customer</th>
+                <th style="width:"class="tableHeadFont">Voyage</th>
+                <th style="width:" class="tableHeadFont">Vessel/F</th>
+                @*<th style="width: 10px;" class="tableHeadFont">Container Type</th>*@
+                @*<th style="width: ;" class="tableHeadFont">Container Info</th>*@
+                @*<th style="width: 10px;" class="tableHeadFont">No.Of Conatiner</th>*@
+                <th style="width: 10px;" class="tableHeadFont">MODE</th>
+                @*<th style="width: " class="tableHeadFont">Arrival Date</th>*@
+                <th style="width: auto" class="tableHeadFont">Enter By</th>
+                <th style="width: auto" class="tableHeadFont">Status</th>
+                <th style="width:10px" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+ <div class="formControlContainer RequestDOPayment" id="RequestDOPayment" title="DO Payment Requesting">
+   <div class="form_control_line">
+         <div class="singleControlContainer width10">
+            <label class="form-label">Debit Note No.</label>
+            <input type="text" id="DebitNoteNo" class="eng" />
+         </div>
+         <div class="singleControlContainer width10 paddingRight7">
+             <label class="form-label">Amount</label>
+             <input type="text" id="Ammount" class="eng" />
+         </div>
+         <div class="singleControlContainer width10 paddingRight7">
+             <label class="form-label">Currency Type</label>
+             <select id="currency">
+                <option value="">--select--</option>
+                <option value="1">MVR</option>
+                <option value="2">USD</option>
+            </select>
+             <p style="color:red">Attach Scanned Debit note from "Attachmnets" Menu</p>
+         </div>
+    </div>
+</div>
+
+ <div class="formControlContainer RequestDOPaymentAIR" id="RequestDOPaymentAIR" title="DO Payment Requesting">
+   <div class="form_control_line">
+         <div class="singleControlContainer width10 paddingRight7">
+             <p style="color:red">Please attach Debit Note Later!</p>
+         </div>
+    </div>
+</div>
+
+ <div class="formControlContainer ReleaseDO" id="ReleaseDO" title="DO Releasing">
+   <div class="form_control_line">
+         <div class="control pull-left">
+            <label class="form-label">DO Collected By</label>
+            <input type="text" id="CustomerName" class="eng" />
+         </div>
+          <div class="control pull-left space-right">
+            <label class="form-label">Contact</label>
+            <input type="text" id="Contact" class="eng" />
+         </div>
+         <div class="control pull-left clear">
+             <label class="form-label">Collected Date</label>
+             <input type="text" id="CollectedDate" class="eng" />
+         </div>
+          <div class="control pull-left space-right">
+             <label class="form-label">Do you want to send Email?</label>
+             <select id="emailoption">
+                <option value="1">NO</option>
+                <option value="2">YES</option>
+            </select>
+         </div>
+       <div class="control pull-left clear">
+        <p style="color:red">IMPORTANT! for Email: Confirm E-OD is attached from "Attachmnets" menu, and customer Email of this BL from customer info</p>
+       </div>
+    </div>
+</div>
+
+ <div class="formControlContainer SendJob" id="SendJob" title="Sending to Job">
+   <div class="form_control_line">
+         <div class="singleControlContainer width10 paddingRight7">
+             <p style="color:red">Verify before sending, Shipping agent D/O is attached?</p>
+         </div>
+    </div>
+</div>
+
+
+ <script src="@Url.Content("~/Scripts/knockout-2.2.0.debug.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var SPstatId = 0;
+
+    $(document).ready(function () {
+        $(".RequestDOPayment").hide();
+        $(".RequestDOPaymentAIR").hide();
+        $(".ReleaseDO").hide();
+        $(".SendJob").hide();
+        $('#CollectedDate').datepicker('setDate', new Date());
+    });
+
+    $('#ManifestTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+    $('#ManifestPreAlertTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+    $('#BOLTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    function loadManifestTable(value) {
+        SPstatId = value;
+        try {
+            var oTable = $('#ManifestTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetShipmentByStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetShipmentByStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#ManifestTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#ManifestTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeofShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "ShippinfAgent", "sDefaultContent": "-", "sClass": "eng" },
+
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            if (value == 1) { //Condition Start
+                                if (row.ModeofShipmentId == 1) {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                        //+ "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + o.aData.ShipmentId + "'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId +")'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                /*XML*/ + "<br><a class='dropdown-item' style='color:#FF0000;' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                } else {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                          + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                        //+ "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                        ///*Print BOLs*/ + "<br><a class='dropdown-item' style='color:#FF0000;' href='../Manifest/PrintMultipleBL?ShipmentId=" + row.ShipmentId + '&ModeofShipment=' + row.ModeofShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                        // + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialogAIR(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                          + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialog(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                }
+                            }
+                            else if(value == 2){
+                                if (row.ModeofShipmentId == 1) {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                          + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                          + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                    /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                        + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialog(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                } else {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                          + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                        //+ "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                         ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintMultipleBL?ShipmentId=" + row.ShipmentId + '&ModeofShipment=' + row.ModeofShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                      //  + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialogAIR(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                }
+                            }
+                           else{
+                                    if (row.ModeofShipmentId == 1) {
+                                        return "<div class='dropdown show'>"
+                                         + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                          + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                            + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                           // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                            + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                            + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                          //    + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                    /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                             + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                          + "</div></div>"
+                                    } else {
+                                        return "<div class='dropdown show'>"
+                                         + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                          + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                            + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                           // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                            + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                          //  + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                    ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintMultipleBL?ShipmentId=" + row.ShipmentId + '&ModeofShipment=' + row.ModeofShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                             + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                          + "</div></div>"
+                                    }
+                            }//Condition End
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#ManifestTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function GetPaymentReadyBol(SPstatus, BLstatus) {
+        SPstatId = 5;
+        try {
+            var oTable = $('#BOLTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetShipmentBy/?SPstatus=' + SPstatus + '&BLstatus=' + BLstatus,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetShipmentBy/?SPstatus=' + SPstatus + '&BLstatus=' + BLstatus,
+                        'contentType': 'application/json; charset=utf-8',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#BOLTable').css('width', '100%');
+                         //   init();
+                        },
+                        "error": function () {
+                            $('#BOLTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeOfShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "ContainerType", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "ContainerInfo", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "TotalNoOfContainer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                   {
+                       "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                           return '<mark>' + row.RecentStatus + '</mark>';
+                       }
+                   },
+                    {
+                        // "mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            if (row.ModeOfShipmentId == 1) {
+                                return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                               // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + '&HBLId=' + row.HBLId + "'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                             //   + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                     /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                             + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOReleaseDialog(" + row.HBLId + ")'>&nbsp;DO Release</a>"
+                             + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showSendJobDialog(" + row.HBLId + ")'>&nbsp;Send to Job</a>"
+                             + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+                            } else {
+                                return "<div class='dropdown show'>"
+                                 + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                  + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                    + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                    //+ "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + '&HBLId=' + row.HBLId + "'>&nbsp;Attachments</a>"
+                                    + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                  //  + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                     ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintBL?HouseBLId=" + row.HBLId + '&ModeofShipment=' + row.ModeOfShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                    + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOReleaseDialog(" + row.HBLId + ")'>&nbsp;DO Release</a>"
+                                    + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showSendJobDialog(" + row.HBLId + ")'>&nbsp;Send to Job</a>"
+                                    + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                                  + "</div></div>"
+                            }
+
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#BOLTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function loadDOReleaseTable(value) {
+        SPstatId = -1;
+        try {
+            var oTable = $('#BOLTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetBLbyStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetBLbyStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#BOLTable').css('width', '100%');
+                         //   init();
+                        },
+                        "error": function () {
+                            $('#BOLTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeOfShipmentId", "sDefaultContent": "-", "sClass": "hide" },/********/
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "ContainerType", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "ContainerInfo", "sDefaultContent": "-", "sClass": "eng" },
+                   // {"mDataProp": "TotalNoOfContainer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                    //{ "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                 //   { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        // "mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            if (row.ModeOfShipmentId == 1) {
+                                return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                //+ "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + '&HBLId=' + row.HBLId + "'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                             //   + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                     /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                             + "<br><a class='dropdown-item' href='../Manifest/PrintDOReleaseNote?HouseBLId=" + row.HBLId + "'>&nbsp;Print POD-Proof Of Delivery</a>"
+                             + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                             + "</div></div>"
+                            } else {
+                                return "<div class='dropdown show'>"
+                                 + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                  + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                    + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                  //  + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + '&HBLId=' + row.HBLId + "'>&nbsp;Attachments</a>"
+                                      + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                             //       + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                     ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintBL?HouseBLId=" + row.HBLId + '&ModeofShipment=' + row.ModeOfShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                    + "<br><a class='dropdown-item' href='../Manifest/PrintDOReleaseNote?HouseBLId=" + row.HBLId + "'>&nbsp;Print POD-Proof Of Delivery</a>"
+                                    + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                                  + "</div></div>"
+                            }
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#BOLTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function loadDOPendingCollectTable(value) {
+        SPstatId = 4;
+        try {
+            var oTable = $('#BOLTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetBLbyStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetBLbyStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#BOLTable').css('width', '100%');
+                           // init();
+                        },
+                        "error": function () {
+                            $('#BOLTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeOfShipmentId", "sDefaultContent": "-", "sClass": "hide" },/********/
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "ContainerType", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "ContainerInfo", "sDefaultContent": "-", "sClass": "eng" },
+                   // {"mDataProp": "TotalNoOfContainer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+               //     { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                 //   { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        // "mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            if (row.ModeOfShipmentId == 1) {
+                                return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                           //     + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                     /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                    + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                             + "</div></div>"
+                            } else {
+                                return "<div class='dropdown show'>"
+                                 + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                  + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                    + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                      + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                //    + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                     ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintBL?HouseBLId=" + row.HBLId + '&ModeofShipment=' + row.ModeOfShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                    + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                                  + "</div></div>"
+                            }
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#BOLTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function ManifestPreAlertTable(value) {
+        SPstatId = value;
+        try {
+            var oTable = $('#ManifestPreAlertTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetShipmentByStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetShipmentByStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#ManifestPreAlertTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#ManifestPreAlertTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeofShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                  //   { "mDataProp": "EntryTypeId", "sDefaultContent": "-", "sClass": "eng" },
+                  {
+                      data: function (row, type, set) {
+                          var color = '';
+                          var val = "";
+                          if (row.EntryTypeId == 3) {
+                              color = 'red';
+                              val = row.EntryType;
+                          } else {
+                              val = row.Number
+
+                          }
+                          //  return '<span style="color:' + color + '">' + val.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span>';
+                          return '<span style="color:' + color + '">' + val + '</span>';
+                      }, "sClass": "TablecolunmCenterGRAY"
+                  },
+                  //  { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "ShippinfAgent", "sDefaultContent": "-", "sClass": "eng" },
+
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            if (value == 1) { //Condition Start
+                                if (row.ModeofShipmentId == 1) {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                        //+ "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + o.aData.ShipmentId + "'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                ///*XML*/ + "<br><a onclick='testxml()' class='dropdown-item' style='color:#FF0000;' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                         + "<br><a class='dropdown-item' style='color:#FF0000;' onclick='XmlDownloadRefresh(" + row.Id + ")'>&nbsp;Generate XML</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                } else {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                          + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                        //+ "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                        ///*Print BOLs*/ + "<br><a class='dropdown-item' style='color:#FF0000;' href='../Manifest/PrintMultipleBL?ShipmentId=" + row.ShipmentId + '&ModeofShipment=' + row.ModeofShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                        //+ "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialogAIR(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialog(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                }
+                            }
+                            else if (value == 2) {
+                                if (row.ModeofShipmentId == 1) {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                          + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                          + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                    /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                        + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialog(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                } else {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                          + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                        //+ "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                         ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintMultipleBL?ShipmentId=" + row.ShipmentId + '&ModeofShipment=' + row.ModeofShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                    //    + "<br><a class='dropdown-item' href='#' style='color:#FF0000;' onClick='showDOPaymentDialogAIR(" + row.ShipmentId + ")'>&nbsp;Request DO Payment</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                }
+                            }
+                            else {
+                                if (row.ModeofShipmentId == 1) {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                      //    + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                /*XML*/ + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                } else {
+                                    return "<div class='dropdown show'>"
+                                     + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                      + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                        + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                       // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                        + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                      //  + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                ///*Print BOLs*/ + "<br><a class='dropdown-item' href='../Manifest/PrintMultipleBL?ShipmentId=" + row.ShipmentId + '&ModeofShipment=' + row.ModeofShipmentId + "'>&nbsp;Print AWBL: to do</a>"
+                                         + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                      + "</div></div>"
+                                }
+                            }//Condition End
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#ManifestPreAlertTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+    }
+
+    function XmlDownloadRefresh(val) {
+        var url = "@Url.Action("SerializeManifestToXML", "XML")";
+            var results;
+            var flag = 0;
+            var param = { ManifestId: val };
+            var data = JSON.stringify(param);
+            $.ajax({
+                type: "POST",
+                url: url,
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                data: data,
+                error: function (results) {
+                },
+                success: function (results) {
+                    getFilterStatus(1);
+                    dash.init();
+                    
+                }
+            });
+          $.download("../XML/SerializeManifestToXML", { ManifestId: val }, "POST");
+        }
+
+
+
+
+    function showDOPaymentDialog(shipmentId) {
+        $(".RequestDOPayment").dialog({
+            width: 265,
+            modal: true,
+            height: 364,
+            buttons: [{
+                text: "Request",
+                'class': 'btn btn-primary',
+                click: function () {
+                    btnSaveDOPayment(shipmentId);
+                    $(this).dialog("close");
+                }},
+                {
+                 text: "Close",
+                 'class': 'btn btn-default',
+                 click: function () {
+                     $('#DebitNoteNo').val("");
+                     $('#Ammount').val("");
+                   $(this).dialog("close");
+                 }
+            }]
+        });
+    }
+
+    function showDOPaymentDialogAIR(shipmentId) {
+        $(".RequestDOPaymentAIR").dialog({
+            width: 265,
+            modal: true,
+            height: 162,
+            buttons: [{
+                text: "Request",
+                'class': 'btn btn-primary',
+                click: function () {
+                    btnSaveDOPaymentAIR(shipmentId);
+                    $(this).dialog("close");
+                }},
+                {
+                    text: "Close",
+                    'class': 'btn btn-default',
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+
+            }]
+        });
+    }
+
+    function showDOReleaseDialog(HBLId) {
+        $(".ReleaseDO").dialog({
+            width: 480,
+            modal: true,
+            height: 330,
+            buttons: [{
+                text: "Save",
+                'class': 'btn btn-primary',
+                click: function () {
+                    btnReleaseDO(HBLId);
+                    $(this).dialog("close");
+                }},
+                {
+                 text: "Close",
+                    'class': 'btn btn-default',
+                    click: function () {
+                        $('#CustomerName').val("");
+                        $('#Contact').val("");
+                        $('#CollectedDate').datepicker('setDate', new Date());
+                        $(this).dialog("close");
+                 }
+            }]
+        });
+    }
+
+    function showSendJobDialog(HBLId) {
+        $(".SendJob").dialog({
+            width: 296,
+            modal: true,
+            height: 162,
+            buttons: [{
+                text: "Send",
+                'class': 'btn btn-primary',
+                click: function () {
+                    btnSendJob(HBLId);
+                    $(this).dialog("close");
+                }},
+                {
+                    text: "Close",
+                    'class': 'btn btn-default',
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+            }]
+        });
+    }
+
+    function btnSaveDOPayment(shipmentId) {
+        var CurrencyType ="";
+        if ($("#currency")[0].selectedIndex == 0) {
+            $.pnotify({
+                title: 'Debit Note',
+                text: 'Select currency Type',
+                type: 'warning'
+            });
+        } else {
+            if ($("#currency")[0].selectedIndex == 1) {
+                CurrencyType="MVR";
+            }
+            if ($("#currency")[0].selectedIndex == 2) {
+                CurrencyType="USD";
+            }
+            var DebitNoteNo = $('#DebitNoteNo').val();
+            var Ammount = $('#Ammount').val();
+            var PaymentInfo = { DebitNoteNo: DebitNoteNo, Ammount: Ammount, shipmentId: shipmentId, RequestedPaymentType: 1, CurrencyType: CurrencyType};
+            var json = JSON.stringify(PaymentInfo);
+            $.ajax({
+                url: '/Payments/RequestDOPayement',
+                type: 'POST',
+                dataType: 'json',
+                data: json,
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    $.pnotify({
+                        title: 'Debit Note',
+                        text: 'Payment has been requested',
+                        type: 'success'
+                    });
+                    getFilterStatus(2);
+                    dash.init();
+                },
+                error: function () {
+                    $.pnotify({
+                        title: 'Debit Note',
+                        text: 'Request Failed!',
+                        type: 'error'
+                    });
+                }
+            });
+            $('#DebitNoteNo').val("");
+            $('#Ammount').val("");
+        }
+    };
+
+    function btnSaveDOPaymentAIR(shipmentId) {
+        var BLInfo = { shipmentId: shipmentId, RequestedPaymentType: 1 };
+        var json = JSON.stringify(BLInfo);
+        $.ajax({
+            url: '/Payments/RequestDOPayementAIR',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Payment',
+                    text: 'Payment requested Successfully',
+                    type: 'success'
+                });
+                getFilterStatus(5);
+                dash.init();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Payment',
+                    text: 'Request Failed!',
+                    type: 'error'
+                });
+            }
+        });
+    };
+
+    function btnSendJob(HBLid) {
+        var BLInfo = { HBLid: HBLid, StatusId: 2 };
+        var json = JSON.stringify(BLInfo);
+        $.ajax({
+            url: '/Manifest/SendToJob',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Job Assigning',
+                    text: 'Sent to Register a Job',
+                    type: 'success'
+                });
+                getFilterStatus(5);
+                dash.init();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Job Assigning',
+                    text: 'Request Failed!',
+                    type: 'error'
+                });
+            }
+        });
+    };
+
+    function btnReleaseDO(HBLid) {
+        var sendEmail = 0;
+        if ($("#emailoption")[0].selectedIndex == 0) {
+            sendEmail = 0;
+        }
+        if ($("#emailoption")[0].selectedIndex == 1) {
+            sendEmail = 1;
+        }
+        var DOcollectedBy = $('#CustomerName').val();
+        var DOcollectedContact = $('#Contact').val();
+        var DOcollectedDate = new Date( $('#CollectedDate').val());
+        var BLInfo = { HBLid: HBLid, StatusId: 3, DOcollectedBy: DOcollectedBy, DOcollectedContact: DOcollectedContact, DOcollectedDate: DOcollectedDate, sendEmail: sendEmail};
+        var json = JSON.stringify(BLInfo);
+        $.ajax({
+            url: '/Manifest/DORelease',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.download("../Manifest/PrintDOReleaseNote", { HouseBLId: HBLid }, "POST");
+                $.pnotify({
+                    title: 'DO Releasing',
+                    text: 'DO has been Released',
+                    type: 'success'
+                });
+                getFilterStatus(5);
+                dash.init();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'DO Releasing',
+                    text: 'Process Failed!',
+                    type: 'error'
+                });
+            }
+        });
+        $('#CustomerName').val("");
+        $('#Contact').val("");
+        $('#CollectedDate').datepicker('setDate', new Date());
+        $("#emailoption")[0].selectedIndex = 0;
+    };
+
+
+    $(document).blur(function () {
+        console.log(SPstatId);
+        if (SPstatId == 1) {
+            dash.init();
+            getFilterStatus(1);
+        }
+    });
+
+    function attachOpen(shipmentId, BLid) {
+    // var myWindow = window.open("../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1100,height=600");
+     var page = "../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+     var $dialog = $('<div style="overflow:visible"></div>')
+                    //.html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                    .html('<iframe style="border: 0px;" src="' + page + '" width="100%" height="100%"></iframe>')
+                    .dialog({
+                        autoOpen: false,
+                        modal: true,
+                        height: 720,
+                        width: 1340,
+                        resizable: true,
+                        title: "DOCUMENTS",
+                        buttons: {
+                            Close: function () {
+                                $(this).dialog("close");
+                                if (SPstatId == 4) {
+                                    dash.init();
+                                    getFilterStatus(4);
+                                }
+                                else if (SPstatId == -1) {
+                                    dash.init();
+                                    getFilterStatus(-1);
+                                }
+                                else { }
+
+                            }
+                        }
+                    });
+     $dialog.dialog('open');
+     ///after CLose popup window
+     /*myWindow.onbeforeunload = function () {
+         if (SPstatId == 4) {
+             dash.init();
+             getFilterStatus(4);
+         }
+         else if (SPstatId == -1) {
+             dash.init();
+             getFilterStatus(-1);
+         }
+         else { }
+     }*/
+ }
+
+ function shipmentStatusOpen(shipmentId, BLid) {
+    // var myWindow = "";
+    // myWindow = window.open("../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1335,height=400");
+     var page = "../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+     var $dialog = $('<div style="overflow:visible"></div>')
+                    .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                    .dialog({
+                        autoOpen: false,
+                        modal: true,
+                        height: 720,
+                        width: 1240,
+                        resizable: true,
+                        title: "STATUS",
+                        buttons: {
+                            Close: function () {
+                                $(this).dialog("close");
+
+                            }
+                        }
+                    });
+     $dialog.dialog('open');
+ }
+
+ </script>

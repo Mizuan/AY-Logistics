@@ -1,0 +1,401 @@
+﻿@model AYLogistics.Models.JobDocumentVM
+
+@{
+    Layout = "~/Views/Shared/_blank2.cshtml";
+    ViewBag.Title = "Documents";
+}
+
+<div class="topMainHeading">
+    @*<h1>@ViewBag.Title</h1>*@
+</div>
+<div class="" id="JobDocumentVM">
+    <div class="control pull-left clear" style="width: 890px;">
+    @using (Html.BeginForm("AddMultipleDocument", "JobDocument", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmAddDoc" }))
+    {
+
+        @Html.HiddenFor(m => m.ShipmentId, new { value = ViewBag.ShipmentId }); 
+       @* @Html.HiddenFor(m => m.specificBLid, new { value = ViewBag.specificBLid }); *@
+         @Html.Hidden("specificBLid", (object)ViewBag.specificBLid);                                                             
+        @Html.TextBoxFor(m => m.Name, new { placeholder = "Name of Document", @class = "eng" });
+        @Html.DropDownListFor(mm => mm.DocumentType, new SelectList(AYLogistics.Models.JobDocumentVM.GetJobDocumentTypes(), "Key", "Value"), new { @class = "eng chosen_select_L", @style = "margin-right: 5px;" })
+        @*@Html.DropDownListFor(mm => mm.HouseBLId, new SelectList(AYLogistics.Models.JobDocumentVM.GetBLList(ViewBag.ShipmentId, ViewBag.specificBLid), "Key", "Value"), "--select BL--", new { @class = "eng", @style = "margin-right: 5px;" })*@
+        @Html.DropDownListFor(mm => mm.HouseBLId, new SelectList(AYLogistics.Models.JobDocumentVM.GetBLList(ViewBag.ShipmentId, ViewBag.specificBLid), "Key", "Value", ViewBag.specificBLid), "--Select BL--", new { @class = "eng", @style = "margin-right: 5px;" })
+        @Html.TextBoxFor(m => m.Description, new { placeholder = "description (optional)", @class = "eng", @style = "margin-right: 5px;" });
+        
+                                                                                                                             
+        @*<div class="fileupload fileupload-new" data-provides="fileupload">
+          <div class="input-append">
+            <span>
+                <input id="file" type="file" name="file" multiple="multiple" style="height:90px"/>
+            </span>
+              <div id="savecontrole">
+                  <button class="btn btn-primary">Upload</button>
+                   <a href="#" class="btn btn" data-dismiss="fileupload" style="">clear</a>
+              </div>
+          </div>
+        </div>                                                                                                      
+        <div id="progressbar" style="height:10px"></div>*@
+        
+  
+    <div class="form-horizontal">  
+        <hr />  
+       @* @Html.ValidationSummary(true, "", new { @class = "text-danger" })  *@
+        <div class="form-group">  
+            <div class="col-md-10">  
+                @Html.TextBoxFor(m => m.files ,new { @type = "file", @multiple = "multiple"})  
+            </div>  
+        </div>  
+        <div class="form-group" id="savecontrole">  
+            <div class="col-md-offset-2 col-md-10">  
+                <input type="submit"  value="Upload" class="btn btn-primary" />  
+            </div>  
+        </div>  
+        <div class="form-group">  
+            <div class="col-md-offset-2 col-md-10 text-success">  
+                @ViewBag.UploadStatus 
+                <div id="progressbar" style="height:10px"></div>
+            </div>  
+        </div>  
+        </div> 
+        
+        
+        
+    }
+    </div>
+
+    <div data-bind="visible: JobDocuments().length > 0" style="width: 1064px;">
+    @*<h3>Accepted Documents</h3>*@
+    <table id="doct" class="display table-hover" style="width: 90%; border-collapse: collapse; font-size:12px; clear:both; float:left;">
+        <thead >
+            <tr>
+                <th class="hide">Id</th>
+                <th style="width:500px">Document Name</th>
+                <th>Type of Document</th>
+                <th>BL</th>
+                <th style="width:500px">Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: JobDocuments">
+            
+            <tr data-bind="ifnot: edit">
+                <td class="hide" data-bind="text: Id"></td>
+                <td><a href="#" target="_blank" data-bind="text: Name, click: $root.download" class="eng"></a></td>
+                <td><select disabled="disabled" class="lang" data-bind="options: $root.DocumentTypes, value:DocumentType, optionsText: 'value', optionsValue: 'key'"></select></td>
+                <td><select disabled="disabled" class="lang" data-bind="options: $root.BLList, value:HouseBLId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--Under Shipment--'"></select></td>
+                <td data-bind="text: Description" class="eng"></td>
+                <td style="width: 65px;">
+                     <div class="btn-group">
+                        <a href="#" data-bind="click: $root.edit" class="btn btn-mini btn-primary">
+                            <i class="icon-edit"></i> @*modify*@
+                        </a>
+                        <a href="#" class="btn btn-mini btn-danger" data-bind="click: $root.remove">
+                           <i class="icon-remove"></i> @*delete*@
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <tr data-bind="if: edit">
+                <td><input type="text" data-bind="value: Name" class="lang"/></td>
+                <td><select data-bind="event:{change:TypeChanged},options: $root.DocumentTypes, value:DocumentType, optionsText: 'value', optionsValue: 'key'" class="lang"></select></td>
+                <td><select data-bind="options: $root.BLList, value:HouseBLId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--Under Shipment--'" class="lang"></select></td>
+                <td><input type="text" data-bind="value: Description" class="lang"/></td>
+                <td style="width:106px;">
+                    <div class="btn-group">
+                    <a href="#" data-bind="click: $root.cancel" class="btn btn-mini btn- lang">
+                        <i class="icon-remove"></i>
+                     @* Cancel*@
+                    </a>
+                    <a href="#" data-bind="click: $root.save" class="btn btn-mini btn-success lang">@*save*@
+                        <i class="icon-save"></i>
+                    </a>
+                  </div>  
+                  </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+
+@*To Display Removed Documents*@
+@*@if (User.IsInRole("Admin"))
+{
+<div data-bind="visible: JobRemovedDocuments().length > 0">
+<h4 style="color:red">Rejected Documents!</h4>
+    <table style="clear:both;" class="grtable">
+        <thead >
+            <tr>
+                <th class="hidden">Id</th>
+                <th style="width:500px">Document Name</th>
+                <th>Type of Document</th>
+                <th style="width:500px">Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: JobRemovedDocuments">
+            
+            <tr data-bind="ifnot: edit">
+                <td class="hidden" data-bind="text: Id"></td>
+                <td><a href="#" target="_blank" data-bind="text: Name, click: $root.download" class="eng"></a></td>
+                <td><select disabled="disabled" class="lang" data-bind="options: $root.DocumentTypes, value:DocumentType, optionsText: 'value', optionsValue: 'key'"></select></td>
+                <td data-bind="text: Description" class="eng"></td>
+                <td style="width: 65px;">
+                     <div class="btn-group">
+                        <a href="#" class="btn btn-mini btn-success" data-bind="click: $root.restore">
+                           <i class="icon-undo icon-2"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <tr data-bind="if: edit">
+                <td><input type="text" data-bind="value: Name" class="lang"/></td>
+                <td><select data-bind="options: $root.DocumentTypes, value:DocumentType, optionsText: 'value', optionsValue: 'key'" class="lang"></select></td>
+                <td><input type="text" data-bind="value: Description" class="lang"/></td>
+                <td style="width:106px;">
+                    <div class="btn-group">
+                    <a href="#" data-bind="click: $root.cancel" class="btn btn-mini btn-info lang">
+                        <i class="icon-remove"></i>
+                    </a>
+                    <a href="#" data-bind="click: $root.save" class="btn btn-mini btn-warning lang">
+                        <i class="icon-edit"></i>
+                    </a>
+                  </div>  
+                  </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+}*@
+</div>
+
+    <script src="@Url.Content("~/Scripts/knockout-2.2.0.debug.js")" type="text/javascript"></script>@* knockout.js*@
+    <script src="@Url.Content("~/Scripts/knockout.mapping-latest.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>@* ajax file upload*@
+    <script type="text/javascript">
+
+        var kovm;
+
+        $(".chosen_select_L").chosen({
+            disable_search_threshold: 5,
+            no_results_text: "Oops, nothing found!"
+        });
+
+        $(function () {
+            kovm = new JobDocumentVM();
+            ko.applyBindings(kovm,$("#JobDocumentVM")[0]);
+
+            $(function() {
+                $( "#progressbar" ).progressbar({
+                    value: 0
+                });
+                //get value and name from document type onchange
+                $("#DocumentType").change(function () {
+                    $("#Name").val($(this).find("option:selected").text());
+                   // var selectedValue = $(this).val();
+                });
+            });
+            $("#frmAddDoc").ajaxForm({
+                beforeSend: function() {
+                    $( "#progressbar" ).progressbar({
+                        value: 0
+                    });
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    $( "#progressbar" ).progressbar({
+                        value: percentComplete
+                    });
+                },
+	            complete: function(xhr) {
+                    //alert(xhr.responseText);
+                    var result = $.parseJSON(xhr.responseText);
+                    $.pnotify({
+                        title: '',
+                        text: result.Message,
+                        type: result.Status
+                    });
+                    $( "#progressbar" ).progressbar({
+                        value: 0
+                    });
+                    if ((result) && (result.Status == "success")) {
+                        console.log("sux");
+                        //var cd = new JobDocument(result.Id, $("#ShipmentId").val(), $("#Name").val(), $("#DocumentType").val(), $("#HouseBLId").val(), $("#Description").val());
+                        // kovm.JobDocuments.push(cd);
+                        location.href = location.href;
+                       //$("#frmAddDoc").clearForm();
+                       $("#Name").val("")
+                       $("#DocumentType").val(0);
+                       $("#Description").val("");
+                    }
+	            }
+            }); 
+        });
+
+        // http://jsfiddle.net/rniemeyer/7yDTJ/
+        function JobDocument(id, shipmentId, name, documentType, houseBLId, description) {
+            var self = this;
+            self.Id = id;
+            self.ShipmentId = shipmentId;
+            self.Name = ko.observable(name);
+            self.DocumentType = ko.observable(documentType);
+            self.Description = ko.observable(description);
+
+            self.HouseBLId = ko.observable(houseBLId);
+
+            self.edit = ko.observable(false);
+
+            self.backup = null;
+
+            self.TypeChanged = function (obj, event) {
+               // console.log(event.currentTarget.options[event.currentTarget.value].innerText);
+                self.Name(event.currentTarget.options[event.currentTarget.value].innerText);
+            }
+        }
+
+        function JobDocumentVM() {
+            var self = this;
+
+            self.DocumentTypes = mapDictionaryToArray(@{Html.RenderAction("GetJobDocumentTypes", "JobDocument");});
+            self.BLList = mapDictionaryToArray(@{Html.RenderAction("GetBLList", "JobDocument");});
+
+            self.JobDocuments = ko.observableArray(@{Html.RenderAction("GetJobDocumentsKO", "JobDocument");});
+           // self.JobRemovedDocuments = ko.observableArray(@{Html.RenderAction("GetRemovedDocumentsKO", "JobDocument");});
+
+            self.edit = function(cd) {
+                cd.backup = ko.mapping.toJS(cd);
+                cd.edit(true);
+            };
+            self.cancel = function(cd) {
+                if (cd.backup != null) {
+                    var b = ko.mapping.fromJS(cd.backup);
+                    cd.Name = b.Name;
+                    cd.DocumentType = b.DocumentType;
+                    cd.Description = b.Description;
+                    cd.HouseBLId = b.HouseBLId;
+                }
+                cd.edit(false);
+            };
+            self.save = function(cd) {
+                var url = "@Url.Action("SaveJobDocument", "JobDocument")";
+                var json = ko.toJSON({model: cd});
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        $.pnotify({
+                            title: '',
+                            text: result.Message,
+                            type: result.Status
+                        });
+                    }
+                });
+                cd.edit(false);
+            };
+            self.remove = function(cd) {
+                var url = "@Url.Action("RemoveDocument", "JobDocument")";
+                var json = ko.toJSON({ model: cd });
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        if (result.Status == 'success') {
+                            self.JobDocuments.remove(cd);
+                        }
+                        $.pnotify({
+                            title: '',
+                            text: result.Message,
+                            type: result.Status,
+                            after_open: function(opts) {
+                                location.href = location.href;
+                            }
+
+                        });
+                    },
+                    error:  function(msg) {
+                        alert("Error: " + msg.status);
+                }
+                });
+            };
+
+           self.restore = function(cd) {
+                var url = "@Url.Action("RestoreDocument", "JobDocument")";
+                var json = ko.toJSON({model: cd});
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                        if (result.Status == 'success') {
+                            self.JobRemovedDocuments.remove(cd);
+                        }
+                        $.pnotify({
+                            title: '',
+                            text: result.Message,
+                            type: result.Status,
+                            after_open: function(opts) {
+                                location.href = location.href;
+                            }
+                        });
+                    }
+                });
+            };
+            self.addDocument = function() {
+                self.JobDocuments.push(new JobDocument(null, $("#SelectedId").val(), "", 1, ""));
+            }
+            self.download = function(cd) {
+                var url = "@Url.Action("DownloadDocument", "JobDocument")";
+                var data = { shipmentId: cd.ShipmentId, docId: cd.Id };
+                $.download(url, data, "post");
+            }
+        }
+        function mapDictionaryToArray(dictionary) {
+            var result = [];
+            for (var key in dictionary) {
+                if (dictionary.hasOwnProperty(key)) {
+                    result.push({ key: key, value: dictionary[key] });
+                }  
+            }
+    
+            return result;
+        }
+        function getJobDocuments(shipmentId) {
+        alert(shipmentId);
+            var url = "@Url.Action("GetJobDocuments", "JobDocument")";
+                var json = JSON.stringify({shipmentId: shipmentId});
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (result) {
+                       if ((result) && (result.length > 0)) {
+                            kovm.JobDocuments.removeAll();
+
+                            for (var i=0;  i<result.length; i++) {
+                                kovm.JobDocuments.push(new JobDocument(result[i].Id, result[i].ShipmentId, result[i].Name, result[i].DocumentType, result[i].HouseBLId, result[i].Description));
+                            }
+                        }else{
+                            kovm.JobDocuments.removeAll();
+                        }
+                        @*$.pnotify({
+                            title: '',
+                            text: result.Message,
+                            type: result.Status
+                        });*@
+                    }
+                });
+        }
+
+        $('#doct tbody').on('click', 'tr', function () { //one click
+            $(this).toggleClass('selected');
+        });
+
+    </script>

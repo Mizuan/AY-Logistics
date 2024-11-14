@@ -1,0 +1,231 @@
+﻿@model AYLogistics.Models.SalesItems
+@using (Html.BeginForm("AddSalesItem", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+        <fieldset>
+            <legend>Add Item</legend>
+                <div class="control pull-left">
+                    @Html.LabelFor(model => model.SalesCAT)
+                    @Html.DropDownListFor(m => m.SalesCAT, new SelectList(AYLogistics.Models.SalesCategory.GetCategoryDropD(), "SalesCatId", "SalesCatName"), "-Select-", new { @class = "chosen_select_L" ,style = "width:540px"})
+                    @Html.ValidationMessageFor(model => model.SalesCAT)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.GST)
+                     @Html.DropDownListFor(m => m.GST, new SelectList(AYLogistics.Models.SalesCurrency.GSTOption(), "Id", "Option"), new { @style = "width:90px", id = "Id", name = "Option" })
+                    @Html.ValidationMessageFor(model => model.GST)
+                </div>
+                <div class="control pull-left clear">
+                    @Html.LabelFor(model => model.ItemName)
+                    @Html.TextBoxFor(model => model.ItemName ,  new {style = "width:540px"})
+                    @Html.ValidationMessageFor(model => model.ItemName)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.UnitId)       
+                    @Html.DropDownListFor(m => m.UnitId, new SelectList(AYLogistics.Models.SalesUnit.GetUnitList(), "Id", "UnitName"), "", new { @style = "width:136px", id = "Id", name = "UnitName" })
+                    @Html.ValidationMessageFor(model => model.UnitId)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.UnitPrice)
+                    @Html.TextBoxFor(model => model.UnitPrice ,  new {style = "width:80px"})
+                    @Html.ValidationMessageFor(model => model.UnitPrice)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.CurrencyId)
+                     @Html.DropDownListFor(m => m.CurrencyId, new SelectList(AYLogistics.Models.SalesCurrency.GetCurrencyList(), "Id", "Currency"), "", new { @style = "width:90px", id = "Id", name = "Currency" })
+                    @Html.ValidationMessageFor(model => model.CurrencyId)
+                </div>
+        </fieldset>
+    </div>
+    <p>
+       <input type="submit" value="Save" class="btn btn-success" />
+    </p>
+}
+
+ <div class="formControlContainer margin-right35">
+    <table id="SalesItemTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th style="width: auto;"class="tableHeadFont hide">Id</th>
+                <th style="width: auto;"class="tableHeadFont hide">STATUS</th>
+                <th style="width: auto;" class="tableHeadFont">INACTIVE</th>
+                <th style="width: auto;" class="tableHeadFont">NAME</th>
+                <th style="width: auto;" class="tableHeadFont">UNIT</th>
+                <th style="width: 80px;" class="tableHeadFont">UNIT PRICE</th>
+                <th style="width: auto;" class="tableHeadFont">CURRENCY</th>
+                @*<th style="width: 20px;" class="tableHeadFont"></th>*@
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        ItemDataTable();
+        init();
+    });
+
+    $('#SalesItemTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    $('#SalesItemTable tbody').on('click', '.itemchkbox', function () { //one click
+        var currentRow = $(this).closest("tr");
+        var col0 = currentRow.find("td:eq(0)").text();
+        var col1 = currentRow.find("td:eq(1)").text();
+        $.ajax({
+            url: '/Sales/UpdateItemStatus/?ITEMid=' + col0 + '&StatusId=' + col1,
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                ItemDataTable();
+            }
+        });
+    });
+
+    var ItemId;
+    $('#SalesItemTable tbody').on('click', '.unitPriceTxt', function () { //one click
+        var currentRow = $(this).closest("tr");
+        ItemId = currentRow.find("td:eq(0)").text();
+        var col1 = currentRow.find("td:eq(1)").text();
+        var col3 = currentRow.find("td:eq(3)").text();
+    });
+
+    function ItemDataTable() {
+        try {
+
+            var oTable = $('#SalesItemTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": "/Sales/GetSalesItems",
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Sales/GetSalesItems',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#SalesItemTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#SalesItemTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "INACTIVE", "sDefaultContent": "-", "sClass": "hide" },
+                    {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            var value = row.INACTIVE == 1 ? "checked=checked id='chk'" : " id='chk'";
+                            return "<input type='checkbox' class='itemchkbox' " + value + " />";
+                        }
+                    },
+                    { "mDataProp": "ItemName", "sDefaultContent": "", "sClass": "eng" },
+                    { "mDataProp": "Unit", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "UnitPrice", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": "UnitPrice", render: function (data, type, row, meta) {
+                            var $inputtxt = $("<input></input>", {
+                                "value": data,
+                                "onfocusout": 'udateUnitPrice(this.value)',
+                                "style": 'width:80px;'
+                            });
+                            return $inputtxt.prop("outerHTML");
+                        }, "sClass": "unitPriceTxt"
+                    },
+                    { "mDataProp": "CurrencyName", "sDefaultContent": "-", "sClass": "eng" },
+                   /* {
+                        "mDataProp": null, "sDefaultContent": "", "fnRender": function (o)
+                        {
+                           // return "<a href='#' onclick='editSalesItem(" + o.aData.Id + ")'><i class='icon-edit icon-2x'></i></a></span>"
+                            return "<a href='../Sales/UpdateSalesItem?Id=" + o.aData.Id + "'><i class='icon-edit icon-2x'></i></a></span>"
+                        }
+                    }*/
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#SalesItemTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+
+    }
+
+    /*function editSalesItem(Id) {
+        var myWindow = window.open("../Sales/UpdateSalesItem?Id=" + Id, "", "width=1250,height=400");
+        ///after CLose popup window
+        myWindow.onbeforeunload = function () {
+            ItemDataTable();
+            init();
+        }
+    }*/
+
+    function udateUnitPrice(price) {
+        var url = "@Url.Action("UpdateUnitPrice", "Sales")";
+        // var results;
+        var flag = 0;
+        var param = { UnitPrice: price, ItemId: ItemId};
+        var data = JSON.stringify(param);
+        $.ajax({
+            type: "POST",
+            url: url,
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (result) {
+                //    results = result;
+                $.pnotify({
+                    title: result.title,
+                    text: result.text,
+                    type: result.type
+                });
+            },
+            dataType: "json"
+        });
+        //  return results;
+    }
+     
+</script>

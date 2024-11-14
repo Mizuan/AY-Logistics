@@ -1,0 +1,107 @@
+﻿@model AYLogistics.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "Edit Employee";
+}
+
+<h4>Edit Employee</h4>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    <div class="PageMenu">
+        <div class="btn-group">
+            <a href="@Url.Action("Index", "Employee")" class="btn btn-primary" ><i class="icon-hand-left"></i>&nbspBack</a>
+        </div>
+    </div>
+
+@using (Html.BeginForm("EditEmployee", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+    <fieldset>
+        <legend>Basic Infomation</legend>
+
+        <div class="control pull-left">
+            @Html.HiddenFor(model => model.Id)
+            @Html.LabelFor(model => model.NIC)
+            @Html.EditorFor(model => model.NIC)
+            @Html.ValidationMessageFor(model => model.NIC)
+        </div>
+          
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.EmpId)
+            @Html.EditorFor(model => model.EmpId)
+          @*  @Html.ValidationMessageFor(model => model.StdID)*@
+        </div>       
+
+       <div class="control pull-left clear">
+            @Html.LabelFor(model => model.FirstName)      
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.MiddleName)       
+            @Html.EditorFor(model => model.MiddleName)
+@*            @Html.ValidationMessageFor(model => model.MiddleName)*@
+        </div>
+
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.LastName)       
+            @Html.EditorFor(model => model.LastName)
+        @*    @Html.ValidationMessageFor(model => model.LastName)*@
+        </div>
+       <div class="control pull-left clear">
+            @Html.LabelFor(model => model.GenderId)       
+            @Html.DropDownListFor(m => m.Gender, new SelectList(AYLogistics.Models.GenderModel.GetGenders(), "GenderId", "GenderName"), "--please Select--", new { @class = "", id = "GenderId", name = "GenderId" })
+            @Html.ValidationMessageFor(model => model.GenderId)
+        </div>
+         <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.DesignationId)
+            @Html.DropDownListFor(m => m.DesignationId, new SelectList(AYLogistics.Models.EmployeeModel.GetEmployeeDesignation(), "DesignationId", "Designation"), "--please Select--", new { @class = ""})
+        </div>
+    </fieldset>
+    </div>
+    <div class="clear">
+    <fieldset>
+        <legend>Permanent Address and Contacts</legend>
+       <div class="control pull-left">
+            @Html.LabelFor(model => model.PermanentAddress)
+            @Html.TextBoxFor(model => model.PermanentAddress)
+           @* @Html.ValidationMessageFor(model => model.Designation)*@
+        </div>
+
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.Contact)
+            @Html.TextBoxFor(model => model.Contact)
+            @Html.ValidationMessageFor(model => model.Contact)
+        </div>
+
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.Email)
+            @Html.TextBoxFor(model => model.Email)
+           @Html.ValidationMessageFor(model => model.Email)
+        </div>
+  </fieldset>
+    </div>
+    
+    <div class="clear">
+    <fieldset>
+        <legend>Employee Status</legend>
+        <div class="control pull-left">
+            @Html.LabelFor(model => model.EmployeeStatusId)
+            @Html.DropDownListFor(m => m.EmployeeStatusName, new SelectList(AYLogistics.Models.EmployeeModel.GetEmployeeStatus(), "EmployeeStatusId", "EmployeeStatusName"), "--please Select--", new { @class = "", id = "EmployeeStatusId", name = "EmployeeStatusId" })
+          @*  @Html.ValidationMessageFor(model => model.EmployeeStatusId)*@
+        </div>
+    </fieldset>
+    </div>
+    
+        <p>
+            <input type="submit" value="Save" class="btn btn-success" />
+        </p>
+}
+
+<script type="text/javascript">
+
+</script>

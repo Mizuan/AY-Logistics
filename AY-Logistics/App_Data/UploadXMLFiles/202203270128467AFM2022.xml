@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Awmds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <General_segment>
+    <General_segment_id>
+      <Customs_office_code>00MP</Customs_office_code>
+      <Voyage_number>testv</Voyage_number>
+      <Date_of_departure>2022-03-27</Date_of_departure>
+      <Date_of_arrival>2022-03-23</Date_of_arrival>
+      <Time_of_arrival>13:15</Time_of_arrival>
+    </General_segment_id>
+    <Totals_segment>
+      <Total_number_of_bols>1</Total_number_of_bols>
+      <Total_number_of_packages>5</Total_number_of_packages>
+      <Total_number_of_containers>2</Total_number_of_containers>
+      <Total_gross_mass>240.00</Total_gross_mass>
+    </Totals_segment>
+    <Transport_information>
+      <Carrier>
+        <Carrier_code />
+        <Carrier_name>AS CHRISTIANA</Carrier_name>
+        <Carrier_address />
+      </Carrier>
+      <Shipping_Agent>
+        <Shipping_Agent_code />
+        <Shipping_Agent_name>ASIA GROUP PVT LTD </Shipping_Agent_name>
+      </Shipping_Agent>
+      <Mode_of_transport_code>1</Mode_of_transport_code>
+      <Identity_of_transporter />
+      <Nationality_of_transporter_code>LK</Nationality_of_transporter_code>
+      <Place_of_transporter />
+      <Master_information />
+    </Transport_information>
+    <Load_unload_place>
+      <Place_of_departure_code>AUMVK</Place_of_departure_code>
+      <Place_of_destination_code>BEMVA</Place_of_destination_code>
+    </Load_unload_place>
+    <Tonnage>
+      <Tonnage_net_weight>0</Tonnage_net_weight>
+      <Tonnage_gross_weight>0</Tonnage_gross_weight>
+    </Tonnage>
+  </General_segment>
+  <Bol_segment>
+    <Bol_id>
+      <Bol_reference>HBm1100</Bol_reference>
+      <Line_number>1</Line_number>
+      <Bol_nature>22</Bol_nature>
+      <Bol_type_code>BL</Bol_type_code>
+      <Master_bol_ref_number>XXX222</Master_bol_ref_number>
+    </Bol_id>
+    <Load_unload_place>
+      <Place_of_loading_code>AUMVH</Place_of_loading_code>
+      <Place_of_unloading_code>CABRM</Place_of_unloading_code>
+      <Port_of_origin_code>MVKDF</Port_of_origin_code>
+      <Original_port_of_loading_code>IQTQD</Original_port_of_loading_code>
+      <Place_of_delivery_code>ARBDR</Place_of_delivery_code>
+      <Place_of_ultimate_destination_code>CABRM</Place_of_ultimate_destination_code>
+    </Load_unload_place>
+    <Traders_segment>
+      <Carrier>
+        <Carrier_code />
+        <Carrier_name>AS CHRISTIANA</Carrier_name>
+        <Carrier_address />
+      </Carrier>
+      <Exporter>
+        <Exporter_name>KOHLER ASIA PACIFIC LTD </Exporter_name>
+        <Exporter_address>29/F SIU ON CENTER 188 LOCKHART ROAD WANCHAI,/ ,, Maldives, ()</Exporter_address>
+      </Exporter>
+      <Notify>
+        <Notify_code />
+        <Notify_name>ETHIHAD AIRWAYS </Notify_name>
+        <Notify_address>Abu Dhabi International Airport/ ,, United Arab Emirates, ()</Notify_address>
+      </Notify>
+      <Consignee>
+        <Consignee_name>ASIA FORWARDING PVT LTD</Consignee_name>
+        <Consignee_address>SAKEENA MANZIL. LEVEL-8B/ MALE,K, Maldives, (C-125/2005)</Consignee_address>
+      </Consignee>
+    </Traders_segment>
+    <ctn_segment>
+      <Ctn_reference>container 1</Ctn_reference>
+      <Number_of_packages>2</Number_of_packages>
+      <Type_of_container>240GP</Type_of_container>
+      <Empty_Full>1/2</Empty_Full>
+      <Marks1>27377</Marks1>
+      <Marks2 />
+      <Marks3 />
+      <Sealing_Party />
+    </ctn_segment>
+    <ctn_segment>
+      <Ctn_reference>container 2</Ctn_reference>
+      <Number_of_packages>3</Number_of_packages>
+      <Type_of_container>10GP</Type_of_container>
+      <Empty_Full>1/1</Empty_Full>
+      <Marks1>kji</Marks1>
+      <Marks2 />
+      <Marks3 />
+      <Sealing_Party />
+    </ctn_segment>
+    <Goods_segment>
+      <Number_of_packages>5</Number_of_packages>
+      <Package_type_code>NG</Package_type_code>
+      <Package_type>Unpacked or Unpackaged, multiple Unit</Package_type>
+      <Gross_mass>240.00</Gross_mass>
+      <Shipping_marks />
+      <Goods_description>test good</Goods_description>
+      <Volume_in_cubic_meters>0.00</Volume_in_cubic_meters>
+      <Num_of_ctn_for_this_bol>2</Num_of_ctn_for_this_bol>
+      <Information />
+    </Goods_segment>
+    <Value_segment>
+      <Freight_segment>
+        <PC_indicator>COL</PC_indicator>
+        <Freight_value>0</Freight_value>
+        <Freight_currency />
+      </Freight_segment>
+    </Value_segment>
+  </Bol_segment>
+</Awmds>

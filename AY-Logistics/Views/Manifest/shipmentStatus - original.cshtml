@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "~/Views/Shared/_blank.cshtml";
+    ViewBag.Title = "shipmentStatus";
+}
+
+
+    <script src="@Url.Content("~/Content/timeline/js/index.js")" type="text/javascript"></script>
+    <link href="@Url.Content("~/Content/timeline/css/style.css")" rel="stylesheet" type="text/css" />
+
+    <h2>Shipment Status</h2>
+   <ul class="timeline" id="timeline">
+    @foreach (Dictionary<object, object> dictionary in AYLogistics.Models.ShipmentStatusVM.GetShipmentStatusList(ViewBag.ShipmentId))
+    {
+        if (dictionary["DateCreated"].ToString() == "-")
+        {
+         <li class="li ">
+           <div class="timestamp">
+               <span class="author">@dictionary["FirstName"].ToString()</span>
+               <span class="date">@dictionary["DateCreated"].ToString()</span>
+           </div>
+           <div class="status">
+                <h4>@dictionary["StatusName"].ToString()</h4>
+           </div>
+         </li>
+        }else{
+        <li class="li complete">
+           <div class="timestamp">
+               <span class="author">@dictionary["FirstName"].ToString()</span>
+               <span class="date">@dictionary["DateCreated"].ToString()</span>
+           </div>
+           <div class="status">
+                <h4>@dictionary["StatusName"].ToString()</h4>
+           </div>
+         </li>
+        }
+    }
+  </ul>
+
+<div class="">
+    <h2>BL / Job Status</h2>
+   <ul class="timeline" id="timeline">
+    @foreach (Dictionary<object, object> dictionary in AYLogistics.Models.ShipmentStatusVM.GetHouseBLStatusList(ViewBag.HouseBLId))
+    {
+        if (dictionary["DateCreated"].ToString() == "-")
+        {
+         <li class="li ">
+           <div class="timestamp">
+               <span class="author">@dictionary["FirstName"].ToString()</span>
+               <span class="date">@dictionary["DateCreated"].ToString()</span>
+           </div>
+           <div class="status">
+                <h4>@dictionary["StatusName"].ToString()</h4>
+           </div>
+         </li>
+        }else{
+        <li class="li complete">
+           <div class="timestamp">
+               <span class="author">@dictionary["FirstName"].ToString()</span>
+               <span class="date">@dictionary["DateCreated"].ToString()</span>
+           </div>
+           <div class="status">
+                <h4>@dictionary["StatusName"].ToString()</h4>
+           </div>
+         </li>
+        }
+    }
+  </ul>
+  </div>

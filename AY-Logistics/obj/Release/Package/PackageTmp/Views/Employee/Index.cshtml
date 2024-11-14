@@ -1,0 +1,109 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "Manage Employee";
+}
+<div class="topMainHeading">
+    <h4 style="margin-left: 339px;">Manage Employee</h4>
+</div>
+<div class="formControlContainer margin-right35">
+    <div class="PageMenu">
+        <a href="@Url.Action("AddNewEmployee", "Employee")" class="btn btn-primary" > <i class="icon-user"></i> Add Employee</a>
+        @*<a href="@Url.Action("Designation", "Admin")" class="btn btn-primary" ><i class="icon-plus-sign-alt"></i> Add Designation</a>*@
+    </div>
+    <table id="EmployeeTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th style="width: 40px;"class="tableHeadFont">Id</th>
+                <th style="width: 40px;"class="tableHeadFont">NIC</th>
+                <th style="width: 80px;" class="tableHeadFont">Employee Id</th>
+                <th style="width: 175px;" class="tableHeadFont">Full Name</th>
+                <th style="width: 230px;" class="tableHeadFont">PermanentAddress</th>
+                <th style="width: 10px; class="tableHeadFont">MobileNo</th>
+                <th style="width: 10px; class="tableHeadFont">Gender</th>
+                <th style="width: 10px; class="tableHeadFont">Status</th>
+                <th style="width: 10px; class="tableHeadFont">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        loadDataTable();
+        init();
+    });
+
+    $('#EmployeeTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    $(function () {
+        $('#EmployeeTable').show();
+        //        $('#slideDown').trigger('click');
+    });
+
+    function loadDataTable() {
+        try {
+
+            var oTable = $('#EmployeeTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": "/Employee/GetAllEmployee",
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": false,
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Employee/GetAllEmployee',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#Users').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#EmployeeTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "NIC", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "EmpId", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "FullName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "PermanentAddress", "sClass": "eng", "sDefaultContent": "-" },
+                    { "mDataProp": "Contact", "sClass": "eng", "sDefaultContent": "-" },
+                    { "mDataProp": "Gender", "sClass": "eng", "sDefaultContent": "-" },
+                    { "mDataProp": "EmployeeStatus", "sClass": "eng", "sDefaultContent": "-" },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<a href='../Employee/EmployeeDetails?id=" + row.Id + " '><i class='icon-info-sign icon-2x'></i></a></span><span class=''><a href='../Employee/EditEmployee?id=" + row.Id + "'><i class='icon-edit icon-2x' style='margin-left: 14px;'></i></a></span>"
+                    }
+                    }
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#EmployeeTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+
+    }
+     
+</script>

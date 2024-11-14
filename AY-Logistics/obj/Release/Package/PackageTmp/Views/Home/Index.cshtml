@@ -1,0 +1,464 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "NaaluLogistics";
+}
+
+@*<h3>@ViewBag.Message</h3>*@
+@*<div class="span8">
+    <div><h3>AF Logistics</h3></div>
+    <div><h4>welcome to Asia Forwarding Logistics Software</h4></div>
+    <div><img src="https://static.wixstatic.com/media/c0d565_bcbf26f106d349b691b4b66eb301d889~mv2.png/v1/fill/w_281,h_108,al_c,q_85,usm_0.66_1.00_0.01/Asia%20Forwarding.png" style="width: 600px; ></div>
+</div>*@
+<link href="../../Content/bootstrap/css/bootstrap-grid.css" rel="stylesheet" />
+
+<div class="container" style="max-width:100%">
+    <div class="row" style="max-width:100%; height:50px"">
+    </div>
+    <div class="row" style="max-width: 100%;">
+        <div class="col-2 involver" style="max-width: 100%;">
+            @*<img src="https://static.wixstatic.com/media/c0d565_bcbf26f106d349b691b4b66eb301d889~mv2.png/v1/fill/w_281,h_108,al_c,q_85,usm_0.66_1.00_0.01/Asia%20Forwarding.png" style="width:200px">*@
+            <img src="../../Content/images/AFlogoV2.png" style="width:200px">
+            <p style="margin:52px 0 10px;font-size: 16px;font-weight: bold;text-align: center;">NaaluLogistics</p>
+        </div>
+        <div class="col-2 involver" style="max-width: 100%;" onclick="log()">
+            @*<div class="control pull-left space-right">*@
+                <span id="" class=""style="color:#0673b9"><i class="icon-comments icon-4x" title="Calendar"></i></span>
+            @*</div>*@
+        </div>
+        <div class="col-2 involver" style="max-width: 100%;">
+            @*<div class="control pull-left">
+                <span id="" class="" style="color:#0673b9"><i class="icon-calendar icon-4x" title="Comments"></i></span>
+            </div>*@
+            <div id="datepicker"></div>
+            @*<p>Date: <input type="text" id="datepicker2" disabled></p>*@
+
+        </div>
+
+      @*  <div class="col-1 involver" style="align-self: flex-start;">
+             <div class="control pull-left space-right">
+                <span id="" class=""style="color:#0673b9"><i class="icon-warning-sign icon-4x" title="Notifications"></i></span>
+            </div>
+        </div>
+          <div class="col-1 involver" style="align-self: flex-start;">
+             <div class="control pull-left space-right">
+                <span id="" class="" style="color:#0673b9"><i class="icon-check icon-4x" title="check"></i></span>
+            </div>
+        </div>*@
+    </div>
+    <div class="row" style="max-width:100%; height:50px"">
+    </div>
+
+  <div class="row" style="max-width:100%;">
+      <div class="col-6">
+          <div class="involver" style="max-width:100%;">
+               <fieldset >
+                <legend>Recent Manifests</legend>
+            @*<h1>Manifests</h1>
+             <p>Recent</p>
+              <p>*@
+
+              <div class="hide">
+                  <fieldset>
+                      <div id="searchBlock">
+                          <div class="control pull-left space-right">
+                              FROM:
+                              <input type="text" id="StartDate" class="eng input-small" />
+                              @*data-date-format="dd/mm/yyyy"*@
+                          </div>
+                          <div class="control pull-left space-right">
+                              TO:
+                              <input type="text" id="EndDate" class="eng input-small" />
+                              OR
+                          </div>
+                          <div class="control pull-left space-right">
+                              <input type="text" id="query" class="eng" placeholder="Manifest No / MBL / MAB / Voyage No / Vessel Name" style="width: 332px;" />
+                          </div>
+                          <div class="control pull-left space-right">
+                              <button id="searchMF" class="btn btn-primary"><i class="icon-search"></i></button>
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+
+              <table id="ManifestFilter" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                  @*<caption style="font-size: 14px; color: #f09529;">Recent Manifests</caption>*@
+                  <thead>
+                      <tr>
+                          <th class="hide">ManifestId</th>
+                          <th class="hide">ShipmentId</th>
+                          <th class="hide">ModeOfShipment</th>
+                          <th style="width: auto" class="tableHeadFont">Manifest#</th>
+                          <th style="width: auto" class="tableHeadFont">Entry Date</th>
+                         @* <th style="width: 110px" class="tableHeadFont">Voyage No</th>*@
+                          @*<th style="width: " class="tableHeadFont">Vessel</th>*@
+                          @*<th style="width: " class="tableHeadFont">Customer</th>*@
+                          <th style="width: " class="tableHeadFont">BL</th>
+                          <th style="width: auto" class="tableHeadFont">Mode</th>
+                          <th style="width: auto" class="tableHeadFont">Entry By</th>
+                          <th style="width: auto" class="tableHeadFont">Status</th>
+                          <th style="width:10px" class="tableHeadFont"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+          </div>
+         @* </p>*@
+          </fieldset>
+      </div>
+
+      <div class="col-6">
+           <div class="involver" style="max-width:100%;">
+                              <fieldset>
+                <legend>Recent Jobs</legend>
+            @*<h1>Jobs</h1>
+             <p>Recent</p>
+              <p>*@
+              <table id="JobTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                  @*<caption style="font-size: 14px; color: #f09529;">Recent Jobs</caption>*@
+                  <thead>
+                      <tr>
+                          <th class="hide">JobId</th>
+                          <th class="hide">ShipmentId</th>
+                          <th class="hide">HBLId</th>
+                          <th style="width: auto" class="tableHeadFont">Job#</th>
+                          <th style="width: " class="tableHeadFont">Reg Date</th>
+                          @*<th style="width: " class="tableHeadFont">Consignee / Customer</th>*@
+                          @*<th style="width: "class="tableHeadFont">MasterBL No</th>*@
+                          <th style="width: 60px" class="tableHeadFont">HBL/AWBL</th>
+                          @*<th style="width: " class="tableHeadFont">Vessel / Flight</th>*@
+                          @*<th style="width: 12px" class="tableHeadFont">Arrival Date</th>*@
+                          <th style="width: auto" class="tableHeadFont">Discharge</th>
+                          <th style="width: auto" class="tableHeadFont">Demurrage</th>
+                          <th style="width: auto" class="tableHeadFont">Mode</th>
+                          @*<th style="width: " class="tableHeadFont">Commodity</th>*@
+                          @*<th style="width: 80px; "class="tableHeadFont">Project</th>*@
+                          <th style="width: 80px; "class="tableHeadFont">Entry By</th>
+                          <th style="width: auto" class="tableHeadFont">Status</th>
+                          <th style="width: " class="tableHeadFont"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+          </div>
+         @* </p>*@
+          </fieldset>
+      </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#ManifestFilter').css('width', '100%');
+
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        $('#StartDate').datepicker('setDate', firstDay);
+        $('#EndDate').datepicker('setDate', lastDay);
+        FilterManifest();
+
+        $('#JobTable').css('width', '100%');
+        FilterJob();
+    });
+
+
+    $('#ManifestFilter tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+    $('#JobTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    function FilterManifest() {
+        try {
+            var oTable = $('#ManifestFilter').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/FilterManifest/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": false,
+                "autoWidth": false,
+                "iDisplayLength": 6,
+                "order": [[0, "desc"]],
+                /* dom: 'Bfrtip',
+                   buttons: [
+                      //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                         {
+                                             extend: 'excel',
+                                             footer: true,
+                                             exportOptions: {
+                                                 columns: ':visible'
+                                             }
+                                         },
+                     'pageLength',
+                     'colvis',
+                  ],*/
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/FilterManifest/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#ManifestFilter').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#ManifestFilter').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeOfShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                   { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                     //{ "mDataProp": "RecentStatus", "sDefaultContent": "-", "sClass": "TablecolunmColor" },
+                     {
+                         "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                             return '<mark>'+row.RecentStatus+'</mark>';
+                         }
+                     },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + row.Id + "'>&nbsp;Edit Manifest</a>"
+                                //+ "<a class='dropdown-item' href='../Manifest/EditManifest?ManifestId=" + o.aData.Id + "'>&nbsp;Edit Manifest</a>" previous DataTable  "o.aData.Id"
+                              //  + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                 + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                            //XML + "<br><a class='dropdown-item' href='../XML/SerializeManifestToXML?ManifestId=" + row.Id + "'>&nbsp;Generate XML</a>"
+                                 + "<br><a class='dropdown-item' href='../Manifest/PrintDispatchOrderSheet?ManifestId=" + row.Id + "'>&nbsp;Print Dispatch Order Sheet</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#ManifestFilter').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+
+    function FilterJob() {
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Job/FilterJob/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": false,
+                "autoWidth": false,
+                "iDisplayLength": 6,
+                "order": [[0, "desc"]],
+
+               /* dom: 'Bfrtip',
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],*/
+                //*Buttons end
+
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Job/FilterJob/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegistrationDate", "sDefaultContent": "-", "sClass": "eng" },
+                  //  { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                  //  { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischargeGreen", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrageRed", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Commodity", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Project", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                  // { "mDataProp": "RecentStatus", "sDefaultContent": "-", "sClass": "TablecolunmColor" },
+                                       {
+                                           "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                                               return '<mark>' + row.RecentStatus + '</mark>';
+                                           }
+                                       },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Job/EditJob?JobId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Edit Job</a>"
+                               // + "<br><a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "&HBLId=" + row.HBLId + "'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                 + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                  //  $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+
+    function init() {
+    }
+
+
+    function attachOpen(shipmentId, BLid) {
+        // var myWindow = window.open("../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1100,height=600");
+        var page = "../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+        var $dialog = $('<div style="overflow:visible"></div>')
+                       .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                       .dialog({
+                           autoOpen: false,
+                           modal: true,
+                           height: 720,
+                           width: 1240,
+                           resizable: true,
+                           title: "DOCUMENTS",
+                           buttons: {
+                               Close: function () {
+                                   $(this).dialog("close");
+
+                               }
+                           }
+                       });
+        $dialog.dialog('open');
+    }
+
+    function shipmentStatusOpen(shipmentId, BLid) {
+        // var myWindow = "";
+        //myWindow = window.open("../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1335,height=400");
+        var page = "../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+        var $dialog = $('<div style="overflow:visible"></div>')
+                       .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                       .dialog({
+                           autoOpen: false,
+                           modal: true,
+                           height: 720,
+                           width: 1240,
+                           resizable: true,
+                           title: "STATUS",
+                           buttons: {
+                               Close: function () {
+                                   $(this).dialog("close");
+
+                               }
+                           }
+                       });
+        $dialog.dialog('open');
+    }
+
+
+    $(function () {
+        $('#datepicker').datepicker({
+            onSelect: function (dateText) {
+                $('#datepicker2').datepicker("setDate", $(this).datepicker("getDate"));
+            }
+        });
+    });
+
+    $(function () {
+        $("#datepicker2").datepicker();
+    });
+
+    function log() {
+        var page = "https://www.theasiaforwarding.com";
+        var $dialog = $('<div style="overflow:visible"></div>')
+                       .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                       .dialog({
+                           autoOpen: false,
+                           modal: true,
+                           height: 720,
+                           width: 1240,
+                           resizable: true,
+                           position: 'center',
+                           title: "LOG",
+                           buttons: {
+                               Close: function () {
+                                   $(this).dialog("close");
+
+                               }
+                           }
+                       });
+        $dialog.dialog('open');
+    }
+
+</script>   

@@ -1,0 +1,98 @@
+﻿@model AYLogistics.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "Employee Details";
+}
+
+<h4>Employee Details</h4>
+
+    <div class="PageMenu">
+        <div class="btn-group">
+            <a href="@Url.Action("Index", "Employee")" class="btn btn-primary" ><i class="icon-hand-left"></i>&nbspBack</a>
+        </div>
+    </div>
+
+<div class="span12">
+<div class="clear">
+<fieldset>
+    <legend>Employee Detail</legend>
+
+     <div class="control pull-left ">
+        @Html.LabelFor(model => model.NIC)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.NIC)
+        </div>
+    </div>
+
+     <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.EmpId)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.EmpId)
+        </div>
+    </div>
+
+    <div class="control pull-left clear">
+        @Html.LabelFor(model => model.FirstName)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.FirstName)
+        </div>
+    </div>
+
+     <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.MiddleName)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.MiddleName)
+        </div>
+    </div>
+
+     <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.LastName)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.LastName)
+        </div>
+    </div>
+
+    <div class="control pull-left clear">
+        @Html.LabelFor(model => model.GenderId)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.Gender)
+        </div>
+    </div>
+
+    <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.Designation)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.Designation)
+        </div>
+    </div>
+
+    <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.PermanentAddress)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.PermanentAddress)
+        </div>
+    </div>
+
+    <div class="control pull-left clear">
+        @Html.LabelFor(model => model.Contact)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.Contact)
+        </div>
+    </div>
+
+    <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.Email)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.Email)
+        </div>
+    </div>
+
+    <div class="control pull-left space-right">
+        @Html.LabelFor(model => model.EmployeeStatusId)
+        <div class="input uneditable-input">
+        @Html.DisplayFor(model => model.EmployeeStatusName)
+        </div>
+    </div>
+
+</fieldset>
+ </div>

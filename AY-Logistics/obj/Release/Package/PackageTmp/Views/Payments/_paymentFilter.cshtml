@@ -1,0 +1,275 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models;
+
+<div class="formControlContainer margin-right35">
+    <table id="ManifestTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide">ManifestId</th>
+                <th class="hide">ShipmentId</th>
+                <th class="hide">ModeOfShipment</th>
+                <th class="hide">RequestedPayment</th>
+                <th style="width: 90px"class="tableHeadFont">Manifest No</th>
+                <th style="width: 90px"class="tableHeadFont">Voyage No</th>
+                <th style="width:" class="tableHeadFont">Vessel</th>
+                <th style="width:" class="tableHeadFont">Customer</th>
+                <th style="width:" class="tableHeadFont">Shipping Agent</th>
+                <th style="width:90px" class="tableHeadFont">DebitNote No / Amnt</th>
+                <th style="width: 15px" class="tableHeadFont">Mode Of Shipment</th>
+                 <th style="width: 15px" class="tableHeadFont">Status</th>
+                @*<th style="width: 15px" class="tableHeadFont">Created Date</th>*@
+                <th style="width:10px" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+       <table id="BOLTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide">ManifestId</th>
+                <th class="hide">ShipmentId</th>
+                <th class="hide">HBLId</th>
+                <th class="hide">ModeOfShipment</th>
+                <th style="width: "class="tableHeadFont">HBL No</th>
+                <th style="width: "class="tableHeadFont">MasterBL No</th>
+                <th style="width: "class="tableHeadFont">Manifest No</th>
+                <th style="width: "class="tableHeadFont">Consignee / Customer</th>
+                <th style="width: "class="tableHeadFont">Voyage No</th>
+                <th style="width: " class="tableHeadFont">Vessel</th>
+                @*<th style="width: 10px;" class="tableHeadFont">Container Type</th>*@
+                @*<th style="width: ;" class="tableHeadFont">Container Info</th>*@
+                @*<th style="width: 10px;" class="tableHeadFont">No.Of Conatiner</th>*@
+                <th style="width: 10px;" class="tableHeadFont">Mode Of Shipment</th>
+                <th style="width: 12px" class="tableHeadFont">Created Date</th>
+                @*<th style="width: " class="tableHeadFont">Arrival Date</th>*@
+                <th style="width:" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+ <div class="formControlContainer ApproveDOPayment" id="ApproveDOPayment" title="DO Payment Approving">
+   <div class="form_control_line">
+         <div class="singleControlContainer width10">
+            <label class="form-label">D/O Collect Voucher No.</label>
+            <input type="text" id="DOcollectVoucherNo" class="eng" />
+             <p style="color:red">Please attach Scanned Payment Voucher before approve</p>
+         </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".ApproveDOPayment").hide();
+    });
+
+    $('#ManifestTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    $('#BOLTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+function loadManifestTable(value) {
+        try {
+            var oTable = $('#ManifestTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetShipmentByStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetShipmentByStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#ManifestTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#ManifestTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ModeofShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "RequestedPayment", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShippinfAgent", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "PayInfo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                   {
+                       "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                           return '<mark>' + row.RecentStatus + '</mark>';
+                       }
+                   },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                                return "<div class='dropdown show'>"
+                                 + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                                  + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                   // + "<a class='dropdown-item' href='../JobDocument/Index?ShipmentId=" + row.ShipmentId + "'>&nbsp;Attachments</a>"
+                                    + "<a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                    + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                                    + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onClick='showDOPaymentApproveDialog(" + row.ShipmentId + "," + row.RequestedPayment + ")'>&nbsp;Approve DO Payment</a>"
+                                    + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + ")'>&nbsp;Status</a>"
+                                  + "</div></div>"
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#ManifestTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+}
+
+function init() {
+}
+
+function showDOPaymentApproveDialog(shipmentId, RequestedPayment) {
+    $(".ApproveDOPayment").dialog({
+        width: 265,
+        modal: true,
+        height: 257,
+        buttons: [{
+            text: "Approve",
+            'class': 'btn btn-primary',
+            click: function () {
+                btnSaveDOPaymentInvoice(shipmentId, RequestedPayment);
+                $(this).dialog("close");
+            }},
+                {
+                    text: "Close",
+                    'class': 'btn btn-default',
+                    click: function () {
+                        $('#DOcollectVoucherNo').val("");
+                        $(this).dialog("close");
+                    }
+        }]
+    });
+}
+
+function btnSaveDOPaymentInvoice(shipmentId, RequestedPayment) {
+    var DOcollectVoucherNo = $('#DOcollectVoucherNo').val();
+    var PaymentInfo = { DOcollectVoucherNo: DOcollectVoucherNo, shipmentId: shipmentId, RequestedPaymentType: RequestedPayment };
+    var json = JSON.stringify(PaymentInfo);
+    $.ajax({
+        url: '/Payments/ApproveDOPayement',
+        type: 'POST',
+        dataType: 'json',
+        data: json,
+        contentType: 'application/json; charset=utf-8',
+        success: function () {
+            $.pnotify({
+                title: 'D/O Invoice',
+                text: 'Payment has been Approved',
+                type: 'success'
+            });
+            $('#DOcollectVoucherNo').val("");
+            loadManifestTable(3);
+            dash.init();
+        },
+        error: function () {
+            $.pnotify({
+                title: 'D/O Invoice',
+                text: 'Approve Failed!',
+                type: 'error'
+            });
+        }
+    });
+};
+
+
+function attachOpen(shipmentId, BLid) {
+   // var myWindow = window.open("../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1100,height=600");
+    var page = "../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+    var $dialog = $('<div style="overflow:visible"></div>')
+                   .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                   .dialog({
+                       autoOpen: false,
+                       modal: true,
+                       height: 720,
+                       width: 1240,
+                       resizable: true,
+                       title: "DOCUMENTS",
+                       buttons: {
+                           Close: function () {
+                               $(this).dialog("close");
+
+                           }
+                       }
+                   });
+    $dialog.dialog('open');
+}
+
+function shipmentStatusOpen(shipmentId, BLid) {
+  //  var myWindow = "";
+   // myWindow = window.open("../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1335,height=400");
+    var page = "../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+    var $dialog = $('<div style="overflow:visible"></div>')
+                   .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                   .dialog({
+                       autoOpen: false,
+                       modal: true,
+                       height: 720,
+                       width: 1240,
+                       resizable: true,
+                       title: "STATUS",
+                       buttons: {
+                           Close: function () {
+                               $(this).dialog("close");
+
+                           }
+                       }
+                   });
+    $dialog.dialog('open');
+}
+
+ </script>

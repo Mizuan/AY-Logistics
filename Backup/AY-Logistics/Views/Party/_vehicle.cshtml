@@ -1,0 +1,231 @@
+﻿@model AYLogistics.Models.Vehicle
+@{
+    ViewBag.Title = "Manage Vehicle";  
+}
+@*<div class="form_control_line">
+    <button type="button" class="btn btn-link" id="btnAddVehicle">
+        <i class="icon-plus-sign-alt"></i>
+        <span></span>
+    </button>
+</div>*@
+    <button type="button" class="btn btn-link" id="btnAddVehicle" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;margin-left: 0px; margin-right: -3px;">
+        <i class="icon-plus-sign-alt"></i>
+        <span></span>
+    </button>
+
+<div class="formControlContainer dialogVehicle" id="dialogVehicle">
+   <div class="form_control_line">
+      <div class="control pull-left">
+          <div class="form_newLabel"><label>Vehicle Name</label></div>
+          <input type="text" id="VehicleName" class="eng" style="width: 230px;" />
+       </div>
+       <div class="control pull-left space-right">
+          <div class="form_newLabel"><label>Vehicle RegNo</label></div>
+          <input type="text" id="VRegNo" class="eng" style="width: 150px;" />
+       </div>
+       @*<div class="control pull-left space-right">
+         <div class="form_newLabel" ><label>Vehicle Owner</label></div>
+          @Html.DropDownListFor(m => m.VCustomerId, new SelectList(AYLogistics.Models.Party.GetPartyIQ(), "PartyId", "PartyName"), "-select-", new { @class = "chosen_select_L", @style = "width: 200px;" })
+          @Html.ValidationMessageFor(model => model.VCustomerId)
+       </div>
+       <div class="control pull-left space-right">
+         <div class="form_newLabel marginRight"><label>Country</label></div>
+         @Html.DropDownListFor(m => m.VCountryId, new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"), "-Select-", new { @class = "chosen_select_L", @style = "width: 130px;" })
+         @Html.ValidationMessageFor(model => model.VCountryId)
+       </div>*@
+        <div class="control pull-left clear">
+          <div class="form_newLabel"><label>Contact Personal</label></div>
+          <input type="text" id="VContactPersonal" class="eng" style="width: 230px;" />
+       </div>
+       <div class="control pull-left space-right">
+          <div class="form_newLabel"><label>Contact No.</label></div>
+          <input type="text" id="VContactNo" class="eng" style="width: 150px;" />
+       </div>
+   </div>
+</div>
+
+<script type="text/javascript">
+
+    var $VehicleDialog = $(".dialogVehicle");
+
+    $(document).ready(function () {
+        $(".dialogVehicle").hide();
+    });
+
+    function ClearVehicleDialog() {
+        $('#VehicleName').val("");
+        $('#VContactPersonal').val("");
+        $('#VContactNo').val("");
+        $('#VRegNo').val("");
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $('#VCustomerId').val(0);
+        $('#VCountryId').val(0);
+        $(".chosen_select_L").chosen(); //~
+    }
+
+    $("#btnAddVehicle").click(function (e) {
+        ClearVehicleDialog();
+        $('.chosen-container').css({ 'width': '160px' }); //to fixed chosen css bug in dialogbox
+        $VehicleDialog.dialog({
+            width: 447,
+            modal: true,
+            height: 260,
+            title: "Add New Vehicle",
+            buttons: [{
+                text: "Save",
+                'class': 'btn btn-primary',
+                click: function () {
+                    if ($('#VehicleName').val() == null) {
+                        $.pnotify({
+                            title: 'Add Vehicle',
+                            text: ' Please fill the required information!',
+                            type: 'warning'
+                        });
+                    } else {
+                        //  e.preventDefault();
+                        SaveVehicle();
+                        $VehicleDialog.dialog('close');
+                        // window.location.href = "/Manifest/Create";
+                    }
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $(".chosen_select_L").chosen(); //~
+    });
+
+
+    function SaveVehicle(e) {
+        var VehicleName = $('#VehicleName').val();
+        var VCustomerId = $('#VCustomerId').val();
+        var VContactPersonal = $('#VContactPersonal').val();
+        var VContactNo = $('#VContactNo').val();
+        var VCountryId = $('#VCountryId').val();
+        var VRegNo = $('#VRegNo').val();
+
+        var VehicleInfo = { VehicleName: VehicleName, VCustomerId: VCustomerId, VContactPersonal: VContactPersonal, VContactNo: VContactNo, VCountryId: VCountryId,
+            VRegNo: VRegNo
+        };
+
+
+        var json = JSON.stringify(VehicleInfo);
+
+        $.ajax({
+            url: '/Job/SaveVehicle',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Add Vehicle',
+                    text: ' New Vehicle has been Saved!',
+                    type: 'success'
+                });
+                ClearVehicleDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Add Vehicle',
+                    text: 'Vehicle has not been save, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    function EditVehicle(Id) {
+        $VehicleDialog.dialog({
+            width: 447,
+            modal: true,
+            height: 260,
+            title: "Edit Vehicle",
+            buttons: [{
+                text: "Update",
+                'class': 'btn btn-primary',
+                click: function () {
+                    /*TO DO: give a condition with Role to disable update button*/
+                    UpdateVehicle(Id);
+                    $VehicleDialog.dialog('close');
+
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        GetSelectedVehicle(Id);
+    }
+
+    function GetSelectedVehicle(Id) {
+        // ClearDialog();
+        var URL = '/Job/GetSelectedVehicle';
+
+        $.getJSON(URL + '/?VehicleId=' + Id, function (data) {
+            try {
+                $('#VehicleName').val(data.Name);
+                $('#VContactPersonal').val(data.ContactPersonal);
+                $('#VContactNo').val(data.ContactNo);
+                $('#VRegNo').val(data.RegNo);
+                $(".chosen_select_L").chosen('destroy'); // reset chosen
+                $('#VCustomerId').val(data.CustomerId);
+                $('#VCountryId').val(data.CountryId);
+                $(".chosen_select_L").chosen(); //~
+            }
+            catch (e) {
+                ClearVehicleDialog();
+            }
+        });
+    }
+
+    function UpdateVehicle(Id) {
+        var Id = Id;
+        var VehicleName = $('#VehicleName').val();
+        var VCustomerId = $('#VCustomerId').val();
+        var VContactPersonal = $('#VContactPersonal').val();
+        var VContactNo = $('#VContactNo').val();
+        var VCountryId = $('#VCountryId').val();
+        var VRegNo = $('#VRegNo').val();
+
+        var VehicleInfo = { Id: Id, VehicleName: VehicleName, VCustomerId: VCustomerId, VContactPersonal: VContactPersonal, VContactNo: VContactNo, VCountryId: VCountryId,
+            VRegNo: VRegNo
+        };
+
+        var json = JSON.stringify(VehicleInfo);
+
+        $.ajax({
+            url: '/Job/UpdateVehicle',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Update Vehicle',
+                    text: ' Vehicle has been Updated!',
+                    type: 'success'
+                });
+                ClearVehicleDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Add Vehicle',
+                    text: 'Vehicle has not been updated, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+
+
+</script>

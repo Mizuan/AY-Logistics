@@ -1,0 +1,1613 @@
+﻿@model AYLogistics.Models.ManifestModel
+@{
+    Layout = "~/Views/Shared/_NoMenuNew.cshtml";
+    ViewBag.Title = "Add New Job";
+}
+
+
+
+<div class="max-w-screen-7xl mx-auto px-4 py-4 space-y-8 w-full">
+    <div class="flex flex-col lg:flex-row md:justify-between space-y-2 lg:space-y-0 w-full text-left">
+        <h2 class="text-2xl md:text-3xl font-semibold text-gray-900">Create Job</h2>
+    </div>
+
+
+    <!-- Legal and Vessel Buttons, Debit Note -->
+    <div class="flex flex-col md:flex-row space-x-0 md:space-x-4 mb-6">
+        <div>
+            @{Html.RenderPartial("../Party/_index");}
+        </div>
+        <div>
+            @{Html.RenderPartial("../Party/_vessel");}
+        </div>
+        <div>
+            @{Html.RenderPartial("../Party/_project");}
+        </div>
+    </div>
+
+
+     <div class="bg-white shadow rounded-lg p-6">
+         <h2 class="text-lg font-bold mb-4 text-gray-900">Bill of Lading Info:</h2>
+
+         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+             <div class="flex flex-col">
+              <label for="voyageNo" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-anchor"></i>
+                <span>Voyage No.</span>
+              </label>
+              <input type="text" class="mt-1 p-2 border rounded" placeholder="Voyage No" data-bind='value: VoyageNo, uniqueName: true'>
+            </div>
+
+             <div class="flex flex-col space-y-2">
+                <label for="vessel" class="flex items-center space-x-2 mb-1 text-sm">
+                    <i class="fas fa-ship"></i>
+                    <span>Vessel / Aircraft</span>
+                </label>
+                <div class="flex items-center">
+                    <input type="text" id="vessel" class="p-2 border rounded flex-grow" placeholder="Search..." data-bind="VesselSelect: VesselId , uniqueName: false">
+                    <button type="button" class="ml-2 text-blue-500" data-bind="click: UpdateVessel"></button>
+                </div>
+            </div>
+
+             <div class="flex flex-col">
+                  <label for="modeOfShipment" class="flex items-center space-x-2 mb-2 text-sm">
+                    <i class="fas fa-shipping-fast"></i>
+                    <span>Mode of Shipment</span>
+                  </label>
+                  <select class="mt-1 p-2 border rounded" data-bind="options: $root.ModeofShipments, value:ModeofShipment, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'">
+                  </select>
+             </div>
+
+             <div class="flex flex-col">
+                <label for="departurePort" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Departure Port</span>
+                </label>
+                <input type="text" id="departurePort" class="mt-1 p-2 border rounded" placeholder="Search..." data-bind='PortSelect: PortOfDeparture , uniqueName: false'>
+             </div>
+
+              <div class="flex flex-col">
+                <label for="dateTimeDeparture" class="flex items-center space-x-2 mb-2 text-sm">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Date & Time Departure</span>
+                </label>
+                <input id="dateTimeDeparture" type="text" class="mt-1 p-2 border rounded bt_datetime" data-bind="value: DateOfDeparture">
+              </div>
+
+              <div class="flex flex-col">
+                <label for="destinationPort" class="flex items-center space-x-2 mb-2 text-sm">
+                    <i class="fas fa-flag"></i>
+                    <span>Destination Port</span>
+                </label>
+                <input type="text" class="mt-1 p-2 border rounded" placeholder="Search..." data-bind='PortSelect: PortOfDestination , uniqueName: false'>
+              </div>
+
+              <div class="flex flex-col">
+                <label for="dateTimeArrival" class="flex items-center space-x-2 mb-2 text-sm">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Date & Time Arrival</span>
+                </label>
+                <input id="dateTimeArrival" type="text" class="mt-1 p-2 border rounded bt_datetime" data-bind="value: DateOfArrival">
+             </div>
+
+             <div class="flex flex-col">
+                <label for="shippingAgent" class="mb-2 text-sm font-medium flex items-center justify-between">
+                    <span class="flex items-center space-x-2">
+                        <i class="fas fa-ship"></i>
+                        <span>Shipping Agent</span>
+                    </span>
+                    <button type="button" class="text-blue-600 hover:text-blue-800" data-bind="click: $root.UpdateDOAgent">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </label>
+                <input type="text" id="shippingAgent" class="p-2 border rounded w-full" placeholder="Search..." data-bind="PartySelect: DOAgent , uniqueName: false">
+             </div>
+
+              <div class="flex flex-col">
+                  <label for="voyageNo" class="flex items-center space-x-2 mb-2 text-sm">
+                    <i class="fas fa-hashtag"></i>
+                    <span>Master BL/AWB No.</span>
+                  </label>
+                  <input type="text" class="mt-1 p-2 border rounded required" data-bind='value: MasterBLno, uniqueName: true'>
+             </div>
+
+             <div class="flex flex-col">
+                <label for="captainName" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-user-tie"></i>
+                <span>Master/Captain Name</span>
+                </label>
+                <input type="text" class="mt-1 p-2 border rounded" data-bind='value: MasterName, uniqueName: false'>
+             </div>
+
+             <div class="flex flex-col">
+              <label for="noContainers" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-box-open"></i>
+                <span>No. of Containers</span>
+              </label>
+              <input type="text" class="mt-1 p-2 border rounded cursor-not-allowed bg-gray-100" data-bind='value: TotalNoOfContainer, uniqueName: false' readonly>
+            </div>
+
+            <div class="flex flex-col">
+                <label for="netTonnage" class="flex items-center space-x-2 mb-2 text-sm">
+                    <i class="fas fa-weight"></i>
+                    <span>NET Tonnage</span>
+                </label>
+                <input type="text" class="mt-1 p-2 border rounded" data-bind='value: NetTonnage, uniqueName: false'>
+            </div>
+
+             <div class="flex flex-col">
+              <label for="grossTonnage" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-weight-hanging"></i>
+                <span>GROSS Tonnage</span>
+              </label>
+              <input type="text" class="mt-1 p-2 border rounded" data-bind='value: GrossTonnage, uniqueName: false'>
+            </div>
+
+            <div class="flex flex-col">
+              <label for="officeCode" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-building"></i>
+                <span>Office Code</span>
+              </label>
+              <select class="mt-1 p-2 border rounded" data-bind="options: $root.CustomOffice, value:CustomOfficeId, optionsText: 'value', optionsValue: 'key'">
+              </select>
+            </div>
+
+             <div class="flex flex-col">
+              <label for="officeCode" class="flex items-center space-x-2 mb-2 text-sm">
+                <i class="fas fa-hashtag"></i>
+                <span>Auto Generate BL#.</span>
+              </label>
+              <select id="BLNoAutoType" class="mt-1 p-2 border rounded">
+                  <option value="1">NO</option>
+                  <option value="2">YES</option>
+              </select>
+            </div>
+
+            <div class="flex flex-col">
+                <label for="deliveryAgent" class="mb-2 text-sm font-medium flex items-center justify-between">
+                    <span class="flex items-center space-x-2">
+                        <i class="fas fa-truck"></i>
+                        <span>Delivery Agent</span>
+                    </span>
+                    <button type="button" class="text-blue-600 hover:text-blue-800" data-bind="click:$root.UpdateDeliveryAgent">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </label>
+                <input type="text" id="deliveryAgent" class="mt-1 p-2 border rounded w-full cursor-pointer" placeholder="Search..." data-bind="event: { blur: selectionChanged }, PartySelect: DOAgentL , uniqueName: false">
+            </div>
+
+
+         </div>
+      </div>
+      
+
+      <!-- BL and Container section -->
+      <div class="bg-white shadow rounded-lg p-6">
+
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">House BL / AWB Information</h2>
+
+          <!-- HouseBLItems Table as a Grid (with Knockout.js binding) -->
+        <div data-bind="visible: HouseBLItems().length > 0">
+            <div data-bind="foreach: HouseBLItems" class="space-y-6">
+
+                 <!-- Each Row -->
+
+            <div>
+                <div class="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-md">
+
+                    <!-- Action Buttons (Top Right, Positioned within the Container) -->
+                    <div class="flex lg:space-y-0 justify-end space-x-2 lg:col-span-4 mb-4">
+                        <!-- Remove Button -->
+                        <button id="rmbutton" type="button" class="bg-red-600 text-white hover:bg-red-800 text-xs px-4 py-1.5 rounded flex items-center space-x-2" data-bind="click: $root.RemoveHBL">
+                            <i class="fas fa-times"></i>
+                            <span class="hidden lg:block">Remove BL</span>
+                        </button>
+
+                        <!-- Add Container Button -->
+                        <button type="button" class="bg-yellow-500 text-white hover:bg-yellow-700 text-xs px-3 py-1 rounded flex items-center space-x-2" data-bind="click: $data.addContainerItem">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Container</span>
+                        </button>
+
+                    </div>
+
+                     <!-- House BL/AWB No -->
+                    <div class="flex flex-col">
+                        <label for="HouseBLno" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>House BL/AWB No.</span>
+                        </label>
+                        <input id="HouseBLno" type="text" class="text-sm p-2 border rounded" placeholder="HBL/AWB no." data-bind="value: HouseBLno,uniqueName: true">
+                    </div>
+
+                    <!-- Shipper -->
+                    <div class="flex flex-col relative">
+                        <label for="shipperNew" class="flex items-center justify-between mb-2 text-sm">
+                            <span class="flex items-center space-x-2">
+                                <i class="fas fa-user"></i>
+                                <span>Shipper</span>
+                            </span>
+                            <button type="button" class="text-blue-600 hover:text-blue-800" data-bind="click: $root.UpdateShipper">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </label>
+                        <input id="shipperNew" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="value: ShipperNew.value, PartySelect: ShipperNew, uniqueName: false">
+                    </div>
+
+                     <!-- Consignee/Customer -->
+                    <div class="flex flex-col relative">
+                        <label for="customerNew" class="flex items-center justify-between mb-2 text-sm">
+                            <span class="flex items-center space-x-2">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Consignee/Customer</span>
+                            </span>
+                            <button type="button" class="text-blue-600 hover:text-blue-800" data-bind="click:$root.UpdateCustomer">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </label>
+                        <input id="customerNew" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PartySelect: CustomerNew , uniqueName: false">
+                    </div>
+
+                    <!-- Notify Party -->
+                    <div class="flex flex-col relative">
+                        <label for="notifyPartyNew" class="flex items-center justify-between mb-2 text-sm">
+                            <span class="flex items-center space-x-2">
+                                <i class="fas fa-user-circle"></i>
+                                <span>Notify Party</span>
+                            </span>
+                            <button type="button" class="text-blue-600 hover:text-blue-800" data-bind="click:$root.UpdateNotifyParty">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </label>
+                        <input id="notifyPartyNew" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PartySelect: NotifyPartyNew , uniqueName: false">
+                    </div>
+
+                    <!-- Freight Indicator -->
+                    <div class="flex flex-col">
+                        <label for="freightIndicator" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-truck-loading"></i>
+                            <span>Freight Indicator</span>
+                        </label>
+                        <select id="freightIndicator" class="text-sm p-2 border rounded w-full" data-bind="options: FreightIndicators, value:FreightIndicator, optionsText: 'value', optionsValue: 'key'"></select>
+                    </div>
+
+                     <!-- BL Nature -->
+                    <div class="flex flex-col">
+                        <label for="blNature" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-shipping-fast"></i>
+                            <span>BL Nature</span>
+                        </label>
+                        <select id="blNature" class="text-sm p-2 border rounded w-full" data-bind="options: BLNatures, value:BLNature, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                    </div>
+
+                     <!-- BL Type -->
+                    <div class="flex flex-col">
+                        <label for="blType" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-boxes"></i>
+                            <span>BL Type</span>
+                        </label>
+                        <select id="blType" class="text-sm p-2 border rounded w-full" data-bind="options: BLTypes, value:BLTypeId, optionsText: 'value', optionsValue: 'key'"></select>
+                    </div>
+
+                     <!-- Shipping Mark/No. -->
+                    <div class="flex flex-col">
+                        <label for="shippingMark" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Shipping Mark/No.</span>
+                        </label>
+                        <input id="shippingMark" type="text" class="text-sm p-2 border rounded w-full" placeholder="Shipping Mark/No." data-bind="value: ShippingMark">
+                    </div>
+
+                    <!-- BL Status -->
+                    <div class="flex flex-col">
+                        <label for="blStatus" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-info-circle"></i>
+                            <span>BL Status</span>
+                        </label>
+                        <select id="blStatus" class="text-sm p-2 border rounded w-full" data-bind="options: BLState, value:BLStateId, optionsText: 'value', optionsValue: 'key'"></select>
+                    </div>
+
+                    <!-- Port of Loading -->
+                    <div class="flex flex-col" data-bind="visible: $root.ModeofShipment() < 2 || $root.ModeofShipment() == null">
+                        <label for="portOfLoading" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-anchor"></i>
+                            <span>Port of Loading</span>
+                        </label>
+                        <input id="portOfLoading" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PortSelect: PortOfLoading , uniqueName: false">
+                    </div>
+
+                    <!-- Port of Unloading -->
+                    <div class="flex flex-col" data-bind="visible: $root.ModeofShipment() < 2 || $root.ModeofShipment() == null">
+                        <label for="portOfUnloading" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-ship"></i>
+                            <span>Port of Unloading</span>
+                        </label>
+                        <input id="portOfUnloading" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PortSelect: PortOfUnLoading , uniqueName: false">
+                    </div>
+
+                     <!-- Port of Origin -->
+                    <div class="flex flex-col" data-bind="visible: $root.ModeofShipment() < 2 || $root.ModeofShipment() == null">
+                        <label for="portOfOrigin" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-globe"></i>
+                            <span>Port of Origin</span>
+                        </label>
+                        <input id="portOfOrigin" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PortSelect: PortOfOrigin , uniqueName: false">
+                    </div>
+
+                    <!-- Port of Original Loading -->
+                    <div class="flex flex-col" data-bind="visible: $root.ModeofShipment() < 2 || $root.ModeofShipment() == null">
+                        <label for="originalLoadingPort" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-ship"></i>
+                            <span>Port of Original Loading</span>
+                        </label>
+                        <input id="originalLoadingPort" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PortSelect: OriginalLoadingPort , uniqueName: false">
+                    </div>
+
+                    <!-- Port Ultimate Destination -->
+                    <div class="flex flex-col" data-bind="visible: $root.ModeofShipment() < 2 || $root.ModeofShipment() == null">
+                        <label for="ultimateDestination" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Port Ultimate Destination</span>
+                        </label>
+                        <input id="ultimateDestination" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PortSelect: UltimateDestination , uniqueName: false">
+                    </div>
+                    
+                    <!-- Port of Delivery -->
+                    <div class="flex flex-col" data-bind="visible: $root.ModeofShipment() < 2 || $root.ModeofShipment() == null">
+                        <label for="portOfDelivery" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-box"></i>
+                            <span>Port of Delivery</span>
+                        </label>
+                        <input id="portOfDelivery" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="PortSelect: PortOfDelivery , uniqueName: false">
+                    </div>
+
+                    <!-- Description of Goods -->
+                    <div class="flex flex-col col-span-2">
+                        <label for="descriptionOfGoods" class="flex items-center space-x-2 mb-2 text-sm">
+                            <i class="fas fa-box-open"></i>
+                            <span>Description of Goods</span>
+                        </label>
+                        <textarea id="descriptionOfGoods" class="p-2 border rounded w-full" placeholder="Description" rows="2" data-bind="value: Description"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 p-6 border rounded-md">
+
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-base font-semibold text-gray-900 mb-4">Container Details</h2>
+                        </div>
+                        <div>
+                            <a class="text-red-600 hover:text-red-800" data-bind="click: $parent.deleteContainerItem">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-bind='foreach: $data.ContainerItems'>
+                        <!-- Container Items -->
+                            <div class="flex flex-col hidden">
+                                <label for="blNature" class="flex items-center space-x-2 mb-2 text-sm">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    <span>Packing</span>
+                                </label>
+                                <select class="text-sm p-2 border rounded w-full" data-bind="options: PackingTypes, value:PackingType, optionsText: 'value', optionsValue: 'key'"></select>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-box text-gray-600"></i>
+                                    <span>Container No</span>
+                                </label>
+                                <input type="text" placeholder="Contnr No" class="text-sm p-2 border rounded" data-bind='value: ContainerNo, uniqueName: true'>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-box-open text-gray-600"></i>
+                                    <span>Container Type</span>
+                                </label>
+                                <select class="text-sm p-2 border rounded" data-bind="options: ContainerTypes, value:ContainerType, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-ruler-combined text-gray-600"></i>
+                                    <span>Size</span>
+                                </label>
+                                <input type="text" placeholder="Size" class="text-sm p-2 border rounded" data-bind='value: ContainerSize,uniqueName: false'>
+                            </div>
+
+                            <div class="flex flex-col">
+                                 <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-exclamation-circle text-gray-600"></i>
+                                    <span>Indicator</span>
+                                </label>
+                                <select class="text-sm p-2 border rounded" data-bind="options: IndicatorTypes, value:Indicator, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-lock text-gray-600"></i>
+                                    <span>Seal No</span>
+                                </label>
+                                <input type="text" placeholder="Seal No" class="text-sm p-2 border rounded" data-bind='value: SealNo,uniqueName: true'>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-box text-gray-600"></i>
+                                    <span>Package Type</span>
+                                </label>
+                                <select class="text-sm p-2 border rounded" data-bind="options: PackageTypes, value:PackageType, optionsText: 'value', optionsValue: 'key'"></select>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-cubes text-gray-600"></i>
+                                    <span>No. of Pkg</span>
+                                </label>
+                                <input type="text" class="text-sm p-2 border rounded" data-bind='value: CNoOfPackage,uniqueName: false'>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-weight-hanging text-gray-600"></i>
+                                    <span>Weight</span>
+                                </label>
+                                <input type="text" class="text-sm p-2 border rounded" data-bind='value: CWeight,uniqueName: false'>
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label class="flex items-center space-x-2 mb-1 text-sm">
+                                    <i class="fas fa-ruler text-gray-600"></i>
+                                    <span>Measure</span>
+                                </label>
+                                <input type="text" class="text-sm p-2 border rounded" data-bind='value: CMeasure,uniqueName: false'>
+                            </div>
+                            
+                    </div>
+
+                    <!-- Summary Fields -->
+                        <div class="mt-4 bg-gray-100 p-4 rounded-md">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                <div class="flex flex-col">
+                                    <label class="flex items-center space-x-2 mb-1 text-sm mb-1">
+                                        <i class="fas fa-cubes"></i>
+                                        <span>BL No. of Pkg</span>
+                                    </label>
+                                    <input type="text" placeholder="NoPckg" class="bg-gray-50 text-sm p-2 border rounded cursor-not-allowed" data-bind='value: TotalBLPackages' readOnly="true">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="flex items-center space-x-2 mb-1 text-sm">
+                                        <i class="fas fa-weight"></i>
+                                        <span>Weight</span>
+                                    </label>
+                                    <input type="text" placeholder="kgs" class="bg-gray-50 text-sm p-2 border rounded cursor-not-allowed" data-bind='value: Weight' readOnly="true">
+                                </div>
+                                <div class="flex flex-col">
+                                    <label class="flex items-center space-x-2 mb-1 text-sm">
+                                        <i class="fas fa-ruler"></i>
+                                        <span>Measure</span>
+                                    </label>
+                                    <input type="text" placeholder="cbm" class="bg-gray-50 text-sm p-2 border rounded cursor-not-allowed" data-bind='value: Measurement' readOnly="true">
+                                </div>
+                                <div class="flex flex-col relative">
+                                    <label for="shipperNew" class="flex items-center justify-between mb-2 text-sm">
+                                        <span class="flex items-center space-x-2">
+                                            <i class="fas fa-user"></i>
+                                            <span>Shipper</span>
+                                        </span>
+                                        <button type="button" class="text-blue-600 hover:text-blue-800" data-bind="click:$root.UpdateProject">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </label>
+                                    <input type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="ProjectSelect: ProjectId , uniqueName: false">
+                              </div>
+                            </div>
+                        </div>
+
+                </div>
+
+            </div>
+      
+
+      </div>
+      
+
+       <fieldset class="border border-gray-300 p-4 rounded-md">
+            <legend class="text-lg font-semibold text-gray-700">Job Info:</legend>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                <!-- Registration Date -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Registration Date *</label>
+                    <input type="text"
+                           class="mt-1 block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 font-awesome placeholder-gray-400"
+                           placeholder=""
+                           data-bind="value: Job.RegistrationDate, datetimepicker: Job.RegistrationDate" />
+                </div>
+
+                <!-- Discharge Date -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Discharge Date</label>
+                    <input type="text"
+                           class="mt-1 block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 font-awesome placeholder-gray-400"
+                           placeholder=""
+                           data-bind="event:{change:UpdateDemurrageDate}, value: Job.DischargeDate, datetimepicker: Job.DischargeDate" />
+                </div>
+
+                <!-- Demurrage Date -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Demurrage Date</label>
+                    <input type="text"
+                           class="mt-1 block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 font-awesome placeholder-gray-400"
+                           placeholder=""
+                           data-bind="value: Job.DemurrageDate, datetimepicker: Job.DemurrageDate" />
+                </div>
+
+                <!-- Commodity -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Commodity *</label>
+                    <select class="mt-1 block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            data-bind="options: $root.Job.CommodityType, value:Job.CommodityTypeId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'">
+                    </select>
+                </div>
+
+                <!-- Shifting Request -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Shifting Request</label>
+                    <select class="mt-1 block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            data-bind="options: $root.Job.JobPriority, value:Job.JobPriorityId, optionsText: 'value', optionsValue: 'key'">
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <button id="SaveManifest"
+        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md text-sm flex items-center space-x-2 my-4"
+        data-bind="click:Save,enable:saveEnabled()">
+            <i class="fas fa-save"></i>
+            <span>Save</span>
+        </button>
+
+
+</div>
+
+
+     <div id="dialog-confirm" title="Job" class="display: none;">
+        <p id="dialog-message"></p>
+    </div>
+     <div id="dialog-confirm1" title="Job" class="display: none;">
+        <p id="dialog-message1"></p>
+    </div>
+     <div id="dialog-confirm2" title="Job" class="display: none;">
+        <p id="dialog-message2"></p>
+    </div>
+     <div id="dialog-confirm3" title="Job" class="display: none;">
+        <p id="dialog-message3"></p>
+    </div>
+
+<script type="text/javascript">
+
+    var JobInfo;
+    var ContainerNo_outputArray = [];
+    var ContainerNo_array = [];
+
+$(".chosen_select_L").chosen({
+    disable_search_threshold: 5,
+    no_results_text: "Oops, nothing found!"
+  });
+
+
+$(document).ready(function () {
+      $(".chosen_select_L").chosen('destroy');
+      $(".bt_datetime").datetimepicker({format: 'dd/mm/yyyy hh:ii'});
+ }); 
+
+
+    var koMM;
+
+    function ManifestModel() {
+        var self = this;
+        self.VoyageNo = ko.observable();
+        self.VesselId = new selectAuto();
+        self.DOAgent = new selectAuto();
+        self.DOAgentL = new selectAuto();
+        self.ModeofShipment = ko.observable();
+     //   self.Nationality = ko.observable();
+        self.PortOfDeparture = new selectAuto();
+        //self.DateOfDeparture = ko.observable(getCurrentDate());
+        self.DateOfDeparture = ko.observable();
+        self.PortOfDestination = new selectAuto();
+       // self.DateOfArrival = ko.observable(getCurrentDate());
+        self.DateOfArrival = ko.observable();
+        self.MasterBLno = ko.observable();
+        self.MasterName = ko.observable();
+        self.TotalNoOfContainer = ko.observable();
+        self.NetTonnage = ko.observable();
+        self.GrossTonnage = ko.observable();
+        self.HouseBLItems = ko.observableArray();
+        
+        self.Job = new JobModel(); 
+        self.Vessel = new VesselModel();
+        self.POwner = new POwnerModel();
+        self.CustomOfficeId = ko.observable();
+               
+        self.ModeofShipments = mapDictionaryToArray(@{Html.RenderAction("GetModeofShipment", "Manifest");});
+        self.Nations = mapDictionaryToArray(@{Html.RenderAction("GetNationality", "Manifest");});
+      //  self.Ports = mapDictionaryToArray(@{Html.RenderAction("GetPort", "Manifest");});
+        self.CustomOffice = mapDictionaryToArray(@{Html.RenderAction("GetCustomeOffice", "Manifest");});
+
+
+
+        self.addHouseBL = function(data){
+           self.HouseBLItems.push(new HouseBLModel())
+           $(".chosen_select_L").chosen();
+           if($("#BLNoAutoType")[0].selectedIndex != 0)
+           {
+               if(self.DOAgentL.id > 0)
+               {
+                   $.each(self.HouseBLItems(), function() {
+                       if(this.HouseBLno()==null || this.HouseBLno()=="")
+                       {
+                           if(self.DOAgentL.id == 7413 || self.DOAgentL.id == 5749 || self.DOAgentL.id == 1017){
+                               result = GenerateHBLnumber(self.DOAgentL.id)
+                               this.HouseBLno(result.HBLNumber);
+                           }
+                           else{
+                               this.HouseBLno("");
+                           }
+                       }
+                   });
+               }
+           }
+        }
+        self.RemoveHBL  = function(data){
+            self.HouseBLItems.remove(data)
+                    $.pnotify({
+                        title: 'Remove BL',
+                        text: "BL hasbeen removed",
+                        type: "success"
+                    });
+        }
+
+        self.UpdateShipper  = function(data){
+             if(data.ShipperNew.id > 0)
+             {
+                EditParty(data.ShipperNew.id)
+             }else{
+                 $.pnotify({
+                        title: 'Update Shipper',
+                        text: "Please Select a Shipper",
+                        type: "error"
+                    });
+             }
+        }
+
+        self.UpdateCustomer  = function(data){
+            if(data.CustomerNew.id > 0)
+             {
+                EditParty(data.CustomerNew.id)
+             }else{
+                 $.pnotify({
+                        title: 'Update Customer',
+                        text: "Please Select a Customer",
+                        type: "error"
+                    });
+             }
+        }
+        self.UpdateNotifyParty  = function(data){
+            if(data.NotifyPartyNew.id > 0)
+             {
+                EditParty(data.NotifyPartyNew.id)
+             }else{
+                 $.pnotify({
+                        title: 'Update NotifyParty',
+                        text: "Please Select a NotifyParty",
+                        type: "error"
+                    });
+             }
+        }
+
+        self.UpdateDOAgent  = function(data){
+            if(self.DOAgent.id > 0)
+             {
+                EditParty(self.DOAgent.id)
+             }else{
+                 $.pnotify({
+                        title: 'Update DO Agent',
+                        text: "Please Select a DO Agent",
+                        type: "error"
+                    });
+             }
+        }
+        self.UpdateDeliveryAgent  = function(data){
+            if(self.DOAgentL.id > 0)
+            {
+                EditParty(self.DOAgentL.id)
+            }else{
+                $.pnotify({
+                    title: 'Update Delivery Agent',
+                    text: "Please Select a Delivery Agent",
+                    type: "error"
+                });
+            }
+        }
+        self.selectionChanged = (function(event){
+            var result;
+            if($("#BLNoAutoType")[0].selectedIndex != 0)
+            {
+                if(self.DOAgentL.id > 0)
+                {
+                    $.each(self.HouseBLItems(), function() {
+                        if(this.HouseBLno()==null || this.HouseBLno()=="")
+                        {
+                            if(self.DOAgentL.id == 7413 || self.DOAgentL.id == 5749 || self.DOAgentL.id == 1017){
+                                result = GenerateHBLnumber(self.DOAgentL.id)
+                                this.HouseBLno(result.HBLNumber);
+                            }
+                            else{
+                                this.HouseBLno("");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+      self.UpdateProject  = function(data){
+          if(data.ProjectId.id > 0)
+             {
+              EditProject(data.ProjectId.id)
+             }else{
+                 $.pnotify({
+                        title: 'Update Project',
+                        text: "Please Select a Project",
+                        type: "error"
+                    });
+             }
+        }
+        //update Vessel
+       self.UpdateVessel  = function(data){
+             if(self.VesselId.id > 0)
+             {
+                EditVessel(self.VesselId.id)
+             }else{
+                 $.pnotify({
+                        title: 'Update Vessel info',
+                        text: "Please Select a Project",
+                        type: "error"
+                    });
+             }
+        }
+
+        self.saveEnabled = ko.computed(function(){
+            var flag = 1;
+            if(self.ModeofShipment()==null){flag = 0;}
+            else if (self.Job.RegistrationDate()==null){flag = 0;}
+          //  else if (self.Job.DischargeDate()==null){flag = 0;}
+            else if (self.Job.CommodityTypeId()==null){flag = 0;}
+            $.each(self.HouseBLItems(), function() {
+                if(this.BLNature()==null){flag = 0;}
+                if(this.FreightIndicator()==null){flag = 0;}
+ //               if( this.ShipperNew.length()==""){flag = 0;}
+//                else if( this.Customer()=="" || this.Customer()==null){flag = 0;}
+//                else if( this.NoOfPackage()=="" || this.NoOfPackage()==null){flag = 0;}
+//               // else if( this.ContainerType()=="" || this.ContainerType()==null){flag = 0;}
+            });
+            return flag;  
+          });
+
+         /*self.TotalNoOfHBL = ko.computed(function(){
+            var total = 0;
+            $.each(self.HouseBLItems(), function() {
+                 if( this.HouseBLno()=="" || this.HouseBLno()==null){
+                    
+                 }else{
+                total++;}
+            });
+            return total;  
+         });*/
+
+        /* self.TotalNoOfPackages = ko.computed(function(){
+            var total = 0;
+            $.each(self.HouseBLItems(), function() {
+                 total = total + parseInt(this.TotalBLPackages());
+            });
+            return total;  
+         });*/
+
+         self.TotalNoOfContainer = ko.computed(function(){
+            var total = 0;
+            $.each(self.HouseBLItems(), function() {
+                $.each(this.ContainerItems(), function() {
+                    var count = 0;
+                    var start = false;
+                    if(this.ContainerNo()!=null)
+                    {
+                        ContainerNo_array.push(this.ContainerNo()); 
+                        for (j = 0; j < ContainerNo_array.length; j++) { 
+                            for (k = 0; k < ContainerNo_outputArray.length; k++) { 
+                                if ( ContainerNo_array[j] == ContainerNo_outputArray[k] ) { 
+                                    start = true; 
+                                } 
+                            } 
+                            count++; 
+                            if (count == 1 && start == false) { 
+                                ContainerNo_outputArray.push(ContainerNo_array[j]); 
+                            } 
+                            start = false; 
+                            count = 0; 
+                        } 
+                        console.log(ContainerNo_outputArray); 
+                        total = ContainerNo_outputArray.length;
+                    }
+                });
+            });
+            return total;
+         });
+
+         /*condition MOS*/
+         self.ModeofShipment.subscribe(function(){
+             if(self.ModeofShipment()==1){self.CustomOfficeId(1);} // 1-sea
+             else if(self.ModeofShipment()==2){self.CustomOfficeId(2);} //2-air
+             $.each(self.HouseBLItems(), function() {
+                 if(self.ModeofShipment()==1){this.BLTypeId(1);} // 1-sea
+                 else if(self.ModeofShipment()==2){this.BLTypeId(3);} //2-air
+                $.each(this.ContainerItems(), function() {
+                    if(self.ModeofShipment()==1){this.PackingType(1);}
+                    else if(self.ModeofShipment()==2){this.PackingType(2);}
+                });
+            });
+         });
+
+        /*self.UpdateDemurrageDate  = function(data){
+            var date2 = $('.d_regDate').datetimepicker('getDate', '+2d'); 
+            date2.setDate(date2.getDate()+10); 
+            $('.d_demDate').datetimepicker('setDate', date2)
+            self.Job.DemurrageDate($('.d_demDate').datetimepicker('getDate', date2));
+        }*/
+         self.UpdateDemurrageDate  = function(data){
+             var date2 = $('.d_disDate').datetimepicker('getDate', '+2d'); 
+             var weekDay = date2.getDay();
+            if(self.ModeofShipment()==1)
+            {
+                $.each(self.HouseBLItems(), function() {
+                    $.each(this.ContainerItems(), function() {
+                        if(this.ContainerType() == 5 ||this.ContainerType() == 6)
+                        {
+                            date2.setDate(date2.getDate()+5);
+                            switch(weekDay) { // if 5 days
+                                case 0: // Sunday
+                                case 1: //Monday
+                                case 2: //Tuesday
+                                case 3: //Wednesday
+                                case 4: //Thursday
+                                case 5: //Friday
+                                    date2.setDate(date2.getDate()+1);
+                                    break;
+                                case 6: //Saturday
+                                    //no day added
+                                    break;
+                                default:
+                            }
+                        }else{
+                            date2.setDate(date2.getDate()+10);
+                            switch(weekDay) { // if 10 Days
+                                case 0: // Sunday
+                                case 5: //Friday
+                                case 6: //Saturday
+                                    date2.setDate(date2.getDate()+1);
+                                    break;
+                                case 1: //Monday
+                                case 2: //Tuesday
+                                case 3: //Wednesday
+                                case 4: //Thursday
+                                    date2.setDate(date2.getDate()+2);
+                                    break;
+                                default:
+                            }
+                        }
+                    });
+                });
+            }
+            else if(self.ModeofShipment()==2 || self.ModeofShipment()==3)
+            {
+                date2.setDate(date2.getDate()+3);
+                switch(weekDay) { // if 3 days
+                    case 0: // Sunday
+                    case 1: //Monday
+                    case 6: //Saturday
+                        //no day added
+                        break;
+                    case 2: //Tuesday
+                    case 3: //Wednesday
+                    case 4: //Thursday
+                    case 5: //Friday
+                        date2.setDate(date2.getDate()+1);
+                        break;
+                    default:
+                }
+            }
+            $('.d_demDate').datetimepicker('setDate', date2)
+            self.Job.DemurrageDate($('.d_demDate').datetimepicker('getDate', date2));
+        }
+
+        self.MasterBLno.subscribe(function(){ 
+            var MBL= SearchMaterBL(self.MasterBLno());
+            if(MBL.ShipmentId > 0)
+            {
+                $("#dialog-message1").text("This BL '"+self.MasterBLno()+"' is already entered");
+                $( "#dialog-confirm1" ).dialog({
+                    closeOnEscape: false,
+                    open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			        resizable: false,
+			        height:180,
+			        modal: true,
+			        buttons: {
+				        "Go Back": function() {
+                             self.MasterBLno("");
+					        $( this ).dialog( "close" );
+				        }
+                        ,
+                        "Detail":function(){
+                           window.location = '../Job/GetBLUnderMBL?ShipmentId='+ MBL.ShipmentId; 
+                        }
+			        }
+                });
+             }
+
+         });
+
+          self.Save = function(data){
+            var HB = {HouseBLItems:self.HouseBLItems()};
+            var json = JSON.stringify(HB);
+            $.ajax({
+            url: '/Job/SaveJob',
+            type: 'POST',
+            dataType: 'json',
+            data: ko.toJSON({MM: koMM}),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+            if (result.Status == "success") {
+                JobInfo = getLastJobInfo();
+                        $("#dialog-message").text("New Job has been created, Number is: "+JobInfo.LastJnumber);
+                        $( "#dialog-confirm" ).dialog({
+			                resizable: false,
+			                height:180,
+			                modal: true,
+			                buttons: {
+				                "New Job": function() {
+					                $( this ).dialog( "close" );
+                                    window.location = '../Job/create'
+				                },
+                                /*"Print":function(){
+                                  //  $.download("../Manifest/PrintManifest", { ManifestId: ManifestInfo.LastSid}, "POST");    
+                                },
+                                "Upload":function(){  
+                                  window.location = '../JobDocument/Index?ShipmentId='+ JobInfo.lastShipmentId ;
+                                }*/
+				                "Edit Job":function(){
+				                    window.location = '../Job/EditJob?JobId='+ JobInfo.LastJid + '&HBLId=' + JobInfo.lastBLId; 
+				                }
+			            }
+                    });
+                } else {
+                    $.pnotify({
+                        title: 'Job',
+                        text: result.Message,
+                        type: result.Status
+                    });
+                }
+               }
+            });
+         }
+    }
+
+    function downloadSuccess(){
+        window.location.href="/Job/create";
+
+    }
+
+
+    function HouseBLModel(){
+       var self = this;
+       self.HouseBLno = ko.observable();
+       self.ContainerItems = ko.observableArray();
+       self.ContainerItems.push( new ContainerModel());
+     //  self.ContainerType = ko.observable();
+     //  self.ContainerNo = ko.observable();
+     //  self.SealNo = ko.observable();
+  //     self.TypeofPackage = ko.observable();
+       self.NoOfPackage = ko.observable(0);
+       self.TotalBLPackages = ko.observable(0);
+       self.FreightIndicator = ko.observable();
+       self.BLNature = ko.observable();
+       self.ShippingMark = ko.observable();
+       self.Shipper = ko.observable();
+       self.Customer = ko.observable();
+       self.NotifyParty = ko.observable();
+       self.CustomerNew = new selectAuto();
+       self.ShipperNew =  new selectAuto();
+       self.NotifyPartyNew = new selectAuto();
+    //   self.DOAgent = new selectAuto();
+       self.Weight = ko.observable();
+       self.Measurement = ko.observable();
+       self.ProjectId = new selectAuto();
+
+       self.PortOfLoading = new selectAuto();
+       self.PortOfUnLoading = new selectAuto();
+       self.PortOfOrigin = new selectAuto();
+       self.OriginalLoadingPort = new selectAuto();
+       self.PortOfDelivery = new selectAuto();
+       self.UltimateDestination = new selectAuto();
+       
+       self.Description = ko.observable();
+       self.BLTypeId = ko.observable();
+       self.BLStateId = ko.observable();
+
+       self.FreightIndicators = mapDictionaryToArray(@{Html.RenderAction("GetFreightIndicator", "Manifest");});
+       self.BLNatures = mapDictionaryToArray(@{Html.RenderAction("GetBLNature", "Manifest");});
+        self.BLTypes = mapDictionaryToArray(@{Html.RenderAction("GetBLType", "Manifest");});
+        self.BLState = mapDictionaryToArray(@{Html.RenderAction("GetBLState", "Manifest");});
+
+       self.addContainerItem = function(data) {
+         self.ContainerItems.push( new ContainerModel());
+       };
+
+       self.TotalBLPackages = ko.computed(function(){
+            var total = 0;
+            $.each(self.ContainerItems(), function() {
+                total = total + parseInt(this.CNoOfPackage());
+            });
+            return total;  
+       });
+
+       self.Weight = ko.computed(function(){
+           var total = 0;
+           $.each(self.ContainerItems(), function() {
+               total = total + parseFloat(this.CWeight());
+           });
+           return total;  
+       });
+       self.Measurement = ko.computed(function(){
+           var total = 0;
+           $.each(self.ContainerItems(), function() {
+               total = total + parseFloat(this.CMeasure());
+           });
+           return total;  
+       });
+
+        self.deleteContainerItem  = function(data){
+            self.ContainerItems.remove(data);
+             $.pnotify({
+                title: 'Remove Container',
+                text: "Container has been removed",
+                type: "success"
+             });
+        }
+
+        self.HouseBLno.subscribe(function(){
+            if(koMM.MasterBLno() == self.HouseBLno())
+            {
+                self.HouseBLno("");
+            }
+            var HBL= SearchHouseBL(self.HouseBLno());
+            if(HBL.JobId > 0)
+            {
+                $("#dialog-message2").text("This BL '"+self.HouseBLno()+"' is already entered");
+                $( "#dialog-confirm2" ).dialog({
+                    closeOnEscape: false,
+                    open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			        resizable: false,
+			        height:180,
+			        modal: true,
+			        buttons: {
+			            "Go Back": function() {
+			                self.HouseBLno("");
+					        $( this ).dialog( "close" );
+				        },
+                        "Detail":function(){
+                           window.location = '../Job/EditJob?JobId='+ HBL.JobId + "&HBLId=" +HBL.HBLId; 
+                        }
+			        }
+                });
+             }
+             else
+             {
+                if(HBL.ManifestId > 0)
+                {
+                    $("#dialog-message3").text("This BL '"+self.HouseBLno()+"' is already entered AS a Manifest, Do you want to a Create Job?");
+                    $( "#dialog-confirm3" ).dialog({
+                        closeOnEscape: false,
+                        open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+			            resizable: false,
+			            height:180,
+			            modal: true,
+			            buttons: {
+			                "Go Back": function() {
+			                    self.HouseBLno("");
+					            $( this ).dialog( "close" );
+				            },
+                            "Yes":function(){
+                            window.location = '../Job/ConvertManifestJob?ManifestId='+ HBL.ManifestId + "&HBLId=" +HBL.HBLId; 
+                            }
+			            }
+                    });
+                }
+             }
+       });
+      
+    }
+
+
+    function JobModel(){
+       var self = this;
+       self.RegistrationDate = ko.observable( new Date());
+       self.DemurrageDate = ko.observable();
+       self.DischargeDate = ko.observable();
+       self.CommodityTypeId = ko.observable();
+      // self.ProjectId = new selectAuto();
+       self.JobPriorityId = ko.observable();
+
+       self.CommodityType = mapDictionaryToArray(@{Html.RenderAction("GetCommodityType", "Job");});
+       self.Project = mapDictionaryToArray(@{Html.RenderAction("GetProject", "Job");});
+       self.JobPriority = mapDictionaryToArray(@{Html.RenderAction("GetJobPriority", "Job");});
+    }
+
+    function ContainerModel(){
+       var self = this;
+       self.PackingType = ko.observable()
+       self.ContainerNo = ko.observable();
+       self.ContainerType = ko.observable();
+       self.PackageType = ko.observable();
+       self.ContainerSize = ko.observable();
+       self.CNoOfPackage = ko.observable(0);
+       self.CWeight = ko.observable(0);
+       self.CMeasure = ko.observable(0);
+       self.Indicator = ko.observable();
+       self.SealNo = ko.observable();
+       self.ContainerTypes = mapDictionaryToArray(@{Html.RenderAction("GetContainerType", "Manifest");});
+       self.IndicatorTypes = mapDictionaryToArray(@{Html.RenderAction("GetContainerIndicatorType", "Manifest");});
+       self.PackingTypes = mapDictionaryToArray(@{Html.RenderAction("GetPacking", "Manifest");});
+       self.PackageTypes = mapDictionaryToArray(@{Html.RenderAction("GetTypeofPackage", "Manifest");});
+       /*condition MOS*/
+       if(koMM.ModeofShipment()==1){this.PackingType(1);}
+       else if(koMM.ModeofShipment()==2){this.PackingType(2);}
+   }
+
+
+
+
+
+/*============================= Other Functions ============================*/
+   function mapDictionaryToArray(dictionary) {
+        var result = [];
+        for (var key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                result.push({ key: key, value: dictionary[key] });
+            }  
+        } 
+        return result;
+    }
+
+
+    
+    function mapDictionaryToArray1(dictionary) {
+        var result = [];
+        for (var key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                result.push({ Value: key, Text: dictionary[key] });
+            }  
+        } 
+        return result;
+    }
+
+
+    /*function getCurrentDate() 
+    {
+        var date = new Date();
+        var dd = date.getDate();
+        var mm = date.getMonth()+1;
+        var yyyy = date.getFullYear();
+        return (dd > 9 ? dd : "0" + dd) + "/" + (mm > 9 ? mm : "0" + mm) + "/" + yyyy;
+    }
+
+    ko.bindingHandlers.datepicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            //initialize datepicker with some optional options
+            var options = allBindingsAccessor().datepickerOptions || {};
+            $(element).datepicker(options).on("changeDate", function (ev) {
+                var observable = valueAccessor();
+                observable(ev.date);
+            });
+        },
+        update: function (element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            $(element).datepicker("setValue", value);
+        }
+    };*/
+
+
+    ko.bindingHandlers.datetimepicker = {
+        init: function (element, valueAccessor, allBindings) {
+          //initialize datepicker with some optional options
+            var format;
+           // var defaultFormat = 'yyyy-mm-dd hh:ii:ss'
+            var defaultFormat = 'dd/mm/yyyy hh:ii'
+            if (typeof allBindings == 'function') {
+                format = allBindings().format || defaultFormat;
+            }
+            else {
+                format = allBindings.get('format') || defaultFormat;
+            }
+            $(element).datetimepicker({
+                autoclose: true,
+                todayBtn: true,
+                'format': format
+            })
+          //when a user changes the date, update the view model
+          ko.utils.registerEventHandler(element, "changeDate", function(event) {
+              var value = valueAccessor();
+                 if (ko.isObservable(value)) {
+                     value($(element).datetimepicker("getFormattedDate"));
+                 }
+          });
+        },
+        update: function (element, valueAccessor) {
+           // var date = ko.unwrap(valueAccessor());
+            var date = ko.utils.unwrapObservable(valueAccessor());
+            if (date) {
+                $(element).datetimepicker('setValue', date);
+            }
+        }
+    };
+
+  //function to allow only numbers (eg:<input type=="" onkeypress="return isNumberKey(event)/>)
+  function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    } else {
+        return true;
+    }      
+  }
+
+
+ /* function PartySearchingTypeHead(element){
+    $(element).typeahead({
+            source: function (query, process) {
+                text = [];
+                value = {};
+                if(query.length >= 3){
+                    $.get('../Party/SearchParty', { 'query': query ,"type":1, subtype: 2 }, function (data) {
+                        console.log(data);
+                        $.each(data, function (dat, c) {
+                            value[c.Name] = c.Id;
+                            text.push(c.Name);
+                        })
+                    }).complete(function () {
+                        return process(text);
+                    });
+                }
+            },
+            updater: function (selection) {
+                selectAtoll = value[selection];
+                AddPartyTypeHead(selectAtoll,element)
+
+                return selection;
+            }
+        });
+ }*/
+
+     function selectAuto(){
+        var self = this;
+        self.value = ko.observable();
+        self.id = ko.observable();
+    }
+
+ko.bindingHandlers.PartySelect = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+
+          $(element).autocomplete({
+              source: function( request, response ) {
+                $.ajax( {
+                  url: "../Party/SearchParty",
+                  dataType: "json",
+                  data:{ 'query':request.term ,"type":1, subtype: 2 },
+                  success: function( data ) {
+                    var test = [];
+
+
+
+                    // pass a function to map
+                    const map1 = data.map(x => ({
+                    id:x.Id,
+                    label:x.Name,
+                    value:x.Name
+                    }));
+
+                    console.log(map1);
+                    response( map1 );
+                  }
+                } );
+            },
+          minLength: 2,
+           select: function( event, ui ) {
+       
+          valueAccessor().id =  ui.item.id;
+           valueAccessor().value =  ui.item.value;
+             console.log(valueAccessor());    
+            console.log(viewModel);
+            console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+    }
+};
+
+//Port Selcet Function
+ko.bindingHandlers.PortSelect = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+
+          $(element).autocomplete({
+              source: function( request, response ) {
+                $.ajax( {
+                  url: "../Manifest/SearchPort",
+                  dataType: "json",
+                  data:{ 'query':request.term ,"type":1, subtype: 2, "mode": koMM.ModeofShipment },
+                  success: function( data ) {
+                    var test = [];
+
+
+
+                    // pass a function to map
+                    const map1 = data.map(x => ({
+                    id:x.Id,
+                    label:x.Name,
+                    value:x.Name
+                    }));
+
+                    console.log(map1);
+                    response( map1 );
+                  }
+                } );
+            },
+          minLength: 2,
+           select: function( event, ui ) {
+       
+          valueAccessor().id =  ui.item.id;
+           valueAccessor().value =  ui.item.value;
+             console.log(valueAccessor());    
+            console.log(viewModel);
+            console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+    }
+};
+
+//Vessel Selcet Function
+ko.bindingHandlers.VesselSelect = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+
+          $(element).autocomplete({
+              source: function( request, response ) {
+                $.ajax( {
+                  url: "../Party/SearchVessel",
+                  dataType: "json",
+                  data:{ 'query':request.term ,"type":1, subtype: 2 },
+                  success: function( data ) {
+                    var test = [];
+
+
+
+                    // pass a function to map
+                    const map1 = data.map(x => ({
+                    id:x.Id,
+                    label:x.Name,
+                    value:x.Name
+                    }));
+
+                    console.log(map1);
+                    response( map1 );
+                  }
+                } );
+            },
+          minLength: 2,
+           select: function( event, ui ) {
+       
+          valueAccessor().id =  ui.item.id;
+           valueAccessor().value =  ui.item.value;
+             console.log(valueAccessor());    
+            console.log(viewModel);
+            console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+    }
+};
+
+
+//Project Selcet Function
+ko.bindingHandlers.ProjectSelect = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+
+          $(element).autocomplete({
+              source: function( request, response ) {
+                $.ajax( {
+                  url: "../Job/SearchProject",
+                  dataType: "json",
+                  data:{ 'query':request.term ,"type":1, subtype: 2 },
+                  success: function( data ) {
+                    var test = [];
+
+
+
+                    // pass a function to map
+                    const map1 = data.map(x => ({
+                    id:x.Id,
+                    label:x.Name,
+                    value:x.Name
+                    }));
+
+                    console.log(map1);
+                    response( map1 );
+                  }
+                } );
+            },
+          minLength: 2,
+           select: function( event, ui ) {
+       
+          valueAccessor().id =  ui.item.id;
+           valueAccessor().value =  ui.item.value;
+             console.log(valueAccessor());    
+            console.log(viewModel);
+            console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+    }
+};
+
+
+
+     function getLastJobInfo(){
+        var url = "@Url.Action("getLastJobInfo", "Job")";
+        var results ;
+        var flag = 0;               
+        var data = JSON.stringify();   
+        $.ajax({
+            type: "POST",
+            url: url,
+            async:false,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function(result){
+                results = result;
+        },
+            dataType: "json"
+        });
+        return results;
+     }
+    function GenerateHBLnumber(val){
+        var url = "@Url.Action("GenerateHouseBLnumber", "Manifest")";
+            var results ;
+            var flag = 0;
+            var param = {DOAId:val};   
+            var data = JSON.stringify(param);     
+            $.ajax({
+                type: "POST",
+                url: url,
+                async:false,
+                contentType: "application/json; charset=utf-8",
+                data: data,
+                success: function(result){
+                    results = result;
+                },
+                dataType: "json"
+            });
+            return results;
+        }
+
+    function SearchMaterBL(MasterBLnumber){
+        var url = "@Url.Action("GetMasterBL", "Manifest")";
+        var results ;
+        var flag = 0;
+        var param = {MasterBLnumber:MasterBLnumber};               
+        var data = JSON.stringify(param);   
+        $.ajax({
+            type: "POST",
+            url: url,
+            async:false,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function(result){
+                results = result;
+        },
+            dataType: "json"
+        });
+        return results;
+    }
+
+    function SearchHouseBL(HouseBLnumber){
+        var url = "@Url.Action("GetHouseBL", "Manifest")";
+        var results ;
+        var flag = 0;
+        var param = {HouseBLnumber:HouseBLnumber};               
+        var data = JSON.stringify(param);   
+        $.ajax({
+            type: "POST",
+            url: url,
+            async:false,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function(result){
+                results = result;
+        },
+            dataType: "json"
+        });
+        return results;
+    }
+
+ function setMasterBLonly()
+ {
+    koMM.addHouseBL();
+    $('#rmbutton').hide();
+ }
+
+  /*============================= Main Model Biding ============================*/
+   $(function(){
+        koMM = new ManifestModel()
+        ko.applyBindings(koMM);
+        setMasterBLonly();
+   })
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#dateTimeDeparture", {
+            enableTime: true,
+            dateFormat: "d/m/Y H:i",
+            altInput: true,
+            altFormat: "d/m/Y H:i",
+            time_24hr: true,
+        });
+
+        flatpickr("#dateTimeArrival", {
+            enableTime: true,
+            dateFormat: "d/m/Y H:i",
+            altInput: true,
+            altFormat: "d/m/Y H:i",
+            time_24hr: true,
+        });
+    });
+</script>

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>   
+     <link rel="shortcut icon" href="../../Content/images/aikoclock256x256.ico" />    
+    @*CSS*@
+    <link href="../../Content/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Chosen/chosen.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/MySite_Cerulean.css")" rel="stylesheet" type="text/css" />@*Custom CSS file*@
+    <link href="@Url.Content("~/Content/font-awesome.css")" rel="stylesheet" type="text/css" />@*Menu bar icon*@
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css"/>
+    @*<link href="@Url.Content("~/Content/DataTables-1.9.4/media/css/demo_page.css")" rel="stylesheet" type="text/css" />@*DataTables*@
+    @*<link href="@Url.Content("~/Content/DataTables-1.9.4/media/css/demo_table.css")" rel="stylesheet" type="text/css" />@*DataTables*@
+    <link href="@Url.Content("~/Content/DataTables-1.9.4/media/css/demo_table_jui.css")" rel="stylesheet" type="text/css" />@*DataTables*@
+    @*<link href="@Url.Content("~/Content/DataTables-1.9.4/media/css/jquery.dataTables.css")" rel="stylesheet" type="text/css" />@*DataTables*@
+
+    
+    <link href="@Url.Content("~/Content/DataTable-1.10.23/DataTable.css")" rel="stylesheet" type="text/css" />@*DataTables---------------*@
+    <link href="@Url.Content("~/Content/DataTable-1.10.23/buttons.dataTables.min-1.6.5.css")" rel="stylesheet" type="text/css" />@*DataTables---------------*@
+
+    <link href="@Url.Content("~/Content/jquery.pnotify.default.css")" rel="stylesheet" type="text/css" />@*Notification*@
+    <link href="@Url.Content("~/Content/MyCustom.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/fullcalendar.css")" rel="stylesheet" type="text/css" />@*Calaender CSS file*@
+    <link href="@Url.Content("~/Content/fullcalendar.print.css")" rel="stylesheet" type="text/css" media='print'/>@*Calaender CSS file*@
+     @* <link href="@Url.Content("~/Scripts/select2-3.5.4/select2.css")" rel="stylesheet" type="text/css" />*@
+    @*Jquery*@
+   
+    <script src="@Url.Content("~/Scripts/jquery-3.5.1.js")" type="text/javascript"></script>@*------------*@
+    <script src="@Url.Content("~/Scripts/jquery-1.8.3.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.24.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.js")" type="text/javascript"></script>@*---------------*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/modernizr-1.7.min.js")" type="text/javascript"></script>
+
+    @*<script src="@Url.Content("~/Scripts/DataTables-1.9.4/media/js/jquery.dataTables.js")" type="text/javascript"></script>@*DataTables*@
+        <script src="@Url.Content("~/Scripts/DataTable-1.10.23/dataTable.js")" type="text/javascript"></script>@*DataTables------------*@
+    <script src="@Url.Content("~/Scripts/DataTables-1.11.5/dataTables.select.min.js")" type="text/javascript"></script>@*DataTables------------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/dataTables.buttons.min-1.6.5.js")" type="text/javascript"></script>@*DataTables----------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/buttons.flash.min-1.6.5.js")" type="text/javascript"></script>@*DataTables---------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/jszip.min.js")" type="text/javascript"></script>@*DataTables--------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/pdfmake.min-0.1.70.js")" type="text/javascript"></script>@*DataTables---------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/vfs_fonts-0.1.70.js")" type="text/javascript"></script>@*DataTables---------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/buttons.html5.min.js")" type="text/javascript"></script>@*DataTables--------*@
+    <script src="@Url.Content("~/Scripts/DataTable-1.10.23/buttons.print.min.js")" type="text/javascript"></script>@*DataTables---------*@
+     <script src="@Url.Content("~//Scripts/DataTables-1.11.5/buttons.colvis.min.js")" type="text/javascript"></script>@*DataTables------------*@
+
+    <script src="@Url.Content("~/Scripts/jquery.pnotify.js")" type="text/javascript"></script>@*Notification*@
+    <script src="@Url.Content("~/Scripts/jquery.cookie.js")" type="text/javascript"></script>@*MyNotification*@
+    <script src="@Url.Content("~/Scripts/jQuery.flashMessage.js")" type="text/javascript"></script>@*MyNotification*@
+    <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/chosen.jquery.min.js")" type="text/javascript"></script>
+
+    @* Knockout *@
+    <script src="@Url.Content("~/Scripts/knockout-2.2.0.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/knockout.mapping-latest.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/knockout.validation.js")" type="text/javascript"></script>
+@*    <script src="@Url.Content("~/Scripts/jquery-1.8.3.min.js")" type="text/javascript"></script> <!-- Use your version of jQuery -->
+    <script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/perpetuum.knockout.js")" type="text/javascript"></script>*@
+
+    <script src="@Url.Content("~/Scripts/mycustom.js")" type="text/javascript"></script>
+
+   
+ 
+
+   @* <script src="../../Scripts/bootstrap_fileupload.js" type="text/javascript"></script>*@
+
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datetimepicker.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/fullcalendar.min.js")" type="text/javascript"></script>
+
+<link href="@Url.Content("~/Content/bootstrap-datepicker.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/bootstrap-datetimepicker.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/Chosen/chosen.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/Chosen/prism.css")" rel="stylesheet" type="text/css" />
+
+<script src="@Url.Content("~/Scripts/chosen.jquery.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/prism.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.filedrop.js")" type="text/javascript"></script>
+
+     @*<script src="@Url.Content("~/Scripts/select2-3.5.4/select2.js")" type="text/javascript"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/ajax-bootstrap-select/1.3.8/js/ajax-bootstrap-select.min.js"></script>*@
+       
+       
+
+</head>
+<body style="padding-top:7px;">
+    <div>
+    <div class="container-fluid" style="max-width:100%">
+        <div class="row-fluid" style="max-width:100%">
+            <div class="span1" style="width: 142px;">              
+               @*@Html.Partial("SideBar")*@
+            </div>
+            @*<div class="span9" style="margin-left: -83px; margin-right: 45px;">*@
+            <div class="span9">
+               @Html.Partial("_Flash")@*This partial View is set for Display Notification Location*@
+               @RenderBody()
+            </div>
+        </div>
+    </div> 
+    <div class="row-fluid">
+        <footer class="span12">
+               <p style="color: #CCCCCC; margin-left: 246px;">Copyright © 2019 ASIA FORWARDING; Developed By: Mohamed Ameen</p>
+        </footer>
+        </div>
+    </div>
+
+        <script type="text/javascript">
+            /****Auto redirect to loging Page after session expired*******/
+            var timeout = @FormsAuthentication.Timeout.TotalMilliseconds; // time taken from 'Web.config'
+            var wintimeout;
+
+            function SetWinTimeout() {
+                wintimeout =  window.setTimeout( "window.location.href='@FormsAuthentication.LoginUrl';",timeout); // In millisecods
+        }
+ 
+        $('body').click(function() {  
+            //when user clicks remove timeout and reset it
+            window.clearTimeout(wintimeout);  
+            SetWinTimeout();
+
+        });
+        SetWinTimeout();
+     </script>
+</body>
+</html>

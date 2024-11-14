@@ -1,0 +1,9 @@
+git commit - mgit remote add origin https://github.com/AmeenHMT/AY-Logistics.git
+git branch -M main
+
+git pull origin main 
+
+
+git add .
+git commit -m "Dbupload"
+git push -u origin main

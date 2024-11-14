@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "Contacts";
+}
+
+<h2>Contacts</h2>
+
+      <div class="control pull-left space-right" style="margin-bottom: 19px;">
+            @{Html.RenderPartial("../Party/_index");}
+     </div>
+     <div class="control pull-left space-right" style="margin-bottom: 19px;">
+      <button type="button" class="btn btn-primary" id="test">
+        <i class="icon-refresh"></i>
+        <span></span>
+    </button>
+     </div>
+
+     <table id="ContactsTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide">PartyId</th>
+                <th style="width: auto"class="tableHeadFont">TYPE</th>
+                <th style="width: auto"class="tableHeadFont">NAME</th>
+                <th style="width: auto" class="tableHeadFont">REG NO.</th>
+                <th style="width: auto" class="tableHeadFont">ADDRESS</th>
+                <th style="width: auto" class="tableHeadFont">CONTACT</th>
+                <th style="width: auto" class="tableHeadFont">MY BANDHARU(User/Pwd)</th>
+                <th style="width: auto" class="tableHeadFont">CUSTOME(User/Pwd</th>
+                <th style="width: auto" class="tableHeadFont">ASYCUDA(User/Pwd</th>
+                <th style="width:10px" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#ContactsTable').css('width', '100%');
+        ContactsTable();
+    });
+
+    function ContactsTable() {
+        try {
+            var oTable = $('#ContactsTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Party/GetContacts',
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": true,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Party/GetContacts',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#ContactsTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#ContactsTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "PartyType", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Name", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Address1", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Contact", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "MyBandharu", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Custom", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Asycuda", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<span onclick='CallEidtParty(" + row.Id + ")'><a href='#'><i class='icon-edit icon-2x'></i></a></span>"
+
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#ContactsTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    $('#ContactsTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    function init() {
+    }
+
+    function CallEidtParty(val) {
+        EditParty(val);
+        //setTimeout(function () {
+        //    location.reload(true);
+        //}, 5000);
+    }
+
+    $("#test").click(function (e) {
+       location.reload(true);
+    });
+
+
+</script>

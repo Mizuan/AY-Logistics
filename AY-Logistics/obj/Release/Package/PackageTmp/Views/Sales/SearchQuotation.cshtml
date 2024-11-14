@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "SearchQuotation";
+}
+
+@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "SearchQuotation";
+}
+
+<h2>Search Quotation</h2>
+
+        
+<div class="formControlContainer margin-right35">
+    <div>
+        <fieldset>
+            <div id="searchBlock">
+                    <div class="control pull-left space-right">
+                        FROM: <input type="text" id="StartDate" class="eng input-small"/> @*data-date-format="dd/mm/yyyy"*@
+                    </div>
+                    <div class="control pull-left space-right">
+                        TO: <input type="text" id="EndDate" class="eng input-small"/> OR
+                    </div>
+                    <div class="control pull-left space-right">
+                        <input type="text" id="query" class="eng" placeholder="Quotation No / Customer" style="width: 332px;"/>
+                    </div>
+                    <div class="control pull-left space-right">
+                        <button id="searchQT" class="btn btn-primary" ><i class="icon-search"></i></button>
+                    </div>
+            </div>
+        </fieldset>
+    </div>
+
+     @*<table id="QuotationFilter" class="select-highlight grtable">*@
+     @*<table id="QuotationFilter" class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Example default base table of Opportunities">*@
+     <table id="QuotationFilter" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide">QuotationId</th>
+                <th style="width: auto;" class="tableHeadFont">Entry Date</th>
+                <th class="tableHeadFont">Quotation No</th>
+                <th style="width: auto;"class="tableHeadFont">Customer</th>
+                 <th style="width: auto;"class="tableHeadFont">Entry By</th>
+                <th style="width:auto;" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#QuotationFilter').css('width', '100%');
+
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        $('#StartDate').datepicker('setDate', firstDay);
+        $('#EndDate').datepicker('setDate', lastDay);
+
+        $("#query").val("");
+        QuotationFilterByDate();
+    });
+
+
+    $('#QuotationFilter tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+
+
+    $("#searchQT").click(function () {
+        if ($("#query").val() == "") {
+            QuotationFilterByDate();
+        }
+        else {
+            QuotationFilterByQuery();
+
+        }
+    });
+
+    function QuotationFilterByDate() {
+        try {
+            var oTable = $('#QuotationFilter').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Sales/QuotationFilterByDate/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Sales/QuotationFilterByDate/?StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val(),
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#QuotationFilter').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#QuotationFilter').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "QuotationNumber", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Name", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                  //  { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<span><a href='../Sales/UpdateQuotation?Id=" + row.Id + "'><i class='icon-edit icon-2x'></i></a></span>"
+                             + "<span><a href='../Sales/PrintQuotation?QuotationId=" + row.Id + "'><i class='icon-print icon-2x' style='margin-left: 14px;'></i></a></span>"
+
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#QuotationFilter').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function QuotationFilterByQuery() {
+        try {
+            var oTable = $('#QuotationFilter').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Sales/QuotationFilterByQuery/?query=' + $('#query').val(),
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Sales/QuotationFilterByQuery/?query=' + $('#query').val(),
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#QuotationFilter').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#QuotationFilter').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "QuotationNumber", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Name", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        // "mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<a href='../Sales/UpdateQuotation?Id=" + row.Id + "'><i class='icon-edit icon-2x'></i></a></span>"
+
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+            });
+
+        } catch (e) {
+            $('#QuotationFilter').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+    }
+
+</script>  

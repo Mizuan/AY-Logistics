@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "About Us";
+}
+
+<p>
+    <h4>Developed By:</h4>
+     <span class="badge badge-warning">MOHAMED AMEEN</span>
+</p>
+
+<h1>API</h1>
+
+<h5>For Testing purposes The User and Paswword is harcoded of (LAGOON ASSETS Pvt Ltd)</h5>
+
+<p>1- GET Current User Detail<a href="@Url.Action("GetUserDetail", "APITest")" target="_blank"> <button>Click</button></a></p>
+<p>-------------------------------------------------------------------------</p>
+<p>2- GET See Shift Requests<a href="@Url.Action("GetActiveSessions", "APITest")" target="_blank"> <button>Click</button></a></p>
+<p>-------------------------------------------------------------------------</p>
+<p>3- GET Clearance By Date </p>
+@using (Html.BeginForm("GetActiveSessionsByName", "APITest", FormMethod.Post, new { target = "_blank" }))
+{
+    <input type="text" id="myTextBoxA" name="myVal"  placeholder="ex: 2024-09-18"/>
+    <input type="submit" value="Submit" />
+}
+<p>-------------------------------------------------------------------------</p>
+<p>4- GET Requested Containers By Date </p>
+@using (Html.BeginForm("GetRequestedContainerByDate", "APITest", FormMethod.Post, new { target = "_blank" }))
+{
+    <input type="text" id="myTextBoxB" name="myVal"  placeholder="ex: 2024-09-18"/>
+    <input type="submit" value="Submit" />
+}
+<p>-------------------------------------------------------------------------</p>
+<p>4- GET Paid BOLs <a href="@Url.Action("GetBillOfLadingDocument", "APITest")" target="_blank"> <button>Click</button></a></p>
+<p>-------------------------------------------------------------------------</p>
+<label>5- GET BOL By Number </label>
+@using (Html.BeginForm("GetBillOfLadingDocumentByNumber", "APITest", FormMethod.Post, new { target = "_blank" }))
+{
+    <input type="text" id="myTextBoxC" name="myVal"  placeholder="ex: 949700061762B"/>
+    <input type="submit" value="Submit" />
+}
+<p>-------------------------------------------------------------------------</p>
+
+<p>6- GET Get BOL Detail </p>
+@using (Html.BeginForm("GetBillOfLadingDocumentDetail", "APITest", FormMethod.Post, new { target = "_blank" }))
+{
+    <input type="text" id="myTextBoxD" name="myVal"  placeholder="ex: ESFSEC24060241"/>
+    <input type="submit" value="Submit" />
+}
+<p>-------------------------------------------------------------------------</p>
+<p>7- GET Container Detail </p>
+@using (Html.BeginForm("GetContainerDetail", "APITest", FormMethod.Post, new { target = "_blank" }))
+{
+    <input type="text" id="myTextBoxE" name="myVal"  placeholder="ex: FSCU3760665"/>
+    <input type="submit" value="Submit" />
+}
+<p>-------------------------------------------------------------------------</p>
+<p>8- GET Invoice BY BOL number or Invoice Number</p>
+@using (Html.BeginForm("GetInvoice", "APITest", FormMethod.Post, new { target = "_blank" }))
+{
+    <input type="text" id="myTextBoxF" name="myVal"  placeholder="ex: AFTMLE240800031"/>
+    <input type="submit" value="Submit" />
+}
+
+

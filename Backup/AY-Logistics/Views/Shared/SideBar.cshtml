@@ -1,0 +1,90 @@
+﻿<div class="">
+	<ul class="nav nav-list">
+       @if (User.IsInRole("Sales"))
+        { 
+		<li class="nav-header" style="font-size: 10px">Sales</li>
+            <li style="font-size: 12px"><i class="icon-file"></i>@Html.ActionLink("Quotation", "NewQuotation", "Sales")</li>
+           <li style="font-size: 12px"><i class="icon-search"></i>@Html.ActionLink("Search Quot", "SearchQuotation", "Sales")</li>
+           <li style="font-size: 12px"><i class="icon-book"></i>@Html.ActionLink("Contacts", "Contacts", "Party")</li>
+        <li class="divider"></li> @*This is a Devider*@
+        }
+        @if (User.IsInRole("Documentation"))
+        { 
+        <li class="nav-header" style="font-size: 10px">Documentation</li>
+            <li style="font-size: 12px"><i class="icon-tasks"></i>@Html.ActionLink("Dash Board", "Index", "Manifest")</li>
+            <li style="font-size: 12px"><i class="icon-plus-sign"></i>@Html.ActionLink("Manifest Entry", "Create", "Manifest")</li>
+            <li style="font-size: 12px"><i class="icon-cloud-upload"></i>@Html.ActionLink("Upload XML", "DragAndDropUpload", "XML")</li>
+            <li style="font-size: 12px"><i class="icon-search"></i>@Html.ActionLink("Search", "AdvanceSearch", "Manifest")</li>
+        <li class="divider"></li> @*This is a Devider*@
+        }
+        @if (User.IsInRole("Clearance"))
+        { 
+		<li class="nav-header" style="font-size: 10px">OPERATIONS</li>
+            <li style="font-size: 12px"><i class="icon-list"></i>@Html.ActionLink("Dash Board", "Index", "Job")</li>
+            <li style="font-size: 12px"><i class="icon-plus-sign"></i>@Html.ActionLink("Job Entry", "Create", "Job")</li>
+            <li style="font-size: 12px"><i class="icon-search"></i>@Html.ActionLink("Search", "AdvanceSearch", "Job")</li>
+        <li class="divider"></li> @*This is a Devider*@
+        }
+        @if (User.IsInRole("Account"))
+        { 
+		<li class="nav-header" style="font-size: 10px">Accounts</li>
+            <li style="font-size: 12px"><i class="icon-shopping-cart"></i>@Html.ActionLink("Requests", "RequestedPayments", "Payments")</li>
+            @*<li><i class="icon-money"></i>@Html.ActionLink("Collection", "UnpaidPayments", "Payments")</li>*@
+            <li style="font-size: 12px"><i class="icon-th"></i>@Html.ActionLink("Tariff", "Index", "Sales")</li>
+        <li class="divider"></li> @*This is a Devider*@
+        }
+        @if (User.IsInRole("Reports"))
+        { 
+        <li class="nav-header" style="font-size: 10px">Reports</li>
+            <li style="font-size: 12px"><i class="icon-file"></i>@Html.ActionLink("Analysis", "Index", "Statistics")</li>
+            @*<li><i class="icon-bar-chart"></i>@Html.ActionLink("Statistics", "", "")</li>*@
+        <li class="divider"></li> @*This is a Devider*@
+        }
+        @if (User.IsInRole("Admin"))
+        { 
+            <li class="nav-header" style="font-size: 10px">Admin</li>
+            <li style="font-size: 12px"><i class="icon-group"></i>@Html.ActionLink("Employee", "index", "Employee")</li>
+            <li style="font-size: 12px"><i class="icon-star-empty"></i>@Html.ActionLink("Designation", "Designation", "Admin")</li>   
+        <li class="divider"></li> @*This is a Devider*@                 
+        }
+        @if (User.IsInRole("SystemAdmin"))
+        { 
+            <li class="nav-header" style="font-size: 10px">System Admin</li>
+			<li style="font-size: 12px"><i class="icon-user"></i>@Html.ActionLink("User", "ViewUser", "Account")</li>
+            <li style="font-size: 12px"><i class="icon-cog"></i>@Html.ActionLink("Setting", "index", "SystemSetting")</li>                
+        }
+        <li class="nav-header" style="font-size: 11px">Links</li>
+        <li style="font-size: 11px"><a href="https://efaas.egov.mv/Account/Login" target="_blank">
+            <img border="0" alt="Efaas" src="https://efaas.egov.mv/assets/favicon.png" width="16" height="16">
+            Efaas</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://my.port.mv/login" target="_blank">
+            <img border="0" alt="MplMale" src="https://my.port.mv//favicon-16x16.png" width="16" height="16">
+            My Bandharu</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://my.adduport.mv/login" target="_blank">
+            <img border="0" alt="MplAddu" src="https://my.port.mv//favicon-16x16.png" width="16" height="16">
+            My Bandharu AD</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://my.kulhudhuffushiport.mv/login" target="_blank">
+            <img border="0" alt="MplKD" src="https://my.port.mv//favicon-16x16.png" width="16" height="16">
+            My Bandharu KD</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://portal.customs.gov.mv/" target="_blank">
+            <img border="0" alt="Customs" src="https://www.customs.gov.mv//06ee95bb560dc392d7631d1998bad531.ico/favicon-16x16.png" width="16" height="16">
+            Customs portal</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://makudi.egov.mv/online/Home/Login" target="_blank">
+            <img border="0" alt="Makudi" src="https://makudi.egov.mv/online/Content/assets/images/favicon.ico" width="16" height="16">
+            Makudi</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://dhirithi.egov.mv/Home/Login" target="_blank">
+            <img border="0" alt="Dhirithi" src="https://dhirithi.egov.mv/Content/img/favicon/favicon-32x32.png" width="16" height="16">
+            Dhirithi</a>
+        </li>
+        <li style="font-size: 11px"><a href="https://business.egov.mv/" target="_blank">
+            <img border="0" alt="Dhirithi" src="https://business.egov.mv/img/favicon.ico" width="16" height="16">
+            Business Portal</a>
+        </li>
+	</ul>
+</div>

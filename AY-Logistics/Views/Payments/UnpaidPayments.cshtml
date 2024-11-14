@@ -1,0 +1,194 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+
+@model AYLogistics.Models.BLStatus
+@{
+    ViewBag.Title = "UnpaidPayments";
+}
+
+<h2>Payment Collection</h2>
+
+        
+<div class="formControlContainer margin-right35">
+        <table id="JobTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th class="hide">PaymentId</th>
+                <th class="hide">ShipmentId</th>
+                <th class="hide">HBLId</th>
+                <th style="width:80px "class="tableHeadFont">Invoice No</th>
+                <th style="width:105px" class="tableHeadFont">Payment Type</th>
+                <th style="width: "class="tableHeadFont">Consignee / Customer</th>
+                <th style="width:80px "class="tableHeadFont">Job / Manifest</th>
+                <th style="width:105px "class="tableHeadFont">HBL / AWBL</th>
+                <th style="width: " class="tableHeadFont">Vessel / Flight</th>
+                <th style="width:12px " class="tableHeadFont">Indicator</th>
+                <th style="width: 10px" class="tableHeadFont">Mode</th>
+                <th style="width:10px" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#JobTable').css('width', '100%');
+        loadJobTable();
+    });
+
+
+    $('#JobTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+function loadJobTable() {
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Payments/GetUnpaid',
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Payments/GetUnpaid',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "PaymentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "DocumentNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "PaymentType", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "FreightIndicatorName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+
+                        return "<div class='dropdown show'>"
+                         + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                          + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                            //+ "<a class='dropdown-item' href='#' onclick='updateCollection(" + row.PaymentId + "," + row.HBLId + ")'>&nbsp;Update Payment</a>"
+                            + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                             + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                          + "</div></div>"
+                    }
+                    }
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+}
+
+function init() {
+}
+
+function updateCollection(PaymentId, HBLId) {
+    var myWindow = window.open("../Payments/UpdateCollection?PaymentId=" + PaymentId + "&HBLId=" + HBLId, "width=1100,height=600");
+    ///after CLose popup window
+    myWindow.onbeforeunload = function () {
+
+    }
+}
+
+function attachOpen(shipmentId, BLid) {
+   // var myWindow = window.open("../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "Documents", "width=1100,height=600");
+    var page = "../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+    var $dialog = $('<div style="overflow:visible"></div>')
+                   .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                   .dialog({
+                       autoOpen: false,
+                       modal: true,
+                       height: 720,
+                       width: 1240,
+                       resizable: true,
+                       title: "DOCUMENTS",
+                       buttons: {
+                           Close: function () {
+                               $(this).dialog("close");
+
+                           }
+                       }
+                   });
+    $dialog.dialog('open');
+    ///after CLose popup window
+    myWindow.onbeforeunload = function () {
+    }
+}
+function shipmentStatusOpen(shipmentId, BLid) {
+  //  var myWindow = "";
+    //  myWindow = window.open("../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1335,height=400");
+    var page = "../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+    var $dialog = $('<div style="overflow:visible"></div>')
+                   .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                   .dialog({
+                       autoOpen: false,
+                       modal: true,
+                       height: 720,
+                       width: 1240,
+                       resizable: true,
+                       title: "STATUS",
+                       buttons: {
+                           Close: function () {
+                               $(this).dialog("close");
+
+                           }
+                       }
+                   });
+    $dialog.dialog('open');
+}
+
+</script>   

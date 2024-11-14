@@ -1,0 +1,185 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "NaaluLogistics";
+}
+
+<div class="max-w-7xl w-full mx-auto px-4">
+
+    <!-- Date Filter Section -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between my-8">
+        <div class="flex space-x-4">
+            <div>
+                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                <input type="date" id="start-date" name="start-date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div>
+                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                <input type="date" id="end-date" name="end-date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+        </div>
+        <div class="mt-3 md:mt-0 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
+            <button id="filter-button" class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg shadow hover:bg-blue-700">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <button id="reset-button" class="px-4 py-1.5 text-sm bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700">
+                <i class="fas fa-redo"></i> Reset Filter
+            </button>
+        </div>
+    </div>
+
+    <!-- Manifests Section -->
+    <div class="my-8">
+        <h2 class="text-xl font-bold mb-4">Recent Manifests</h2>
+        <div id="manifests-container" class="grid gap-6 lg:grid-cols-2 sm:grid-cols-1">
+            <!-- Manifest cards will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Jobs Section -->
+    <div class="my-8">
+        <h2 class="text-xl font-bold mb-4">Recent Jobs</h2>
+        <div id="jobs-container" class="grid gap-6 lg:grid-cols-2 sm:grid-cols-1">
+            <!-- Job cards will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fetch and render manifests based on dates
+    function fetchManifests(startDate, endDate) {
+        const start = startDate || getTodayDate();
+        const end = endDate || getTodayDate();
+
+        fetch(`/Manifest/FilterManifest/?StartDate=${start}&EndDate=${end}`)
+        .then(response => response.json())
+        .then(data => {
+            renderManifests(data.aaData);
+    })
+    .catch(error => console.error('Error fetching manifests:', error));
+    }
+
+    // Fetch and render jobs based on dates
+    function fetchJobs(startDate, endDate) {
+        const start = startDate || getTodayDate();
+        const end = endDate || getTodayDate();
+
+        fetch(`/Job/FilterJob/?StartDate=${start}&EndDate=${end}`)
+        .then(response => response.json())
+        .then(data => {
+            renderJobs(data.aaData);
+    })
+    .catch(error => console.error('Error fetching jobs:', error));
+    }
+
+    // Render manifests as cards
+    function renderManifests(manifests) {
+        const container = document.getElementById('manifests-container');
+        container.innerHTML = '';
+
+        if (!manifests || manifests.length === 0) {
+            container.innerHTML = '<p class="text-gray-500">No manifests found for the selected dates.</p>';
+            return;
+        }
+
+        manifests.forEach(manifest => {
+            const card = `
+                <div class="border rounded-lg shadow p-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold">Manifest #${manifest.Number}</h3>
+                        <span class="text-gray-500 text-sm">${manifest.RecentStatus === 'New Manifest' ? 
+                            '<i class="fas fa-check-circle text-green-500"></i> New Manifest' : 
+                            '<i class="fas fa-clock text-yellow-500"></i> Pending'}
+        </span>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+        <div><strong>Date:</strong> ${manifest.DateCreated}</div>
+        <div><strong>BL:</strong> ${manifest.HouseBL || '-'}</div>
+        <div><strong>Mode:</strong> ${manifest.ModeOfShipmentName}</div>
+        <div><strong>By:</strong> ${manifest.Employee}</div>
+    </div>
+</div>
+            `;
+        container.innerHTML += card;
+    });
+    }
+
+    // Render jobs as cards
+    function renderJobs(jobs) {
+        const container = document.getElementById('jobs-container');
+        container.innerHTML = '';
+
+        if (!jobs || jobs.length === 0) {
+            container.innerHTML = '<p class="text-gray-500">No jobs found for the selected dates.</p>';
+            return;
+        }
+
+        jobs.forEach(job => {
+            const card = `
+                <div class="border rounded-lg shadow p-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold">Job #${job.JobNo}</h3>
+                        <span class="text-gray-500 text-sm">${job.RecentStatus === 'Completed' ? 
+                            '<i class="fas fa-check-circle text-green-500"></i> Completed' : 
+                            '<i class="fas fa-clock text-yellow-500"></i> In Progress'}
+        </span>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+        <div><strong>Reg Date:</strong> ${job.RegistrationDate}</div>
+        <div><strong>HBL/AWBL:</strong> ${job.HouseBL || '-'}</div>
+        <div><strong>Discharge:</strong> ${job.DateDischargeGreen || '-'}</div>
+        <div><strong>Demurrage:</strong> ${job.DateDemurrageRed || '-'}</div>
+        <div><strong>Mode:</strong> ${job.ShipmentMode}</div>
+        <div><strong>By:</strong> ${job.Employee}</div>
+    </div>
+</div>
+            `;
+        container.innerHTML += card;
+    });
+    }
+
+    // Helper function to get today's date in YYYY-MM-DD format
+    function getTodayDate() {
+        const today = new Date();
+        return today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    }
+
+    // Initialize fetching of manifests and jobs with default dates (today)
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = getTodayDate();
+        document.getElementById('start-date').value = today;
+        document.getElementById('end-date').value = today;
+
+        fetchManifests(today, today);
+        fetchJobs(today, today);
+    });
+
+    // Event listener for filter button
+    document.getElementById('filter-button').addEventListener('click', function() {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+
+        // Ensure dates are valid; if not, default to today
+        if (!startDate || !endDate) {
+            console.error("Start or End date is invalid. Using today's date.");
+        }
+
+        // Fetch data based on selected dates
+        fetchManifests(startDate, endDate);
+        fetchJobs(startDate, endDate);
+    });
+
+    // Event listener for reset button
+    document.getElementById('reset-button').addEventListener('click', function() {
+        // Reset the date inputs to today's date
+        const today = getTodayDate();
+        document.getElementById('start-date').value = today;
+        document.getElementById('end-date').value = today;
+
+        // Fetch data for today's date
+        fetchManifests(today, today);
+        fetchJobs(today, today);
+    });
+</script>
+
+

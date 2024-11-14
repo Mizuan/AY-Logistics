@@ -1,0 +1,168 @@
+﻿@model AYLogistics.Models.SystemSetting
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<h2>System Settings</h2>
+
+@using (Html.BeginForm("UpdateManifestFormat", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+    <fieldset style="width: 600px;">
+        <legend>Format and Numbering:</legend>
+        <div class="control pull-left">
+            @Html.LabelFor(model => model.ManifestFormat)
+            @Html.TextBoxFor(model => model.ManifestFormat)
+            @Html.ValidationMessageFor(model => model.ManifestFormat)
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.ManifestSequence)
+            @Html.TextBoxFor(model => model.ManifestSequence, new { @style = "width: 50px" })
+            @Html.ValidationMessageFor(model => model.ManifestSequence)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+    </fieldset>
+</div>
+}
+
+@using (Html.BeginForm("UpdateJobFormat", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+        <div class="control pull-left clear">
+            @Html.LabelFor(model => model.JobFormatSEA)
+            @Html.TextBoxFor(model => model.JobFormatSEA)
+            @Html.ValidationMessageFor(model => model.JobFormatSEA)
+        </div>
+        <div class="control pull-left clear">
+            @Html.LabelFor(model => model.JobFormatAIR)
+            @Html.TextBoxFor(model => model.JobFormatAIR)
+            @Html.ValidationMessageFor(model => model.JobFormatAIR)
+        </div>
+        <div class="control pull-left clear hide">
+            @Html.LabelFor(model => model.JobFormatPOST)
+            @Html.TextBoxFor(model => model.JobFormatPOST)
+            @Html.ValidationMessageFor(model => model.JobFormatPOST)
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.JobSequence)
+            @Html.TextBoxFor(model => model.JobSequence, new { @style = "width: 50px" })
+            @Html.ValidationMessageFor(model => model.JobSequence)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+</div>
+}
+
+@using (Html.BeginForm("UpdateBLFormat", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+        <div class="control pull-left clear">
+            @Html.LabelFor(model => model.HouseBLFormat)
+            @Html.TextBoxFor(model => model.HouseBLFormat)
+            @Html.ValidationMessageFor(model => model.HouseBLFormat)
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.HBLSequence)
+            @Html.TextBoxFor(model => model.HBLSequence, new { @style = "width: 50px" })
+            @Html.ValidationMessageFor(model => model.HBLSequence)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+</div>
+}
+@using (Html.BeginForm("UpdateQuotFormat", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+        <div class="control pull-left clear">
+            @Html.LabelFor(model => model.QuotFormat)
+            @Html.TextBoxFor(model => model.QuotFormat)
+            @Html.ValidationMessageFor(model => model.QuotFormat)
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.QuotSequence)
+            @Html.TextBoxFor(model => model.QuotSequence, new { @style = "width: 50px" })
+            @Html.ValidationMessageFor(model => model.QuotSequence)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+</div>
+}
+
+
+@using (Html.BeginForm("UpdateDCFormat", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+        <div class="control pull-left clear">
+            @Html.LabelFor(model => model.DCFormat)
+            @Html.TextBoxFor(model => model.DCFormat)
+            @Html.ValidationMessageFor(model => model.DCFormat)
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.DCSequence)
+            @Html.TextBoxFor(model => model.DCSequence, new { @style = "width: 50px" })
+            @Html.ValidationMessageFor(model => model.DCSequence)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+</div>
+}
+
+
+@using (Html.BeginForm("AddCommodity", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+    <fieldset style="width: 600px;">
+        <legend>Commodity Types:</legend>
+        <div class="control pull-left">
+            @Html.LabelFor(model => model.commodityId)
+            @Html.DropDownListFor(m => m.commodityId, new SelectList(AYLogistics.Models.SystemSetting.GetCommodities(), "commodityId", "CommodityName"), new { @class = "" })
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.CommodityName)
+            @Html.TextBoxFor(model => model.CommodityName)
+            @Html.ValidationMessageFor(model => model.CommodityName)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+    </fieldset>
+</div>
+}
+
+@using (Html.BeginForm("AddDocType", "SystemSetting", FormMethod.Post))
+{
+@Html.ValidationSummary(true)
+<div  class="involver span7">
+    <fieldset style="width: 600px;">
+        <legend>Document Types:</legend>
+        <div class="control pull-left">
+            @Html.LabelFor(model => model.documentId)
+            @Html.DropDownListFor(m => m.commodityId, new SelectList(AYLogistics.Models.SystemSetting.GetDocAvailableTypes(), "documentId", "DocumentName"), new { @class = "" })
+        </div>
+        <div class="control pull-left space-right">
+            @Html.LabelFor(model => model.DocumentName)
+            @Html.TextBoxFor(model => model.DocumentName)
+            @Html.ValidationMessageFor(model => model.DocumentName)
+        </div>
+        <div class="control pull-left space-right">
+         <button class="btn btn-primary" style="margin-top: 24px;"><i class="icon-save" ></i></button>
+        </div>
+    </fieldset>
+</div>
+}
+

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title> 
+    <link rel="shortcut icon" href="../../Content/images/aikoclock256x256.ico" />   
+
+    
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <!-- Tailwind CSS and Flowbite CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="@Url.Content("~/Content/CustomStyles.css")" rel="stylesheet" type="text/css" />
+
+    @* jQuery and Knockout *@ 
+    <script src="@Url.Content("~/Scripts/jquery-1.8.3.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.24.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/modernizr-1.7.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/knockout-2.2.0.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/knockout.mapping-latest.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/mycustom.js")" type="text/javascript"></script>
+
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="w-full">
+            @RenderBody()
+        </div>
+    </div> 
+
+    <script type="text/javascript">
+        /****Auto redirect to login page after session expiration*******/
+        var timeout = @FormsAuthentication.Timeout.TotalMilliseconds; // time from 'Web.config'
+        var wintimeout;
+
+        function SetWinTimeout() {
+            wintimeout = window.setTimeout("window.location.href='@FormsAuthentication.LoginUrl';", timeout);
+        }
+
+        $('body').click(function () {  
+            window.clearTimeout(wintimeout);  
+            SetWinTimeout();
+        });
+
+        SetWinTimeout();
+    </script>
+    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+﻿@model AYLogistics.Models.Party
+@{
+    ViewBag.Title = "Manage Party";  
+}
+ @Html.HiddenFor(m => m.AddressId)
+ @Html.HiddenFor(m => m.ContactId)
+<div class="form_control_line">
+@*    <button type="button" class="btn btn-primary hide" id="btnEditParty">
+        <i class="icon-edit"></i>
+        <span>update</span>
+    </button>*@
+    <button type="button" class="btn btn-primary" id="btnAddParty">
+        <i class="icon-plus-sign-alt"></i>
+        <span>Legal Body / Individual</span>
+    </button>
+</div>
+
+<div class="formControlContainer dialogParty" id="dialogParty">
+   <div class="form_control_line">
+      <div class="control pull-left">
+         <div class="form_newLabel"><label>Type *</label></div>
+         @Html.DropDownListFor(m => m.PartyTypeId, new SelectList(AYLogistics.Models.Party.GetPartyType(), "PartyTypeId", "PartyTypeName"), "-select-", new { @class = "input-medium" })
+          @Html.ValidationMessageFor(model => model.PartyTypeId)
+       </div>
+       <div class="control pull-left space-right">
+          <div class="form_newLabel"><label>Name *</label></div>
+          <input type="text" id="PartyName" class="eng" style="width: 540px;" />
+       </div>
+       <div class="control pull-left clear">
+           <div class="form_newLabel marginRight"><label>RegNo/NIC</label></div>
+           <input type="text" id="RegNo" class="input-medium"/>
+        </div>
+        <div class="control pull-left space-right">
+           <div class="form_newLabel marginRight"><label>Tin No.</label></div>
+           <input type="text" id="TinNo" class="input-medium" style="width: 170px;"/>
+        </div>
+        <div class="control pull-left space-right">
+           <div class="form_newLabel marginRight"><label>CNumber (Import/Export)</label></div>
+           <input type="text" id="CNumber" class="input-medium" style="width: 178px;"/>
+        </div>
+         <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight"><label>Country *</label></div>
+            @Html.DropDownListFor(m => m.NationalityId, new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"), "-Select-", new { @class = "input-medium chosen_select_L" })
+            @Html.ValidationMessageFor(model => model.NationalityId)
+        </div>
+        <div class="control pull-left clear hide">
+            <div class="form_newLabel marginRight"><label>Atoll</label></div>
+            <input type="text" id="Atoll" class="input-small" />
+        </div>
+         <div class="control pull-left space-right hide">
+           <div class="form_newLabel marginRight"><label>Island</label></div>
+           <input type="text" id="Island" class="input-small" style="width: 226px;"/>
+        </div>
+         <div class="control pull-left cleart">
+           <div class="form_newLabel marginRight"><label>Address 1 *</label></div>
+           <input type="text" id="Address1" class="eng" style="width: 540px;" />
+        </div>
+        @*<div class="control pull-left space-right">
+           <div class="form_newLabel marginRight"><label>Adress 2</label></div>
+           <input type="text" id="Address2" class="eng" style="width: 339px;" />
+        </div>*@
+
+
+         <div class="control pull-left space-right">
+           <div class="form_newLabel marginRight"><label>TEL No.</label></div>
+           <input type="text" id="TelNo" class="input-small" style="width: 135px;"/>
+        </div>
+        <div class="control pull-left space-right hide">
+           <div class="form_newLabel marginRight"><label>FAX No.</label></div>
+           <input type="text" id="FaxNo" class="input-small"/>
+        </div>
+         <div class="control pull-left clear">
+           <div class="form_newLabel marginRight"><label>Email</label></div>
+           <input type="text" id="Email" class="input-medium" style="width: 367px;"/>
+        </div>
+         <div class="control pull-left space-right">
+           <div class="form_newLabel marginRight"><label>ContactName</label></div>
+           <input type="text" id="ContactName" class="input-medium"/>
+        </div>
+         <div class="control pull-left space-right">
+           <div class="form_newLabel marginRight"><label>Mobile No</label></div>
+           <input type="text" id="MobileNo" class="input-small" style="width: 135px;"/>
+        </div>
+
+        <div class="control pull-left clear">
+            <div class="form_newLabel marginRight" style="color:blue;"><label>MYBANDHARU user</label></div>
+            <input type="text" id="MBuser" class="input-medium" style="width: 217px;"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight" style="color:green;"><label>CUSTOMS user</label></div>
+            <input type="text" id="CustomUser" class="input-medium" style="width: 217px;"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight" style="color:orange;"><label>ASYCUDA user</label></div>
+            <input type="text" id="ACuser" class="input-medium" style="width: 217px;"/>
+        </div>
+
+
+        <div class="control pull-left clear">
+            <div class="form_newLabel marginRight" style="color:blue;"><label>password</label></div>
+            <input type="text" id="MBpassword" class="input-medium" style="width: 217px;"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight" style="color:green;"><label>password</label></div>
+            <input type="text" id="CustomPwd" class="input-medium" style="width: 217px;"/>
+        </div>
+        <div class="control pull-left space-right">
+            <div class="form_newLabel marginRight" style="color:orange;"><label>password</label></div>
+            <input type="text" id="ACpassword" class="input-medium" style="width: 217px;"/>
+        </div>
+
+
+
+   </div>
+</div>
+
+<script type="text/javascript">
+
+    var $dialige = $(".dialogParty");
+
+    $(document).ready(function () {
+        $(".dialogParty").hide();
+    });
+
+    function ClearDialog() {
+        $('#PartyName').val("");
+        $('#RegNo').val("");
+        $('#TinNo').val("");
+        $('#CNumber').val("");
+        $('#Atoll').val("");
+        $('#Island').val("");
+        $('#Address1').val("");
+       // $('#Address2').val("");
+        $('#TelNo').val("");
+        $('#FaxNo').val("");
+        $('#Email').val("");
+        $('#ContactName').val("");
+        $('#MobileNo').val("");
+        $('#MBuser').val("");
+        $('#ACuser').val("");
+        $('#MBpassword').val("");
+        $('#ACpassword').val("");
+        $('#CustomUser').val("");
+        $('#CustomPwd').val("");
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $('#PartyTypeId').val(0);
+        $('#NationalityId').val(0);
+        $(".chosen_select_L").chosen(); //~
+    }
+
+    $("#btnAddParty").click(function (e) {
+        ClearDialog();
+        $dialige.dialog({
+            width: 760,
+            modal: true,
+            height: 505,
+            title: "Add New Party",
+            buttons: [{
+                text: "Save",
+                'class': 'btn btn-primary',
+                click: function () {
+                    if ($('#PartyName').val() == null || $('#NationalityId').val() == 0) {
+                        $.pnotify({
+                            title: 'Add Party',
+                            text: ' Please fill the required information!',
+                            type: 'warning'
+                        });
+                    } else {
+                        //  e.preventDefault();
+                        SaveParty();
+                        $dialige.dialog('close');
+                        // window.location.href = "/Manifest/Create";
+                    }
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $(".chosen_select_L").chosen(); //~
+    });
+
+    function EditParty(Id) {
+        $dialige.dialog({
+            width: 760,
+            modal: true,
+            height: 505,
+            title: "Edit Party",
+            buttons: [{
+                text: "Update",
+                'class': 'btn btn-primary',
+                click: function () {
+                    /*TO DO: give a condition with Role to disable update button*/
+                    UpdateParty(Id);
+                    $dialige.dialog('close');
+
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        GetSelectedParty(Id);
+    }
+
+    function SaveParty(e) {
+        var PartyTypeId = $('#PartyTypeId').val();
+        var PartyName = $('#PartyName').val();
+        var RegNo = $('#RegNo').val();
+        var TinNo = $('#TinNo').val();
+        var CNumber = $('#CNumber').val();
+        var NationalityId = $('#NationalityId').val();
+        var Atoll = $('#Atoll').val();
+        var Island = $('#Island').val();
+        var Address1 = $('#Address1').val();
+       // var Address2 = $('#Address2').val();
+        var TelNo = $('#TelNo').val();
+        var FaxNo = $('#FaxNo').val();
+        var Email = $('#Email').val();
+        var ContactName = $('#ContactName').val();
+        var MobileNo = $('#MobileNo').val();
+        var MBuser = $('#MBuser').val();
+        var ACuser = $('#ACuser').val();
+        var MBpassword = $('#MBpassword').val();
+        var ACpassword = $('#ACpassword').val();
+        var CustomUser = $('#CustomUser').val();
+        var CustomPwd = $('#CustomPwd').val();
+
+
+        var PartyInfo = { PartyTypeId: PartyTypeId, PartyName: PartyName, RegNo: RegNo, TinNo: TinNo, CNumber: CNumber, NationalityId: NationalityId,
+            Atoll: Atoll, Island: Island, Address1: Address1, TelNo: TelNo, FaxNo: FaxNo, Email: Email, ContactName: ContactName, MobileNo: MobileNo,
+            MBuser: MBuser, MBpassword: MBpassword, CustomUser: CustomUser, CustomPwd: CustomPwd,ACuser: ACuser, ACpassword: ACpassword,
+        };
+
+        var json = JSON.stringify(PartyInfo);
+
+        $.ajax({
+            url: '/Party/SaveParty',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Add Party',
+                    text: ' New Party has been Saved!',
+                    type: 'success'
+                });
+                ClearDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Add Party',
+                    text: 'Party has not been save, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    function GetSelectedParty(Id) {
+         ClearDialog();
+        var URL = '/Party/GetSelectedParty';
+
+        $.getJSON(URL + '/?PartyId=' + Id, function (data) {
+            try {
+                $('#PartyName').val(data.PartyName);
+                $('#RegNo').val(data.RegNo);
+                $('#TinNo').val(data.TinNo);
+                $('#CNumber').val(data.CNumber);
+                $('#Atoll').val(data.Atoll);
+                $('#Island').val(data.Island);
+                $('#Address1').val(data.Address1);
+              //  $('#Address2').val(data.Address2);
+                $('#TelNo').val(data.TelNo);
+                $('#FaxNo').val(data.FaxNo);
+                $('#Email').val(data.Email);
+                $('#ContactName').val(data.ContactName);
+                $('#MobileNo').val(data.MobileNo);
+                $('#MBuser').val(data.MyBandharuUser);
+                $('#MBpassword').val(data.MyBandharuPwd);
+                $('#CustomUser').val(data.CustomUser);
+                $('#CustomPwd').val(data.CustomPwd);
+                $('#ACuser').val(data.AsycudaUser);
+                $('#ACpassword').val(data.AsycudaPwd);
+                $(".chosen_select_L").chosen('destroy'); // reset chosen
+                $('#PartyTypeId').val(data.PartyTypeId);
+                $('#AddressId').val(data.AddressId);
+                $('#ContactId').val(data.ContactId);
+                $('#NationalityId').val(data.NationalityId);
+                $(".chosen_select_L").chosen(); //~
+            }
+            catch (e) {
+                ClearDialog();
+            }
+        });
+    }
+
+    function UpdateParty(Id) {
+        var PartyId = Id;
+        var PartyTypeId = $('#PartyTypeId').val();
+        var PartyName = $('#PartyName').val();
+        var RegNo = $('#RegNo').val();
+        var TinNo = $('#TinNo').val();
+        var CNumber = $('#CNumber').val();
+        var NationalityId = $('#NationalityId').val();
+        var Atoll = $('#Atoll').val();
+        var Island = $('#Island').val();
+        var Address1 = $('#Address1').val();
+       // var Address2 = $('#Address2').val();
+        var TelNo = $('#TelNo').val();
+        var FaxNo = $('#FaxNo').val();
+        var Email = $('#Email').val();
+        var ContactName = $('#ContactName').val();
+        var MobileNo = $('#MobileNo').val();
+        var AddressId = $('#AddressId').val();
+        var ContactId = $('#ContactId').val();
+        var MBuser = $('#MBuser').val();
+        var ACuser = $('#ACuser').val();
+        var MBpassword = $('#MBpassword').val();
+        var ACpassword = $('#ACpassword').val();
+        var CustomUser = $('#CustomUser').val();
+        var CustomPwd = $('#CustomPwd').val();
+
+        var PartyInfo = { AddressId: AddressId, ContactId: ContactId, PartyId: PartyId, PartyTypeId: PartyTypeId, PartyName: PartyName, RegNo: RegNo, TinNo: TinNo, CNumber: CNumber, NationalityId: NationalityId,
+            Atoll: Atoll, Island: Island, Address1: Address1, TelNo: TelNo, FaxNo: FaxNo, Email: Email, ContactName: ContactName, MobileNo: MobileNo,
+            MBuser: MBuser, MBpassword: MBpassword, CustomUser: CustomUser, CustomPwd: CustomPwd, ACuser: ACuser, ACpassword: ACpassword,
+        };
+
+        var json = JSON.stringify(PartyInfo);
+
+        $.ajax({
+            url: '/Party/UpdateParty',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Update Party',
+                    text: ' Party has been Updated!',
+                    type: 'success'
+                });
+                ClearDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Update Party',
+                    text: 'Party has not been updated, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+</script>

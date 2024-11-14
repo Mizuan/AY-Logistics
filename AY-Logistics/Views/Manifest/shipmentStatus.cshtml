@@ -1,0 +1,92 @@
+﻿@{
+    
+    ViewBag.Title = "Shipment Status";
+}
+
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <!-- Page Title -->
+    <h2 class="text-3xl font-semibold text-gray-900 mb-6">Shipment Status</h2>
+
+    <!-- Shipment Status Section -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h3 class="text-xl font-bold text-blue-600 mb-4">Shipment Status</h3>
+        <ul class="timeline space-y-4">
+            @foreach (Dictionary<object, object> dictionary in AYLogistics.Models.ShipmentStatusVM.GetShipmentStatusList(ViewBag.ShipmentId))
+            {
+                if (dictionary["DateCreated"].ToString() == "-")
+                {
+                    <li class="flex items-start space-x-4">
+                        <!-- Timeline Indicator -->
+                        <div class="w-8 h-8 rounded-full bg-gray-400"></div>
+                        
+                        <!-- Timeline Content -->
+                        <div>
+                            <div class="text-gray-500 text-sm">@dictionary["DateCreated"].ToString()</div>
+                            <div class="font-semibold text-base text-gray-900">@dictionary["StatusName"].ToString()</div>
+                            <div class="text-sm text-gray-600">By: @dictionary["FirstName"].ToString()</div>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="flex items-start space-x-4">
+                        <!-- Timeline Indicator -->
+                        <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        
+                        <!-- Timeline Content -->
+                        <div>
+                            <div class="text-gray-500 text-sm">@dictionary["DateCreated"].ToString()</div>
+                            <div class="font-semibold text-lg text-gray-900">@dictionary["StatusName"].ToString()</div>
+                            <div class="text-sm text-gray-600">By: @dictionary["FirstName"].ToString()</div>
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+
+    <!-- BL / Job Status Section -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h3 class="text-xl font-bold text-blue-600 mb-4">BL / Job Status</h3>
+        <ul class="timeline space-y-4">
+            @foreach (Dictionary<object, object> dictionary in AYLogistics.Models.ShipmentStatusVM.GetHouseBLStatusList(ViewBag.HouseBLId))
+            {
+                if (dictionary["DateCreated"].ToString() == "-")
+                {
+                    <li class="flex items-start space-x-4">
+                        <!-- Timeline Indicator -->
+                        <div class="w-8 h-8 rounded-full bg-gray-400"></div>
+                        
+                        <!-- Timeline Content -->
+                        <div>
+                            <div class="text-gray-500 text-sm">@dictionary["DateCreated"].ToString()</div>
+                            <div class="font-semibold text-lg text-gray-900">@dictionary["StatusName"].ToString()</div>
+                            <div class="text-sm text-gray-600">By: @dictionary["FirstName"].ToString()</div>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="flex items-start space-x-4">
+                        <!-- Timeline Indicator -->
+                        <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        
+                        <!-- Timeline Content -->
+                        <div>
+                            <div class="text-gray-500 text-sm">@dictionary["DateCreated"].ToString()</div>
+                            <div class="font-semibold text-lg text-gray-900">@dictionary["StatusName"].ToString()</div>
+                            <div class="text-sm text-gray-600">By: @dictionary["FirstName"].ToString()</div>
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<!-- Include FontAwesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>

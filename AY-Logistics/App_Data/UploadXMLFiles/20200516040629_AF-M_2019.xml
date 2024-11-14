@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Awmds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <General_segment>
+    <General_segment_id>
+      <Customs_office_code />
+      <Voyage_number>4181</Voyage_number>
+      <Date_of_departure>2019-12-02</Date_of_departure>
+      <Date_of_arrival>2019-12-05</Date_of_arrival>
+      <Time_of_arrival>06:30</Time_of_arrival>
+    </General_segment_id>
+    <Totals_segment>
+      <Total_number_of_bols>1</Total_number_of_bols>
+      <Total_number_of_packages>20</Total_number_of_packages>
+      <Total_number_of_containers>2</Total_number_of_containers>
+      <Total_gross_mass>10.00</Total_gross_mass>
+    </Totals_segment>
+    <Transport_information>
+      <Carrier>
+        <Carrier_code />
+        <Carrier_name>RT ODIN</Carrier_name>
+        <Carrier_address />
+      </Carrier>
+      <Shipping_Agent>
+        <Shipping_Agent_code />
+        <Shipping_Agent_name />
+      </Shipping_Agent>
+      <Mode_of_transport_code>1</Mode_of_transport_code>
+      <Identity_of_transporter />
+      <Nationality_of_transporter_code>AF</Nationality_of_transporter_code>
+      <Place_of_transporter />
+      <Master_information />
+    </Transport_information>
+    <Load_unload_place>
+      <Place_of_departure_code>AUMVA</Place_of_departure_code>
+      <Place_of_destination_code>AUMVL</Place_of_destination_code>
+    </Load_unload_place>
+    <Tonnage>
+      <Tonnage_net_weight>10</Tonnage_net_weight>
+      <Tonnage_gross_weight>10</Tonnage_gross_weight>
+    </Tonnage>
+  </General_segment>
+  <Bol_segment>
+    <Bol_id>
+      <Bol_reference>BOL1001</Bol_reference>
+      <Line_number>1</Line_number>
+      <Bol_nature>22</Bol_nature>
+      <Bol_type_code>BL</Bol_type_code>
+      <Master_bol_ref_number>MBOL100026</Master_bol_ref_number>
+    </Bol_id>
+    <Load_unload_place>
+      <Place_of_loading_code>AUMVA</Place_of_loading_code>
+      <Place_of_unloading_code>AUMVL</Place_of_unloading_code>
+      <Port_of_origin_code>AUMVH</Port_of_origin_code>
+      <Original_port_of_loading_code>AUMVH</Original_port_of_loading_code>
+      <Place_of_delivery_code>AUMVH</Place_of_delivery_code>
+      <Place_of_ultimate_destination_code>AUMVH</Place_of_ultimate_destination_code>
+    </Load_unload_place>
+    <Traders_segment>
+      <Carrier>
+        <Carrier_code />
+        <Carrier_name>RT ODIN</Carrier_name>
+        <Carrier_address />
+      </Carrier>
+      <Exporter>
+        <Exporter_name>Raaraa Investment Investment and and Investment Pvt Ltd</Exporter_name>
+        <Exporter_address>Marujaanuge/ Male',K, Afghanistan</Exporter_address>
+      </Exporter>
+      <Notify>
+        <Notify_code />
+        <Notify_name>Raaraa Investment Investment and and Investment Pvt Ltd</Notify_name>
+        <Notify_address>Marujaanuge/ Male',K, Afghanistan</Notify_address>
+      </Notify>
+      <Consignee>
+        <Consignee_name>Raaraa Investment Investment and and Investment Pvt Ltd</Consignee_name>
+        <Consignee_address>Marujaanuge/ Male',K, Afghanistan</Consignee_address>
+      </Consignee>
+    </Traders_segment>
+    <ctn_segment>
+      <Ctn_reference>100</Ctn_reference>
+      <Number_of_packages>10</Number_of_packages>
+      <Type_of_container>40HC</Type_of_container>
+      <Empty_Full>1/1</Empty_Full>
+      <Marks1>123456</Marks1>
+      <Marks2 />
+      <Marks3 />
+      <Sealing_Party />
+    </ctn_segment>
+    <ctn_segment>
+      <Ctn_reference>101</Ctn_reference>
+      <Number_of_packages>10</Number_of_packages>
+      <Type_of_container>20HC</Type_of_container>
+      <Empty_Full>1/2</Empty_Full>
+      <Marks1>123457</Marks1>
+      <Marks2 />
+      <Marks3 />
+      <Sealing_Party />
+    </ctn_segment>
+    <Goods_segment>
+      <Number_of_packages>20</Number_of_packages>
+      <Package_type_code />
+      <Package_type />
+      <Gross_mass>10</Gross_mass>
+      <Goods_description>test</Goods_description>
+      <Volume_in_cubic_meters>10</Volume_in_cubic_meters>
+      <Num_of_ctn_for_this_bol>2</Num_of_ctn_for_this_bol>
+      <Information />
+    </Goods_segment>
+    <Value_segment>
+      <Freight_segment>
+        <PC_indicator>PRE</PC_indicator>
+        <Freight_value>0</Freight_value>
+        <Freight_currency />
+      </Freight_segment>
+    </Value_segment>
+  </Bol_segment>
+</Awmds>

@@ -1,0 +1,98 @@
+﻿@model AYLogistics.Models.SalesCurrency
+
+<!-- Form Section -->
+@using (Html.BeginForm("AddSalesCurrency", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-red-500 text-sm mb-4" })
+    <div class="w-full bg-white rounded-lg shadow p-6">
+        <fieldset>
+            <legend class="text-lg font-semibold mb-4">Add Currency</legend>
+
+            <!-- Two-Column Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Currency Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.Currency)
+                    </label>
+                    @Html.TextBoxFor(
+                        m => m.Currency,
+                        new {
+                            @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        }
+                    )
+                    @Html.ValidationMessageFor(model => model.Currency, "", new { @class = "text-red-500 text-sm" })
+                </div>
+
+                <!-- Exchange Rate -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        @Html.LabelFor(model => model.ExchangeRate)
+                    </label>
+                    @Html.TextBoxFor(
+                        m => m.ExchangeRate,
+                        new {
+                            @class = "p-2 w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        }
+                    )
+                    @Html.ValidationMessageFor(model => model.ExchangeRate, "", new { @class = "text-red-500 text-sm" })
+                </div>
+            </div>
+        </fieldset>
+        <button type="submit" class="mt-4 px-4 py-1.5 text-sm bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none">
+            Save
+        </button>
+    </div>
+}
+
+<!-- Card Layout for Currencies -->
+<div id="currency-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+    <!-- Cards will be dynamically inserted here -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        fetchCurrencies();
+
+        // Fetch Currencies from the server
+        function fetchCurrencies() {
+            $.ajax({
+                url: '/Sales/GetCurrencies',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    renderCurrencyCards(response.aaData);
+                },
+                error: function () {
+                    alert('Failed to load currencies.');
+                }
+            });
+        }
+
+        // Render Currencies as cards
+        function renderCurrencyCards(currencies) {
+            const container = $('#currency-cards-container');
+            container.empty();
+
+            if (currencies.length === 0) {
+                container.html('<p class="text-gray-500">No currencies found.</p>');
+                return;
+            }
+
+            currencies.forEach(currency => {
+                const card = `
+                    <div class="border rounded-lg shadow p-4 bg-white">
+                        <h3 class="text-lg font-semibold text-gray-800">${currency.Name}</h3>
+                        <p class="text-sm text-gray-600"><strong>Exchange Rate:</strong> ${currency.ExchangeRate}</p>
+                        <div class="mt-4">
+                            <a href="/Sales/UpdateCurrency?Id=${currency.Id}" class="px-4 py-1.5 text-sm bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                `;
+            container.append(card);
+        });
+    }
+    });
+</script>

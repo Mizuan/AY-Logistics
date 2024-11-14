@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Drag and Drop";
+}
+
+<!-- Tailwind CSS and Flowbite Integration -->
+<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+    <div class="w-full max-w-lg">
+
+        <!-- Flowbite Alert -->
+        <div id="alertMessage" class="hidden mx-auto mb-6 max-w-lg"></div>
+
+        <h2 class="text-xl font-bold text-center mb-6 text-gray-700">Drag & Drop XML file to Upload</h2>
+        
+        <!-- Drop Zone -->
+        <div id="dropZone" class="bg-gray-200 border-2 border-dashed border-gray-400 rounded-lg py-16 px-6 text-center text-gray-600 hover:bg-gray-300 transition">
+            <span class="block font-medium text-lg mb-4">Drop your XML files here</span>
+            <span class="text-sm">Only .xml files are allowed. Max file size: 5 MB</span>
+        </div>
+        
+        <!-- Upload Result -->
+        <div class="mt-6">
+            <h3 class="text-lg font-semibold mb-3 text-gray-700">Uploaded Files:</h3>
+            <ul id="uploadResult" class="list-disc pl-5 text-sm text-gray-600">
+                <!-- Uploaded files will appear here -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- TailwindCSS and Flowbite JavaScript -->
+<script type="text/javascript">
+    $(function () {
+        // Dropzone Setup
+        $('#dropZone').filedrop({
+            url: '@Url.Action("UploadFiles")',
+            allowedfileextensions: ['.xml'],
+            paramname: 'files',
+            maxfiles: 1, // Maximum number of files allowed at a time
+            maxfilesize: 5, // Maximum file size in MB
+
+            dragOver: function () {
+                $('#dropZone').addClass('bg-blue-100 border-blue-400');
+            },
+            dragLeave: function () {
+                $('#dropZone').removeClass('bg-blue-100 border-blue-400').addClass('bg-gray-200 border-gray-400');
+            },
+            drop: function () {
+                $('#dropZone').removeClass('bg-blue-100 border-blue-400').addClass('bg-gray-200 border-gray-400');
+            },
+
+            uploadFinished: function (i, file, response, time) {
+                // Append uploaded file info to the list
+                $('#uploadResult').append('<li>' + file.name + " -------> " + response + '</li>');
+
+                // Show success alert
+                showAlert('File uploaded successfully!', 'success');
+            },
+            error: function (errMsg) {
+                // Show error alert
+                showAlert(errMsg, 'error');
+            }
+        });
+
+        // Show alert with Flowbite
+        function showAlert(message, type) {
+            const alertTypes = {
+                success: 'bg-green-100 border border-green-400 text-green-700',
+                error: 'bg-red-100 border border-red-400 text-red-700',
+            };
+
+            const alertHTML = `
+                <div class="p-4 rounded-lg ${alertTypes[type]}">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.25-10.92a.75.75 0 011.5 0V10a.75.75 0 01-1.5 0V7.08zM10 14.75a.75.75 0 110 1.5.75.75 0 010-1.5z" clip-rule="evenodd" />
+                        </svg>
+                        <span>${message}</span>
+                    </div>
+                </div>`;
+            
+            $('#alertMessage').html(alertHTML).removeClass('hidden');
+
+            // Auto-hide after 3 seconds
+            setTimeout(function () {
+                $('#alertMessage').addClass('hidden').html('');
+            }, 3000);
+        }
+    });
+</script>

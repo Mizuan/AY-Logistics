@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<Awmds>
+  <General_segment>
+    <General_segment_id>
+      <Customs_office_code>00MP</Customs_office_code>
+      <Voyage_number>04G77W1MA</Voyage_number>
+      <Date_of_departure>2020-09-14</Date_of_departure>
+      <Date_of_arrival>2020-09-16</Date_of_arrival>
+      <Time_of_arrival>11:55</Time_of_arrival>
+    </General_segment_id>
+    <Totals_segment>
+      <Total_number_of_bols>1</Total_number_of_bols>
+      <Total_number_of_packages>34</Total_number_of_packages>
+      <Total_number_of_containers>1</Total_number_of_containers>
+      <Total_gross_mass>11708.80</Total_gross_mass>
+    </Totals_segment>
+    <Transport_information>
+      <Carrier>
+        <Carrier_code />
+        <Carrier_name>ROSSINI</Carrier_name>
+        <Carrier_address />
+      </Carrier>
+      <Shipping_Agent>
+        <Shipping_Agent_code />
+        <Shipping_Agent_name>TTS MALDIVES PRIVATE LIMITED</Shipping_Agent_name>
+      </Shipping_Agent>
+      <Mode_of_transport_code>1</Mode_of_transport_code>
+      <Identity_of_transporter />
+      <Nationality_of_transporter_code>AG</Nationality_of_transporter_code>
+      <Place_of_transporter />
+      <Master_information />
+    </Transport_information>
+    <Load_unload_place>
+      <Place_of_departure_code>LKCMB</Place_of_departure_code>
+      <Place_of_destination_code>MVMLE</Place_of_destination_code>
+    </Load_unload_place>
+    <Tonnage>
+      <Tonnage_net_weight>0</Tonnage_net_weight>
+      <Tonnage_gross_weight>0</Tonnage_gross_weight>
+    </Tonnage>
+  </General_segment>
+  <Bol_segment>
+    <Bol_id>
+      <Bol_reference>X20C00870-MLE-500</Bol_reference>
+      <Line_number>1</Line_number>
+      <Bol_nature>23</Bol_nature>
+      <Bol_type_code>BL</Bol_type_code>
+      <Master_bol_ref_number>SIK0293614</Master_bol_ref_number>
+    </Bol_id>
+    <Load_unload_place>
+      <Place_of_loading_code>SGSIN</Place_of_loading_code>
+      <Place_of_unloading_code>MVMLE</Place_of_unloading_code>
+      <Port_of_origin_code>SGSIN</Port_of_origin_code>
+      <Original_port_of_loading_code>SGSIN</Original_port_of_loading_code>
+      <Place_of_delivery_code>MVMLE</Place_of_delivery_code>
+      <Place_of_ultimate_destination_code>MVMLE</Place_of_ultimate_destination_code>
+    </Load_unload_place>
+    <Traders_segment>
+      <Carrier>
+        <Carrier_code />
+        <Carrier_name>ROSSINI</Carrier_name>
+        <Carrier_address />
+      </Carrier>
+      <Exporter>
+        <Exporter_name>KURIHARA KOGYO CO. LTD</Exporter_name>
+        <Exporter_address>SINGAPORE/ ,, Singapore, ()</Exporter_address>
+      </Exporter>
+      <Notify>
+        <Notify_code />
+        <Notify_name>MALDIVES INFLIGHT CATERING PVT LTD</Notify_name>
+        <Notify_address>PROJECT NAME: MADIFUSHI ISLAND RESORT &amp; SPAMALE' INTERNATIONAL AIRPORT, HULHULHE/ ,, Maldives, (C-0011/1988)</Notify_address>
+      </Notify>
+      <Consignee>
+        <Consignee_name>MALDIVES INFLIGHT CATERING PVT LTD</Consignee_name>
+        <Consignee_address>PROJECT NAME: MADIFUSHI ISLAND RESORT &amp; SPAMALE' INTERNATIONAL AIRPORT, HULHULHE/ ,, Maldives, (C-0011/1988)</Consignee_address>
+      </Consignee>
+    </Traders_segment>
+    <ctn_segment>
+      <Ctn_reference>CMAU5849649 </Ctn_reference>
+      <Number_of_packages>34</Number_of_packages>
+      <Type_of_container>40HC</Type_of_container>
+      <Empty_Full>1/1</Empty_Full>
+      <Marks1>P5569931</Marks1>
+      <Marks2 />
+      <Marks3 />
+      <Sealing_Party />
+    </ctn_segment>
+    <Goods_segment>
+      <Number_of_packages>34</Number_of_packages>
+      <Package_type_code>PK</Package_type_code>
+      <Package_type>Package</Package_type>
+      <Gross_mass>11708.80</Gross_mass>
+      <Shipping_marks />
+      <Goods_description>MECHANICAL, 
+ELECTRICAL AND PLUMBING MATERIALS </Goods_description>
+      <Volume_in_cubic_meters>50.00</Volume_in_cubic_meters>
+      <Num_of_ctn_for_this_bol>1</Num_of_ctn_for_this_bol>
+      <Information />
+    </Goods_segment>
+    <Value_segment>
+      <Freight_segment>
+        <PC_indicator>PRE</PC_indicator>
+        <Freight_value>0</Freight_value>
+        <Freight_currency />
+      </Freight_segment>
+    </Value_segment>
+  </Bol_segment>
+</Awmds>

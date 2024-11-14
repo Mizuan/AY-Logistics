@@ -1,0 +1,664 @@
+﻿@model AYLogistics.Models.ManifestModel
+@{
+    Layout = "~/Views/Shared/_NoMenu.cshtml";
+    ViewBag.Title = "Edit Job";
+}
+
+@Html.HiddenFor(mdoel => Model.ManifestId)
+@Html.HiddenFor(mdoel => Model.ShipmentId) 
+
+<h2>Edit Job</h2>
+ <fieldset class="well" style="width: 1198px;">
+   <legend>Bill of Lading Info:</legend>
+    <div class="control pull-left">
+        <label class="control-label">VoyageNo</label>
+        <input type="text" class="input-small required" data-bind='value: VoyageNo, uniqueName: true'/>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Vessel / Flight</label>
+        <div class="control pull-right" style="margin-top: -24px;">
+           <button type="button" class="btn btn-link" data-bind="click:UpdateVessel" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px; margin-left: -130px"><i class="icon-edit"></i></button>
+        </div>
+        <select class="chosen_select_L" data-bind="options: $root.Vessels, value:Vessel, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Mode of Shipment</label>
+        <select class="input-medium" data-bind="options: $root.ModeofShipments, value:ModeofShipment, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Nationality</label>
+        <select style="width:115px" data-bind="options: $root.Nations, value:Nationality, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Port of Departure</label>
+        <select class="input-medium" data-bind="options: $root.Ports, value:PortOfDeparture, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Date of Departure</label>
+        <input type="text" class="lang-eng" style="width:115px;" data-bind="value: DateOfDeparture ,datetimepicker: DateOfDeparture" />
+    </div>
+     <div class="control pull-left space-righ" style="margin-left: 7px;">
+        <label class="control-label">Port of Destination</label>
+        <select class="input-medium" data-bind="options: $root.Ports, value:PortOfDestination, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Date of Arrival</label>
+        <input type="text" class="lang-eng" style="width:115px;" data-bind="value: DateOfArrival ,datetimepicker: DateOfArrival" />
+    </div>
+     <div class="control pull-left clear">
+        <label class="control-label">Master BL/AWB</label>
+        <input type="text" class="input-small required" data-bind='value: MasterBLno, uniqueName: true'/>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Master Name</label>
+        <input type="text" class="input-small" data-bind='value: MasterName, uniqueName: false'/>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">No.of Container</label>
+         <input type="text" class="input-small" data-bind='value: TotalNoOfContainer, uniqueName: false'/>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">No.of HBL</label>
+         <input type="text" class="input-small" style="width:50px" data-bind='value: TotalNoOfHBL'/ readOnly="true">
+    </div>
+        <div class="control pull-left space-right">
+        <label class="control-label">No.of Pckg</label>
+         <input type="text" class="input-small" style="width:55px" data-bind='value: TotalNoOfPackages'/ readOnly="true">
+    </div>
+        <div class="control pull-left space-right">
+        <label class="control-label">NET.Ton</label>
+         <input type="text" class="input-small" style="width:50px" data-bind='value: NetTonnage, uniqueName: false'/>
+    </div>
+        <div class="control pull-left space-right">
+        <label class="control-label">GROSS.Ton</label>
+         <input type="text" class="input-small" style="width:50px" data-bind='value: GrossTonnage, uniqueName: false'/>
+    </div>
+     <div class="control pull-right" style="margin-top: 21px;">
+            @{Html.RenderPartial("../Party/_project");}
+     </div>
+     <div class="control pull-right" style="margin-top: 21px; margin-right: 6px;">
+            @{Html.RenderPartial("../Party/_index");}
+     </div>
+     <div class="control pull-right" style="margin-top: 21px; margin-right: 6px;">
+            @{Html.RenderPartial("../Party/_vessel");}
+     </div>
+</fieldset>
+
+<div class="control pull-left clear"> 
+    <table data-bind='visible: HouseBLItems().length > 0'>
+       <thead>
+          <tr style="border: 1px solid  gray;">
+         </tr>
+       </thead>
+       <tbody data-bind='foreach: HouseBLItems'>
+       <tr>
+            <td><label></label><button id="rmbutton" type="button" class="btn btn-danger" data-bind="click:$root.RemoveHBL" style="padding-left:6px; margin-top: 8px;"><i class="icon-remove"></i></button></td>
+            <td><label>HouseBL/AWB</label><input type="text" placeholder="HBL/AWB no." class='required' style = "width: 110px;" data-bind='value: HouseBLno,uniqueName: true'/></td>
+            <td>
+                <div class="control pull-left" >
+                   <label>Shipper</label>
+                <div class="control pull-left" style="margin-top: -24px;padding-left: 50px;">
+                   <button id="" type="button" class="btn btn-link" data-bind="click:$root.UpdateShipper" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;"><i class="icon-edit"></i></button>
+                </div>
+                   <select id="cid" class="chosen_select_L" style = "width: 170px;" data-bind="click:updateList,clickBubble: false, options: Shippers, value:Shipper, event: {change: onChange}, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                </div>
+
+            </td>
+            <td>
+                <div class="control pull-left" >
+                   <label>Consignee/Customer</label>
+                <div class="control pull-left" style="margin-top: -24px;padding-left: 133px;">
+                  <button id="" type="button" class="btn btn-link" data-bind="click:$root.UpdateCustomer" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;"><i class="icon-edit"></i></button>
+                </div>
+                   <select class="chosen_select_L" style = "width: 170px;" data-bind="options: Customers, value:Customer, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                 </div>
+            </td>
+            <td>
+                 <div class="control pull-left" >
+                   <label>Notify Party</label>
+                 <div class="control pull-left" style="margin-top: -24px;padding-left: 73px;">
+                  <button id="" type="button" class="btn btn-link" data-bind="click:$root.UpdateNotifyParty" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;"><i class="icon-edit"></i></button>
+                </div>
+                   <select class="chosen_select_L" style = "width: 170px;" data-bind="options: NotifyParties, value:NotifyParty, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                </div>
+            </td>
+            <td><label>Description of Goods</label><textarea style="width: 150px; height: 20px;" placeholder="Description" data-bind="value:Description"></textarea></td>
+            <td><label>Container Type</label><select style = "width: 110px;" data-bind="options: ContainerTypes, value:ContainerType, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Container No</label><input type="text" placeholder="Contnr No" class='required' style = "width: 70px;" data-bind='value: ContainerNo,uniqueName: true'/></td>
+            <td><label>Seal No.</label><input type="text" placeholder="Seal No" style = "width: 70px;" data-bind='value: SealNo,uniqueName: true'/></td>
+            <td><label>Type of Pckg</label><select style = "width: 100px;" data-bind="options: TypeofPackages, value:TypeofPackage, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>No.of Pckg</label><input type="text" placeholder="NoPckg" style = "width: 60px;" data-bind='value: NoOfPackage'/></td>
+            <td><label>Freight Indicator</label><select style = "width: 110px;" data-bind="options: FreightIndicators, value:FreightIndicator, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Weight</label><input type="text" placeholder="kgs" style = "width: 40px;" data-bind='value: Weight'/></td>
+            <td><label>Measure</label><input type="text" placeholder="cbm" style = "width: 40px;" data-bind='value: Measurement'/></td>
+         </tr>
+         <tr>
+            <td></td>
+            <td><label>Port of Loading</label><select class="chosen_select_L" style = "width: 125px;" data-bind="options: $root.Ports, value:PortOfLoading, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Port of Unloading</label><select class="chosen_select_L" style = "width: 170px;" data-bind="options: $root.Ports, value:PortOfUnLoading, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Port of Origin</label><select class="chosen_select_L" style = "width: 170px;" data-bind="options: $root.Ports, value:PortOfOrigin, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Port of Original Loading</label><select class="chosen_select_L" style = "width: 170px;" data-bind="options: $root.Ports, value:OriginalLoadingPort, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Port Ultimate Destination</label><select class="chosen_select_L" style = "width: 165px;" data-bind="options: $root.Ports, value:UltimateDestination, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select></td>
+            <td><label>Port of Delivery</label><select class="chosen_select_L" style = "width: 110px;" data-bind="options: $root.Ports, value:PortOfDelivery, optionsText: 'value', optionsValue: 'key', optionsCaption: '-select-'"></select></td>
+         </tr>
+         @*<tr>
+            <td></td>
+            <td><label>Registration Date</label><input type="text" class="lang-eng d_regDate" style="width:115px;" data-bind="event:{change:$root.UpdateDemurrageDate}, value: RegistrationDate ,datetimepicker: RegistrationDate" /></td>
+            <td><label>Discharge Date</label><input type="text" class="lang-eng d_demDate" style="width:155px;" data-bind="value: DemurrageDate ,datetimepicker: DemurrageDate" readOnly="true" /</td>
+            <td>
+                <label>Commodity</label>
+                <select class="chosen_select_L" style = "width: 170px;" data-bind="options: CommodityType, value:CommodityTypeId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+           </td>
+            <td>
+                <div class="control pull-left" >
+                    <label>Project</label>
+                    <div class="control pull-left" style="margin-top: -24px;padding-left: 45px;">
+                        <button id="" type="button" class="btn btn-link" data-bind="click:$root.UpdateProject" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;"><i class="icon-edit"></i></button>
+                    </div>
+                        <select class="chosen_select_L" style = "width: 170px;" data-bind="options: Project, value:ProjectId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+                </div>
+
+           </td>
+         </tr>*@
+         <tr style="border: 1px solid  gray;">
+
+         </tr>
+       </tbody>
+    </table>
+</div>
+
+<fieldset class="well" style="width: 1198px;">
+    <legend>Job Info:</legend>
+    <div class="control pull-left">
+        <label class="control-label">Registration Date</label>
+        <input type="text" class="lang-eng d_regDate" style="width:115px;" data-bind="event:{change:UpdateDemurrageDate}, value: Job.RegistrationDate ,datetimepicker: Job.RegistrationDate" />
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Demurrage Date</label>
+        <input type="text" class="lang-eng d_demDate" style="width:115px;" data-bind="value: Job.DemurrageDate ,datetimepicker: Job.DemurrageDate" readOnly="true" />
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Discharge Date</label>
+        <input type="text" class="lang-eng d_disDate" style="width:115px;" data-bind="value: Job.DischargeDate ,datetimepicker: Job.DischargeDate"/>
+    </div>
+     <div class="control pull-left space-right">
+        <label class="control-label">Commodity</label>
+        <select class="chosen_select_L" style = "width: 125px;" data-bind="options: $root.Job.CommodityType, value:Job.CommodityTypeId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+    <div class="control pull-left space-right">
+        <label class="control-label">Job Priority</label>
+        <select class="chosen_select_L" style = "width: 115px;" data-bind="options: $root.Job.JobPriority, value:Job.JobPriorityId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+     <div class="control pull-left space-right">
+        <label class="control-label">Project</label>
+         <div class="control pull-left" style="margin-top: -24px;padding-left: 50px;">
+             <button id="" type="button" class="btn btn-link" data-bind="click:$root.UpdateProject" style="padding-left: 0px;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;"><i class="icon-edit"></i></button>
+          </div>
+        <select class="chosen_select_L" style = "width: 320px;" data-bind="options: $root.Job.Project, value:Job.ProjectId, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
+    </div>
+</fieldset>
+
+<div class="control pull-left clear"style="width: 183px;margin-top: 10px;">
+     @*<button class="btn btn-primary" data-bind="click: addHouseBL"><i class="icon-plus"></i> Add HBL</button>*@
+    <button id="SaveManifest" class="btn btn-success" data-bind="click:Save,enable:saveEnabled()"><i class="icon-save" ></i> Save</button>
+</div>
+
+     <div id="dialog-confirm" title="Manifest" class="display: none;">
+        <p id="dialog-message"></p>
+    </div>
+
+<script type="text/javascript">
+
+var JobInfo;
+
+$(".chosen_select_L").chosen({
+    disable_search_threshold: 5,
+    no_results_text: "Oops, nothing found!"
+  });
+
+
+$(document).ready(function () {
+      $(".chosen_select_L").chosen('destroy');
+      MI = GetManifest($('#ManifestId').val());
+      GetHouseBLItems(MI.ShipmentId);
+      $(".bt_datetime").datetimepicker({format: 'dd/mm/yyyy hh:ii'});
+ }); 
+
+
+    var koMM;
+
+    function ManifestModel() {
+        var self = this;
+        self.VoyageNo = ko.observable(MI.VoyageNo);
+        self.Vessel = ko.observable(MI.VesselId);
+        self.ModeofShipment = ko.observable(MI.ModeofShipmentId);
+        self.Nationality = ko.observable(MI.NationalityId);
+        self.PortOfDeparture = ko.observable(MI.PortOfDeparture);
+        //self.DateOfDeparture = ko.observable(getCurrentDate());
+        self.DateOfDeparture = ko.observable(MI.DateDeparture);
+        self.PortOfDestination = ko.observable(MI.PortOfDestination);
+       // self.DateOfArrival = ko.observable(getCurrentDate());
+        self.DateOfArrival = ko.observable(MI.DateArrival);
+        self.MasterBLno = ko.observable(MI.MasterBL);
+        self.MasterName = ko.observable(MI.MasterName);
+        self.TotalNoOfContainer = ko.observable(MI.TotalNoOfContainer);
+        self.NetTonnage = ko.observable(MI.NETtonnage);
+        self.GrossTonnage = ko.observable(MI.GROSStonnage);
+        self.HouseBLItems = ko.observableArray();
+        
+        self.Job = new JobModel(); 
+
+        self.Vessels = mapDictionaryToArray(@{Html.RenderAction("GetVessel", "Manifest");});
+
+        self.ModeofShipments = mapDictionaryToArray(@{Html.RenderAction("GetModeofShipment", "Manifest");});
+        self.Nations = mapDictionaryToArray(@{Html.RenderAction("GetNationality", "Manifest");});
+        self.Ports = mapDictionaryToArray(@{Html.RenderAction("GetPort", "Manifest");});
+
+
+
+        self.addHouseBL = function(data){
+           self.HouseBLItems.push(new HouseBLModel())
+           $(".chosen_select_L").chosen();
+        }
+        self.RemoveHBL  = function(data){
+            self.HouseBLItems.remove(data)
+                    $.pnotify({
+                        title: 'Remove BL',
+                        text: "BL hasbeen removed",
+                        type: "success"
+                    });
+        }
+
+        self.UpdateShipper  = function(data){
+             if(data.Shipper() > 0)
+             {
+                EditParty(data.Shipper())
+             }else{
+                 $.pnotify({
+                        title: 'Update Shipper',
+                        text: "Please Select a Shipper",
+                        type: "error"
+                    });
+             }
+        }
+
+        self.UpdateCustomer  = function(data){
+            if(data.Customer() > 0)
+             {
+                EditParty(data.Customer())
+             }else{
+                 $.pnotify({
+                        title: 'Update Customer',
+                        text: "Please Select a Customer",
+                        type: "error"
+                    });
+             }
+        }
+        self.UpdateNotifyParty  = function(data){
+            if(data.NotifyParty() > 0)
+             {
+                EditParty(data.NotifyParty())
+             }else{
+                 $.pnotify({
+                        title: 'Update NotifyParty',
+                        text: "Please Select a NotifyParty",
+                        type: "error"
+                    });
+             }
+        }
+
+      self.UpdateProject  = function(data){
+             if(self.Job.ProjectId() > 0)
+             {
+                EditProject(self.Job.ProjectId())
+             }else{
+                 $.pnotify({
+                        title: 'Update Project',
+                        text: "Please Select a Project",
+                        type: "error"
+                    });
+             }
+        }
+        //update Vessel
+       self.UpdateVessel  = function(data){
+             if(self.Vessel() > 0)
+             {
+                EditVessel(self.Vessel())
+             }else{
+                 $.pnotify({
+                        title: 'Update Vessel info',
+                        text: "Please Select a Project",
+                        type: "error"
+                    });
+             }
+        }
+
+        self.saveEnabled = ko.computed(function(){
+            var flag = 1;
+            if(self.VoyageNo()==null){flag = 0;}
+            $.each(self.HouseBLItems(), function() { 
+                if( this.Shipper()=="" || this.Shipper()==null){flag = 0;}
+                else if( this.Customer()=="" || this.Customer()==null){flag = 0;}
+                else if( this.NoOfPackage()=="" || this.NoOfPackage()==null){flag = 0;}
+                else if( this.ContainerType()=="" || this.ContainerType()==null){flag = 0;}
+            });
+            return flag;  
+          });
+
+         self.TotalNoOfHBL = ko.computed(function(){
+            var total = 0;
+            $.each(self.HouseBLItems(), function() {
+                 if( this.HouseBLno()=="" || this.HouseBLno()==null){
+                    
+                 }else{
+                total++;}
+            });
+            return total;  
+         });
+
+         self.TotalNoOfPackages = ko.computed(function(){
+            var total = 0;
+            $.each(self.HouseBLItems(), function() {
+                total = total + parseInt(this.NoOfPackage());
+            });
+            return total;  
+         });
+
+        self.UpdateDemurrageDate  = function(data){
+            var date2 = $('.d_regDate').datetimepicker('getDate', '+2d'); 
+            date2.setDate(date2.getDate()+10); 
+            $('.d_demDate').datetimepicker('setDate', date2)
+            self.Job.DemurrageDate($('.d_demDate').datetimepicker('getDate', date2));
+        }
+
+          self.Save = function(data){
+            var HB = {HouseBLItems:self.HouseBLItems()};
+            var json = JSON.stringify(HB);
+            $.ajax({
+            url: '/Job/SaveJob',
+            type: 'POST',
+            dataType: 'json',
+            data: ko.toJSON({MM: koMM}),
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+            if (result.Status == "success") {
+                JobInfo = getLastJobInfo();
+                        $("#dialog-message").text("Job has been created, Number is: "+JobInfo.LastJnumber);
+                        $( "#dialog-confirm" ).dialog({
+			                resizable: false,
+			                height:180,
+			                modal: true,
+			                buttons: {
+				                "New": function() {
+					                $( this ).dialog( "close" );
+                                    window.location = '../Job/create'
+				                },
+                                "Print":function(){
+                                  //  $.download("../Manifest/PrintManifest", { ManifestId: ManifestInfo.LastSid}, "POST");    
+                                },
+                                "Upload":function(){
+                                   // $.download("../Manifest/PrintManifest", { ManifestId: MI.ManifestId}, "POST");    
+                                }
+			            }
+                    });
+                } else {
+                    $.pnotify({
+                        title: 'Manifest',
+                        text: result.Message,
+                        type: result.Status
+                    });
+                }
+               }
+            });
+         }
+    }
+
+    function downloadSuccess(){
+        window.location.href="/Job/create";
+
+    }
+
+
+    function HouseBLModel(){
+       var self = this;
+       self.HouseBLno = ko.observable();
+       self.ContainerType = ko.observable();
+       self.ContainerNo = ko.observable();
+       self.SealNo = ko.observable();
+       self.TypeofPackage = ko.observable();
+       self.NoOfPackage = ko.observable(0);
+       self.FreightIndicator = ko.observable();
+       self.Shipper = ko.observable();
+       self.Customer = ko.observable();
+       self.NotifyParty = ko.observable();
+       self.Weight = ko.observable();
+       self.Measurement = ko.observable();
+       self.PortOfLoading = ko.observable();
+       self.PortOfUnLoading = ko.observable();
+       self.PortOfOrigin = ko.observable();
+       self.OriginalLoadingPort = ko.observable();
+       self.PortOfDelivery = ko.observable();
+       self.UltimateDestination = ko.observable();
+       self.Description = ko.observable();
+
+       self.ContainerTypes = mapDictionaryToArray(@{Html.RenderAction("GetContainerType", "Manifest");});
+       self.TypeofPackages = mapDictionaryToArray(@{Html.RenderAction("GetTypeofPackage", "Manifest");});
+       self.FreightIndicators = mapDictionaryToArray(@{Html.RenderAction("GetFreightIndicator", "Manifest");});
+       self.Shippers = mapDictionaryToArray(@{Html.RenderAction("GetParty", "Manifest");});
+       self.Customers = mapDictionaryToArray(@{Html.RenderAction("GetParty", "Manifest");});
+       self.NotifyParties = mapDictionaryToArray(@{Html.RenderAction("GetParty", "Manifest");});
+       self.Ports = mapDictionaryToArray(@{Html.RenderAction("GetPort", "Manifest");});
+    
+        self.updateList = function(){
+            $.get('../Manifest/GetParty',function(result){
+                    //self.Shippers(mapDictionaryToArray(@{Html.RenderAction("GetParty", "Manifest");}));
+            });
+
+        }
+       
+       self.onChange = function() {
+           // $.get('../Manifest/GetParty',function(result){
+               //self.Shippers(mapDictionaryToArray(@{Html.RenderAction("GetParty", "Manifest");}));
+               //self.Shippers.push('<option value="100">The local Compnay Pvt Ltd</option>');
+           // });
+            /*  value2 = "hhhhhhhhhhhhhhhhhh"
+              $("#cid_chosen").append("<option selected>" + value2 + "</option>");
+              $("#cid_chosen").trigger("chosen:updated");*/
+
+           //if (self.Shipper() == null){$("#btnAddParty" ).trigger( "click" );}
+       };
+      
+    }
+
+
+    function JobModel(){
+       var self = this;
+       self.RegistrationDate = ko.observable();
+       self.DemurrageDate = ko.observable();
+       self.DischargeDate = ko.observable();
+       self.CommodityTypeId = ko.observable();
+       self.ProjectId = ko.observable();
+       self.JobPriorityId = ko.observable();
+
+       self.CommodityType = mapDictionaryToArray(@{Html.RenderAction("GetCommodityType", "Job");});
+       self.Project = mapDictionaryToArray(@{Html.RenderAction("GetProject", "Job");});
+       self.JobPriority = mapDictionaryToArray(@{Html.RenderAction("GetJobPriority", "Job");});
+    }
+
+
+
+
+
+/*============================= Other Functions ============================*/
+   function mapDictionaryToArray(dictionary) {
+        var result = [];
+        for (var key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                result.push({ key: key, value: dictionary[key] });
+            }  
+        } 
+        return result;
+    }
+
+
+    
+    function mapDictionaryToArray1(dictionary) {
+        var result = [];
+        for (var key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                result.push({ Value: key, Text: dictionary[key] });
+            }  
+        } 
+        return result;
+    }
+
+
+    /*function getCurrentDate() 
+    {
+        var date = new Date();
+        var dd = date.getDate();
+        var mm = date.getMonth()+1;
+        var yyyy = date.getFullYear();
+        return (dd > 9 ? dd : "0" + dd) + "/" + (mm > 9 ? mm : "0" + mm) + "/" + yyyy;
+    }
+
+    ko.bindingHandlers.datepicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+            //initialize datepicker with some optional options
+            var options = allBindingsAccessor().datepickerOptions || {};
+            $(element).datepicker(options).on("changeDate", function (ev) {
+                var observable = valueAccessor();
+                observable(ev.date);
+            });
+        },
+        update: function (element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor());
+            $(element).datepicker("setValue", value);
+        }
+    };*/
+
+
+    ko.bindingHandlers.datetimepicker = {
+        init: function (element, valueAccessor, allBindings) {
+          //initialize datepicker with some optional options
+            var format;
+           // var defaultFormat = 'yyyy-mm-dd hh:ii:ss'
+            var defaultFormat = 'dd/mm/yyyy hh:ii'
+            if (typeof allBindings == 'function') {
+                format = allBindings().format || defaultFormat;
+            }
+            else {
+                format = allBindings.get('format') || defaultFormat;
+            }
+            $(element).datetimepicker({
+                autoclose: true,
+                todayBtn: true,
+                'format': format
+            })
+          //when a user changes the date, update the view model
+          ko.utils.registerEventHandler(element, "changeDate", function(event) {
+              var value = valueAccessor();
+                 if (ko.isObservable(value)) {
+                     value($(element).datetimepicker("getFormattedDate"));
+                 }
+          });
+        },
+        update: function (element, valueAccessor) {
+           // var date = ko.unwrap(valueAccessor());
+            var date = ko.utils.unwrapObservable(valueAccessor());
+            if (date) {
+                $(element).datetimepicker('setValue', date);
+            }
+        }
+    };
+
+  //function to allow only numbers (eg:<input type=="" onkeypress="return isNumberKey(event)/>)
+  function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    } else {
+        return true;
+    }      
+  }
+
+
+ /* function PartySearchingTypeHead(element){
+    $(element).typeahead({
+            source: function (query, process) {
+                text = [];
+                value = {};
+                if(query.length >= 3){
+                    $.get('../Party/SearchParty', { 'query': query ,"type":1, subtype: 2 }, function (data) {
+                        console.log(data);
+                        $.each(data, function (dat, c) {
+                            value[c.Name] = c.Id;
+                            text.push(c.Name);
+                        })
+                    }).complete(function () {
+                        return process(text);
+                    });
+                }
+            },
+            updater: function (selection) {
+                selectAtoll = value[selection];
+                AddPartyTypeHead(selectAtoll,element)
+
+                return selection;
+            }
+        });
+ }*/
+
+     function getLastJobInfo(){
+        var url = "@Url.Action("getLastJobInfo", "Job")";
+        var results ;
+        var flag = 0;               
+        var data = JSON.stringify();   
+        $.ajax({
+            type: "POST",
+            url: url,
+            async:false,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function(result){
+                results = result;
+        },
+            dataType: "json"
+        });
+        return results;
+    }
+
+    function GetManifest(MfId){
+        var url = "@Url.Action("GetManifest", "Manifest")";
+        var results ;
+        var flag = 0;
+        var param = {MfId:MfId};               
+        var data = JSON.stringify(param);   
+        $.ajax({
+            type: "POST",
+            url: url,
+            async:false,
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function(result){
+                results = result;
+        },
+            dataType: "json"
+        });
+        return results;
+    }
+
+ function setMasterBLonly()
+ {
+    koMM.addHouseBL();
+    $('#rmbutton').hide();
+ }
+
+  /*============================= Main Model Biding ============================*/
+   $(function(){
+        koMM = new ManifestModel()
+        ko.applyBindings(koMM);
+        setMasterBLonly();
+    })
+
+</script>

@@ -1,0 +1,697 @@
+﻿@model AYLogistics.Models.SalesModel
+@{
+    ViewBag.Title = "NewQuotation";
+}
+
+<div class="min-h-screen bg-gray-100 p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">New Quotation</h2>
+
+    <!-- Quotation Form -->
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <fieldset>
+            <legend class="text-lg font-medium text-gray-700 mb-4">Quotation Details</legend>
+
+            <div class="flex flex-col md:flex-row space-x-0 md:space-x-4 mb-6">
+                 <div>
+                       @{Html.RenderPartial("../Party/_index");}
+                 </div>
+                 <div class="control pull-left space-right" style="margin-top: 0px;">
+                        @{Html.RenderPartial("../Party/_project");}
+                 </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 mb-6">
+                <!-- Quotation Type -->
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Type</label>
+                    <select id="QTType" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- TYPE --</option>
+                        <option value="1">SEA</option>
+                        <option value="2">AIR</option>
+                    </select>
+                </div>
+                <!-- Quotation Mode -->
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Mode</label>
+                    <select id="QTMode" class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- MODE --</option>
+                        <option value="1">IMPORT</option>
+                        <option value="2">EXPORT</option>
+                    </select>
+                </div>
+                <!-- Currency Type -->
+                <div class="flex flex-col">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Currency</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind="options: $root.Currencies, value:CurrencyType, optionsText: 'value', optionsValue: 'key'"></select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Customer -->
+                <div class="w-full">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Customer</label>
+                    <div class="relative flex items-center">
+                        <input type="text" placeholder="Search..." class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind='PartySelect: PartyId, uniqueName: false' />
+                        <button class="absolute right-3 text-gray-500 hover:text-blue-500" data-bind="click:$root.UpdateCustomer">
+                            <i class="fas fa-edit" title="Update customer info"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Project -->
+                <div class="w-full">
+                    <label class="text-sm font-medium text-gray-700 mb-1">Project</label>
+                    <div class="relative flex items-center">
+                        <input type="text" placeholder="Search..." class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind='ProjectSelect: ProjectId, uniqueName: false' />
+                        <button class="absolute right-3 text-gray-500 hover:text-blue-500" data-bind="click:$root.UpdateProject">
+                            <i class="fas fa-edit" title="Update project info"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- Sales Categories -->
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <h3 class="text-lg font-medium text-gray-700 mb-4">Sales Categories</h3>
+        <div class="flex justify-end mb-4">
+            <button class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center shadow hover:bg-blue-600 focus:outline-none" data-bind="click: AddSubItems">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <table class="w-full text-left border border-gray-300">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2">Category</th>
+                    <th class="px-4 py-2">Action</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: SalesCategoryItems">
+                <tr>
+                    <td class="px-4 py-2">
+                        <input type="text" placeholder="Search Category..." class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind='SalesCatSelect: Id, uniqueName: false' />
+                    </td>
+                    <td class="px-4 py-2">
+                        <button class="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow hover:bg-red-600 focus:outline-none" data-bind="click:$root.RemoveSubItems">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <table class="w-full text-left border border-gray-300">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-2">Item / Service</th>
+                                    <th class="px-4 py-2">Qty</th>
+                                    <th class="px-4 py-2">Unit</th>
+                                    <th class="px-4 py-2">Rate</th>
+                                    <th class="px-4 py-2">GST</th>
+                                    <th class="px-4 py-2">Total</th>
+                                    <th class="px-4 py-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: $data.SalesItems">
+                                <tr>
+                                    <td class="px-4 py-2">
+                                        <input type="text" placeholder="Search Item..." class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind='SalesItemSelect: ItemId, uniqueName: false' />
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <input type="text" placeholder="Qty" class="w-16 px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind="value: Quantity, uniqueName: false" />
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <input type="text" placeholder="Unit" class="w-24 px-3 py-2 border border-gray-300 rounded bg-gray-100" data-bind="value: UnitName, uniqueName: false" readonly />
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <input type="text" placeholder="Rate" class="w-24 px-3 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" data-bind="value: UnitPrice, uniqueName: false" />
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <input type="text" placeholder="GST" class="w-16 px-3 py-2 border border-gray-300 rounded bg-gray-100" data-bind="value: IsGST, uniqueName: false" readonly />
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <input type="text" placeholder="Total" class="w-24 px-3 py-2 border border-gray-300 rounded bg-gray-100" data-bind="value: ItemTotal, uniqueName: false" readonly />
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <button class="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow hover:bg-red-600 focus:outline-none" data-bind="click:$parent.RemoveSalesItems">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals -->
+    <div class="flex justify-end items-center text-gray-800">
+        <p class="text-lg font-medium">
+            Subtotal: <span class="text-black font-semibold" data-bind="text: Subtotal"></span> |
+            GST: <span class="text-black font-semibold" data-bind="text: GST"></span> |
+            Total: <span class="text-black font-semibold" data-bind="text: NetTotal"></span>
+        </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-6 flex justify-end space-x-2">
+        <!-- Add Button -->
+        <button class="px-4 py-2 bg-blue-500 text-white text-sm rounded shadow hover:bg-blue-600 focus:outline-none flex items-center space-x-2" data-bind="click: AddSubItems">
+            <i class="fas fa-plus"></i>
+            <span>Add</span>
+        </button>
+
+        <!-- Save Button -->
+        <button class="px-4 py-2 bg-green-500 text-white text-sm rounded shadow hover:bg-green-600 focus:outline-none flex items-center space-x-2" data-bind="click: Save">
+            <i class="fas fa-save"></i>
+            <span>Save</span>
+        </button>
+    </div>
+
+</div>
+
+<div id="dialog-confirm-quot" title="Quotation" class="display: none;">
+    <p id="dialog-message-quot"></p>
+</div>
+
+
+
+<script type="text/javascript">
+
+    var currentCatID ="";
+    $(".chosen_select_L").chosen({
+        disable_search_threshold: 5,
+        no_results_text: "Oops, nothing found!"
+    });
+
+
+    $(document).ready(function () {
+        $(".chosen_select_L").chosen('destroy');
+        // $(".chosen_select_L").chosen();
+        ERInfo = getExchangeRate();
+    });
+    var koMM;
+
+    function SalesModel() {
+        var self = this;
+        self.PartyId = new selectAuto();
+        self.ProjectId = new selectAuto();
+        self.ValidThrough = ko.observable();
+        self.DiscountRate = ko.observable();
+        self.Type = ko.observable();
+        self.Mode = ko.observable();
+        self.SalesCategoryItems = ko.observableArray();
+        self.POwner = new POwnerModel();
+        self.CurrencyType = ko.observable();
+        self.MVR = ko.observable(ERInfo.ExchangeRate);
+        self.Currencies = mapDictionaryToArray(@{Html.RenderAction("GetKOCurrencies", "Sales");});
+
+        self.CurrencyType.subscribe(function(){
+            if(self.CurrencyType() == 2)
+            {
+                alert("NOTE! Please Confirm the Exchange rate (USD to MVR) from Management");
+            }
+        });
+
+        self.AddSubItems = function (data) {
+            self.SalesCategoryItems.push(new SalesCategoryModel());
+            $(".chosen_select_L").chosen();
+
+        }
+        self.RemoveSubItems = function(data){
+            self.SalesCategoryItems.remove(data)
+            $.pnotify({
+                title: 'Remove Category',
+                text: "Category and its Item has been removed",
+                type: "success"
+            });
+        }
+        self.UpdateCustomer = function (data) {
+            if (data.PartyId.id > 0) {
+                EditParty(data.PartyId.id)
+            } else {
+                $.pnotify({
+                    title: 'Update Customer',
+                    text: "Please Select a Customer",
+                    type: "error"
+                });
+            }
+        }
+        self.UpdateProject  = function(data){
+            if(data.ProjectId.id > 0)
+            {
+                EditProject(data.ProjectId.id)
+            }else{
+                $.pnotify({
+                    title: 'Update Project',
+                    text: "Please Select a Project",
+                    type: "error"
+                });
+            }
+        }
+       /* self.Subtotal = ko.computed(function() {
+            var total = 0;
+            $.each(self.SalesCategoryItems(), function() { 
+                $.each(this.SalesItems(), function() { 
+                    total = total + parseFloat(this.ItemTotal());
+                });
+            });
+            return total.toFixed(2);
+        });*/
+        self.Subtotal = ko.computed(function() {
+            var total = 0;
+                $.each(self.SalesCategoryItems(), function() { 
+                    $.each(this.SalesItems(), function() { 
+                        total = total + parseFloat(this.ItemTotal());
+                    });
+                });
+            return total.toFixed(2);
+        });
+        self.GSTItemSubtotal = ko.computed(function() {
+            var total = 0;
+            $.each(self.SalesCategoryItems(), function() { 
+                $.each(this.SalesItems(), function() {
+                    if(this.IsGST() == 8)
+                    {
+                        total = total + parseFloat(this.ItemTotal());
+                    }
+                });
+            });
+            return total.toFixed(2);
+        });
+        self.GST = ko.computed(function() {
+            var gst = 0;
+            var gst =  parseFloat(self.GSTItemSubtotal()) * 0.08;
+           // console.log();
+            return gst.toFixed(2);
+        });
+        self.NetTotal = ko.computed(function() {
+            var Net = 0;
+            var Net =  parseFloat(self.Subtotal()) + parseFloat(self.GST());
+            //gst = self.Subtotal() + parseFloat(amnt) ;
+            return Net.toFixed(2);
+        });
+
+        self.Save = function(data){
+            if ($("#QTType")[0].selectedIndex == 1) {
+                self.Type("SEA");
+            }
+            if ($("#QTType")[0].selectedIndex == 2) {
+                self.Type("AIR");
+            }
+
+            if ($("#QTMode")[0].selectedIndex == 1) {
+                self.Mode("IMPORT");
+            }
+            if ($("#QTMode")[0].selectedIndex == 2) {
+                self.Mode("EXPORT");
+            }
+            var SCI = {SalesCategoryItems:self.SalesCategoryItems()};
+            var json = JSON.stringify(SCI);
+            $.ajax({
+                url: '/Sales/SaveQuotaion',
+                type: 'POST',
+                dataType: 'json',
+                data: ko.toJSON({SM: koMM}),
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result.Status == "success") {
+                         QuotInfo = getLastQuotationInfo();
+                         $("#dialog-message-quot").text("Quotation has been created, Number is: "+QuotInfo.QuotationNumber);
+                        $( "#dialog-confirm-quot" ).dialog({
+                            resizable: false,
+                            height:180,
+                            modal: true,
+                            buttons: {
+                                "Close": function() {
+                                    $( this ).dialog( "close" );
+                                    window.location = '../Sales/NewQuotation'
+                                },
+                                "Print":function(){
+                                    $.download("../Sales/PrintQuotation", { QuotationId: QuotInfo.Id}, "POST");    
+                                }
+                            }
+                        });
+                    } else {
+                        $.pnotify({
+                            title: 'QUOTATION',
+                            text: result.Message,
+                            type: result.Status
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+
+    function SalesCategoryModel(){
+        var self = this;
+        self.Id = new selectAuto();
+        self.IdDD = ko.observable();
+        self.SalesItems = ko.observableArray();
+        self.SalesItems.push( new SalesItemModel());
+        self.IdDDList = mapDictionaryToArray(@{Html.RenderAction("GetCategoriesKO", "Sales");});
+        
+        self.AddSalesItems = function (data) {
+           /*  currentCatID = data.IdDD();*/
+            self.SalesItems.push(new SalesItemModel());
+           currentCatID = data.Id.id();
+               $(".chosen_select_L").chosen();
+
+        }
+        self.RemoveSalesItems = function(data){
+            self.SalesItems.remove(data)
+            $.pnotify({
+                title: 'Remove Items',
+                text: "Item has been removed",
+                type: "success"
+            });
+        }
+
+        self.IdDD.subscribe(function(){
+            $('#ItemPan').show();
+        });
+
+    }
+    function SalesItemModel(){
+        var self = this;
+        self.ItemId = new selectAuto();
+        self.ItemIdDD = ko.observable();
+        self.UnitName = ko.observable();
+        self.UnitPrice = ko.observable(0.00);
+        self.Quantity = ko.observable(0);
+       // self.ItemTotal = ko.observable(0.00);
+        self.CurrencyName = ko.observable();
+        self.IsGST = ko.observable();
+        //self.UnitId = ko.observable();
+        //self.CurrencyId = ko.observable();
+        self.ItemIdDDList = mapDictionaryToArrayList(@{Html.RenderAction("GetSalesItemKO", "Sales");});
+
+        self.selectionChanged = (function(event){
+            self.Quantity(0);
+           if(self.ItemId.id > 0)
+            /* if(self.ItemIdDD() > 0)*/
+            {
+                $.getJSON("../Sales/GetItemRates",{ItemId:self.ItemId.id},function(data){
+               /* $.getJSON("../Sales/GetItemRates",{ItemId:self.ItemIdDD()},function(data){*/
+                    if(koMM.CurrencyType() == 2)
+                    {
+                        self.UnitPrice(data.UnitPrice  * koMM.MVR());
+                        self.CurrencyName('MVR');
+                    }else{
+                        self.UnitPrice(data.UnitPrice.toFixed(2));
+                        self.CurrencyName(data.Currency);
+                    }
+                    self.UnitName(data.UnitName);
+                    self.IsGST(data.IsGST);
+                });
+            }
+        });
+
+        self.ItemTotal = ko.computed(function(){
+            var total = 0.00;
+            total = self.Quantity() * parseFloat(self.UnitPrice());
+            return total.toFixed(2);  
+        });
+
+    }
+
+    function getLastQuotationInfo(){
+        var url = "@Url.Action("getLastQuotationInfo", "Sales")";
+             var results ;
+             var flag = 0;               
+             var data = JSON.stringify();   
+             $.ajax({
+                 type: "POST",
+                 url: url,
+                 async:false,
+                 contentType: "application/json; charset=utf-8",
+                 data: data,
+                 success: function(result){
+                     results = result;
+                 },
+                 dataType: "json"
+             });
+             return results;
+    }
+
+    function getExchangeRate(){
+        var url = "@Url.Action("getExchangeRate", "Sales")";
+            var results ;
+            var flag = 0;               
+            var data = JSON.stringify();   
+            $.ajax({
+                type: "POST",
+                url: url,
+                async:false,
+                contentType: "application/json; charset=utf-8",
+                data: data,
+                success: function(result){
+                    results = result;
+                },
+                dataType: "json"
+            });
+            return results;
+        }
+
+    function mapDictionaryToArray(dictionary) {
+        var result = [];
+        for (var key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                result.push({ key: key, value: dictionary[key] });
+            }  
+        } 
+        return result;
+    }
+
+    function mapDictionaryToArrayList(dictionaryList) {
+        var result = [];
+       // console.log(dictionaryList);
+        for (var i = 0; i < dictionaryList.length; i++) {
+          for (var key in dictionaryList[i]) {
+              if (dictionaryList[i].hasOwnProperty(key)) {
+                  result.push({ key: key, value: dictionaryList[i][key], hidden:"hidden"});
+                }  
+            }
+        }
+        console.log(result);
+        return result;
+    }
+
+    function selectAuto(){
+        var self = this;
+        self.value = ko.observable();
+        self.id = ko.observable();
+    }
+
+    ko.bindingHandlers.PartySelect = {
+        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called when the binding is first applied to an element
+            // Set up any initial state, event handlers, etc. here
+
+            $(element).autocomplete({
+                source: function( request, response ) {
+                    $.ajax( {
+                        url: "../Party/SearchParty",
+                        dataType: "json",
+                        data:{ 'query':request.term ,"type":1, subtype: 2 },
+                        success: function( data ) {
+                            var test = [];
+
+
+
+                            // pass a function to map
+                          const map1 = data.map(x => ({
+                              id:x.Id,
+                              label:x.Name,
+                              value:x.Name
+                          }));
+
+                            console.log(map1);
+                            response( map1 );
+                        }
+                    } );
+                },
+                minLength: 2,
+                select: function( event, ui ) {
+       
+                    valueAccessor().id =  ui.item.id;
+                    valueAccessor().value =  ui.item.value;
+                    console.log(valueAccessor());    
+                    console.log(viewModel);
+                    console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+                }
+            } );
+        },
+        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called once when the binding is first applied to an element,
+            // and again whenever any observables/computeds that are accessed change
+            // Update the DOM element based on the supplied values here.
+        }
+    };
+
+    //Project Selcet Function
+    ko.bindingHandlers.ProjectSelect = {
+        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called when the binding is first applied to an element
+            // Set up any initial state, event handlers, etc. here
+
+            $(element).autocomplete({
+                source: function( request, response ) {
+                    $.ajax( {
+                        url: "../Job/SearchProject",
+                        dataType: "json",
+                        data:{ 'query':request.term ,"type":1, subtype: 2 },
+                        success: function( data ) {
+                            var test = [];
+
+
+
+                            // pass a function to map
+                          const map1 = data.map(x => ({
+                              id:x.Id,
+                              label:x.Name,
+                              value:x.Name
+                          }));
+
+                            console.log(map1);
+                            response( map1 );
+                        }
+                    } );
+                },
+                minLength: 2,
+                select: function( event, ui ) {
+       
+                    valueAccessor().id =  ui.item.id;
+                    valueAccessor().value =  ui.item.value;
+                    console.log(valueAccessor());    
+                    console.log(viewModel);
+                    console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+                }
+            } );
+        },
+        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called once when the binding is first applied to an element,
+            // and again whenever any observables/computeds that are accessed change
+            // Update the DOM element based on the supplied values here.
+        }
+    };
+
+    //SalesCategory Selcet Function
+    ko.bindingHandlers.SalesCatSelect = {
+        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called when the binding is first applied to an element
+            // Set up any initial state, event handlers, etc. here
+
+            $(element).autocomplete({
+                source: function( request, response ) {
+                    $.ajax( {
+                        url: "../Sales/SearchCategories",
+                        dataType: "json",
+                        data:{ 'query':request.term ,"type":1, subtype: 2 },
+                        success: function( data ) {
+                            var test = [];
+
+
+
+                            // pass a function to map
+                          const map1 = data.map(x => ({
+                              id:x.Id,
+                              label:x.Name,
+                              value:x.Name
+                          }));
+
+                            console.log(map1);
+                            response( map1 );
+                        }
+                    } );
+                },
+                minLength: 2,
+                select: function( event, ui ) {
+       
+                    valueAccessor().id =  ui.item.id;
+                    valueAccessor().value =  ui.item.value;
+                    console.log(valueAccessor());    
+                    console.log(viewModel);
+                    console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+                    currentCatID = ui.item.id;
+                }
+            } );
+        },
+        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called once when the binding is first applied to an element,
+            // and again whenever any observables/computeds that are accessed change
+            // Update the DOM element based on the supplied values here.
+        }
+    };
+
+
+    //SalesItem Select Function
+    ko.bindingHandlers.SalesItemSelect = {
+        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called when the binding is first applied to an element
+            // Set up any initial state, event handlers, etc. here
+
+            $(element).autocomplete({
+                source: function( request, response ) {
+                    $.ajax( {
+                        url: "../Sales/SearchSalesItem",
+                        dataType: "json",
+                        data:{ 'query':request.term ,"type":1, subtype: 2, SCATid:currentCatID },
+                        success: function( data ) {
+                            var test = [];
+
+
+
+                            // pass a function to map
+                          const map1 = data.map(x => ({
+                              id:x.Id,
+                              label:x.Name,
+                              value:x.Name
+                          }));
+
+                            console.log(map1);
+                            response( map1 );
+                        }
+                    } );
+                },
+                minLength: 2,
+                select: function( event, ui ) {
+       
+                    valueAccessor().id =  ui.item.id;
+                    valueAccessor().value =  ui.item.value;
+                    console.log(valueAccessor());    
+                    console.log(viewModel);
+                    console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+                    console.log(currentCatID);
+                }
+            } );
+        },
+        update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            // This will be called once when the binding is first applied to an element,
+            // and again whenever any observables/computeds that are accessed change
+            // Update the DOM element based on the supplied values here.
+        }
+    };
+
+
+
+    
+
+
+    $(function () {
+        koMM = new SalesModel()
+        ko.applyBindings(koMM);
+        init();
+    })
+    function init() {
+        koMM.AddSubItems();
+        $('#rmbutton').hide();
+      //  $('#ItemPan').hide();
+    }
+
+
+</script>

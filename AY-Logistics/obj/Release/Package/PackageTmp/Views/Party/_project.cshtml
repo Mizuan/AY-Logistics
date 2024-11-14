@@ -1,0 +1,289 @@
+﻿@model AYLogistics.Models.Project
+@{
+    ViewBag.Title = "Manage Party";  
+}
+<div class="form_control_line">
+    <button type="button" class="btn btn-info" id="btnAddProject">
+        <i class="icon-plus-sign-alt"></i>
+        <span>New Project</span>
+    </button>
+</div>
+<div class="formControlContainer dialogProject" id="dialogProject">
+   <div class="form_control_line">
+      <div class="control pull-left">
+          <div class="form_newLabel"><label>Project Name</label></div>
+          <input type="text" id="Name" class="eng" style="width: 356px;" />
+       </div>
+       <div class="control pull-left space-right">
+         <div class="form_newLabel" ><label>Customer</label></div>
+         @* @Html.DropDownListFor(m => m.CustomerId, new SelectList(AYLogistics.Models.Party.GetPartyIQ(), "PartyId", "PartyName"), "-select-", new { @class = "chosen_select_L", @style = "width: 190px;" })
+          @Html.ValidationMessageFor(model => model.CustomerId)*@
+           <input type="text" placeholder="&#xf002; Search..." style="font-family:FontAwesome;" class="input-medium selectedProjectOwner" data-bind='value:POwner.POwnerId.value, POwnerSelect: POwner.POwnerId , uniqueName: false'/>
+       </div>
+       <div class="control pull-left space-right">
+         <div class="form_newLabel marginRight"><label>Country</label></div>
+         @Html.DropDownListFor(m => m.CountryId, new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"), "-Select-", new { @class = "chosen_select_L", @style = "width: 130px;" })
+         @Html.ValidationMessageFor(model => model.CountryId)
+       </div>
+        <div class="control pull-left clear">
+          <div class="form_newLabel"><label>Contact Personal</label></div>
+          <input type="text" id="ContactPersonal" class="eng" style="width: 230px;" />
+       </div>
+       <div class="control pull-left space-right">
+          <div class="form_newLabel"><label>Contact No.</label></div>
+          <input type="text" id="ContactNo" class="eng" style="width: 106px;" />
+       </div>
+       <div class="control pull-left space-right">
+          <div class="form_newLabel"><label>Project Location</label></div>
+          <input type="text" id="Location" class="eng" style="width: 311px;" />
+       </div>
+   </div>
+</div>
+
+<script type="text/javascript">
+
+    var $dialoge = $(".dialogProject");
+
+    $(document).ready(function () {
+        $(".dialogProject").hide();
+    });
+
+    function ClearProjectDialog() {
+        $('#Name').val("");
+        $('#ContactPersonal').val("");
+        $('#ContactNo').val("");
+        $('#Location').val("");
+        $('.selectedProjectOwner').val("");
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+            $('#CountryId').val(0);
+        $(".chosen_select_L").chosen(); //~
+    }
+
+    function EditProject(Id) {
+        $dialoge.dialog({
+            width: 750,
+            modal: true,
+            height: 380,
+            title: "Edit Project",
+            buttons: [{
+                text: "Update",
+                'class': 'btn btn-primary',
+                click: function () {
+                    /*TO DO: give a condition with Role to disable update button*/
+                    UpdateProject(Id);
+                    $dialoge.dialog('close');
+
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'btn btn-default',
+                                    click: function () {
+                                        $(this).dialog("close");
+                                    }
+            }]
+        });
+        GetSelectedProject(Id);
+    }
+
+    function GetSelectedProject(Id) {
+       ClearProjectDialog();
+        var URL = '/Job/GetSelectedProject';
+
+        $.getJSON(URL + '/?ProjectId=' + Id, function (data) {
+            try {
+                $('#Name').val(data.Name);
+                $('#ContactPersonal').val(data.ContactPersonal);
+                $('#ContactNo').val(data.ContactNo);
+                $('#Location').val(data.Location);
+                koMM.POwner.POwnerId.id = data.CustomerId;
+                $('.selectedProjectOwner').val(data.OwnerName);
+                $(".chosen_select_L").chosen('destroy'); // reset chosen
+                    $('#CountryId').val(data.CountryId);
+                $(".chosen_select_L").chosen(); //~
+            }
+            catch (e) {
+                ClearProjectDialog();
+ 
+            }
+        });
+    }
+
+    function UpdateProject(Id) {
+        var Id = Id;
+        var ProjectName = $('#Name').val();
+        var CustomerId = koMM.POwner.POwnerId.id;
+        var ContactPersonal = $('#ContactPersonal').val();
+        var ContactNo = $('#ContactNo').val();
+        var CountryId = $('#CountryId').val();
+        var Location = $('#Location').val();
+
+        var ProjectInfo = {Id:Id, Name: ProjectName, CustomerId: CustomerId, ContactPersonal: ContactPersonal, ContactNo: ContactNo, CountryId: CountryId,
+            Location: Location
+        };
+
+        var json = JSON.stringify(ProjectInfo);
+
+        $.ajax({
+            url: '/Job/UpdateProject',
+            type: 'POST',
+            dataType: 'json',
+            data: json,
+            contentType: 'application/json; charset=utf-8',
+            success: function () {
+                $.pnotify({
+                    title: 'Update Project',
+                    text: ' Project has been Updated!',
+                    type: 'success'
+                });
+                ClearProjectDialog();
+            },
+            error: function () {
+                $.pnotify({
+                    title: 'Add Project',
+                    text: 'Project has not been updated, please try again!',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+
+
+  function POwnerModel(){
+       var self = this;
+       self.POwnerId = new selectAuto();
+
+           $("#btnAddProject").click(function (e) {
+                ClearProjectDialog();
+                $('.chosen-container').css({ 'width': '160px' }); //to fixed chosen css bug in dialogbox
+                $dialoge.dialog({
+                    width: 750,
+                    modal: true,
+                    height: 305,
+                    title: "Add New Project",
+                    buttons: [{
+                        text: "Save",
+                        'class': 'btn btn-primary',
+                        click: function () {
+                            if ($('#Name').val() == null || $('#CustomerId').val() == 0 || $('#CountryId').val() == 0) {
+                                $.pnotify({
+                                    title: 'Add Project',
+                                    text: ' Please fill the required information!',
+                                    type: 'warning'
+                                });
+                            } else {
+                                //  e.preventDefault();
+                                SaveProject();
+                                $dialoge.dialog('close');
+                                // window.location.href = "/Manifest/Create";
+                            }
+                        }},
+                                        {
+                                            text: "Close",
+                                            'class': 'btn btn-default',
+                                            click: function () {
+                                                $(this).dialog("close");
+                                            }
+                    }]
+                });
+            });
+
+
+            function SaveProject(e) {
+                  var Pow;
+                    if(self.POwnerId.id > 0)
+                    {
+                    Pow = self.POwnerId.id;
+                    }
+                    else if(self.POwnerId.id() > 0)
+                    {
+                    Pow = self.POwnerId.id();
+                    }
+
+                var ProjectName = $('#Name').val();
+                var CustomerId = Pow;
+                var ContactPersonal = $('#ContactPersonal').val();
+                var ContactNo = $('#ContactNo').val();
+                var CountryId = $('#CountryId').val();
+                var Location = $('#Location').val();
+
+                var ProjectInfo = { Name: ProjectName, CustomerId: CustomerId, ContactPersonal: ContactPersonal, ContactNo: ContactNo, CountryId: CountryId,
+                    Location: Location
+                };
+
+                var json = JSON.stringify(ProjectInfo);
+
+                $.ajax({
+                    url: '/Job/SaveProject',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        $.pnotify({
+                            title: 'Add Project',
+                            text: ' New Project has been Saved!',
+                            type: 'success'
+                        });
+                        ClearProjectDialog();
+                    },
+                    error: function () {
+                        $.pnotify({
+                            title: 'Add Project',
+                            text: 'Project has not been save, please try again!',
+                            type: 'error'
+                        });
+                    }
+                });
+            }
+
+          }
+
+//Project Owner Selecet Function
+ko.bindingHandlers.POwnerSelect = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+
+          $(element).autocomplete({
+              source: function( request, response ) {
+                $.ajax( {
+                  url: "../Party/SearchParty",
+                  dataType: "json",
+                  data:{ 'query':request.term ,"type":1, subtype: 2 },
+                  success: function( data ) {
+                    var test = [];
+
+
+
+                    // pass a function to map
+                    const map1 = data.map(x => ({
+                    id:x.Id,
+                    label:x.Name,
+                    value:x.Name
+                    }));
+
+                    console.log(map1);
+                    response( map1 );
+                  }
+                } );
+            },
+          minLength: 2,
+           select: function( event, ui ) {
+       
+          valueAccessor().id =  ui.item.id;
+           valueAccessor().value =  ui.item.value;
+             console.log(valueAccessor());    
+            console.log(viewModel);
+            console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+    }
+};
+
+</script>

@@ -1,0 +1,117 @@
+﻿@model AYLogistics.Models.CreateUserVM
+@{
+    ViewBag.Title = "CreateUser";
+}
+
+<div class="topMainHeading">
+    <h4>Create User</h4>
+</div>
+ 
+    <div class="" >
+        <div class="">
+            <div class="control pull-left">
+                <a href="@Url.Action("ViewUser", "Account")" class="btn btn-primary" ><i class="icon-hand-left"></i> Back</a>
+            </div>
+        </div>
+ 
+@* @{
+    if(ViewBag.message !=null){
+        <div class="alert @Html.Raw(ViewBag.type)" style="margin-top:4px;">
+        @ViewBag.message
+        </div>
+    }
+}*@
+        @using (Ajax.BeginForm("CreateUser", "Account", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess" }, new { id = "CreateUserForm" }))
+        {
+        <div class="">
+            <div class="control pull-left clear">
+                <span class="" style="width: 130px;">@Html.LabelFor(m => m.ACSUserId)</span>
+                  @Html.DropDownListFor(m => m.ACSUserId, new SelectList(AYLogistics.Models.Account.Employee.GetEmployees(), "Id", "Name"), new { @class = "", onChange = "getEmail(this.value)" })
+                  @Html.ValidationMessageFor(m => m.ACSUserId)
+             </div>
+
+             <div class="control pull-left clear">
+                 <span class="" style="width: 130px;">@Html.LabelFor(m => m.UserName)</span>
+                  @Html.TextBoxFor(m => m.UserName ,new { @class = "" })
+                  @Html.ValidationMessageFor(m => m.UserName)
+             </div>
+                
+            <div class="control pull-left clear">
+                 <span class="" style="width: 130px;">@Html.LabelFor(m => m.Email)</span>
+                  @Html.TextBoxFor(m => m.Email, new { @class = "" })
+                  @Html.ValidationMessageFor(m => m.Email)
+             </div>
+      
+            <div class="control pull-left clear">
+                 <span class="" style="width: 130px;">@Html.LabelFor(m => m.Password)</span>
+                  @Html.PasswordFor(m => m.Password, new { @class = "" })
+                  @Html.ValidationMessageFor(m => m.Password)
+            </div>
+
+            <div class="control pull-left clear">
+             <span class="" style="width: 130px;">@Html.LabelFor(m => m.ConfirmPassword)</span>
+              @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "" })
+              @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </div>
+        </div>
+
+       <fieldset class="clear">
+          <legend>  
+                <div class="clear">
+                    <span class="control pull-left clear">@Html.LabelFor(m => m.Roles)</span>
+                </div>
+        </legend>   
+       </fieldset>
+        <div class="clear">
+              @foreach (string roleName in Roles.GetAllRoles())
+                {
+                    
+                    string checkboxId = "checkbox_" + roleName;
+                    <div class="control pull-left clear">
+                        <input type="checkbox"  id="@checkboxId" value="@roleName" name="Roles") />
+                    </div>
+                    <div class="control pull-left space-right">
+                        <label for="@checkboxId">@roleName</label>
+                    </div>
+                } 
+        </div>
+        
+       <fieldset class="clear">
+          <legend>  
+            <div class="control pull-left clear">
+              <input type="submit" class="btn btn-success" value="Save" />
+            </div>
+        </legend>   
+       </fieldset>
+        }
+    </div>
+
+<script type="text/javascript">
+    function OnSuccess(result) {
+        if (result.Status == "success") {
+            $("#CreateUserForm").each(function () {
+                this.reset();
+            });
+        }
+        $.pnotify({
+            title: 'User',
+            text: result.Message,
+            type: result.Status
+        });
+    }
+
+
+    function getEmail(value) {
+        var URL = '/Account/GetEmployeeEmail';
+        $.getJSON(URL + '/?ACSUId=' + value, function (data) {
+            try {
+                $('#Email').val(data.Email);
+            }
+            catch (e) {
+                $('#Email').val("");
+            }
+        });
+    }
+
+
+</script>

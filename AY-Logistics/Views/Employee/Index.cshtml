@@ -1,0 +1,168 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models
+@{
+    ViewBag.Title = "Manage Employee";
+}
+
+@using System.Web.Security;
+@using AYLogistics.Models;
+
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-900">Manage Employee</h2>
+
+    <!-- Page Menu -->
+    <div class="mb-4 flex justify-end">
+        <a href="@Url.Action("AddNewEmployee", "Employee")" class="px-4 py-1.5 text-sm bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+            <i class="fas fa-user-plus mr-2"></i> Add Employee
+        </a>
+    </div>
+
+    <!-- Search Section -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div>
+            <label for="searchQuery" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <input type="text" id="searchQuery" placeholder="Search by name, NIC, etc." 
+                class="w-full p-2 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="flex justify-end mt-4">
+            <button id="searchEmployees" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+                Search
+            </button>
+        </div>
+    </div>
+
+    <!-- Employee Cards -->
+    <div id="employee-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards will be dynamically inserted here -->
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination-container" class="mt-6 flex justify-center space-x-2">
+        <!-- Pagination buttons will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const itemsPerPage = 6; // Number of items per page
+        let currentPage = 1; // Current active page
+        let employeesData = []; // Store employees fetched from the server
+
+        // Load initial data
+        fetchEmployees();
+
+        // Handle Search Button Click
+        $('#searchEmployees').click(function () {
+            filterEmployees();
+        });
+
+        // Fetch all employees
+        function fetchEmployees() {
+            $.ajax({
+                url: `/Employee/GetAllEmployee`,
+                type: 'POST',
+            dataType: 'json',
+            success: function (response) {
+                employeesData = response.aaData || [];
+                renderEmployees(currentPage);
+                renderPagination(employeesData.length, itemsPerPage);
+            },
+            error: function () {
+                alert('Failed to load employee data.');
+            }
+        });
+    }
+
+        // Filter employees based on search input
+    function filterEmployees() {
+        const query = $('#searchQuery').val().trim().toLowerCase();
+        const filteredData = employeesData.filter(employee => {
+            const searchString = `${employee.FullName || ''} ${employee.NIC || ''} ${employee.EmpId || ''}`.toLowerCase();
+    return searchString.includes(query);
+    });
+    currentPage = 1; // Reset to first page
+    renderEmployees(currentPage, filteredData);
+    renderPagination(filteredData.length, itemsPerPage);
+    }
+
+    // Render employees as cards
+    function renderEmployees(page, data = employeesData) {
+        const container = $('#employee-container');
+        container.empty();
+
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const visibleEmployees = data.slice(startIndex, endIndex);
+
+        if (visibleEmployees.length === 0) {
+            container.html('<p class="text-gray-500 text-center">No employees found.</p>');
+            return;
+        }
+
+        visibleEmployees.forEach(employee => {
+            const card = `
+                <div class="bg-white border rounded-lg shadow p-6">
+                    <h3 class="text-base font-semibold text-gray-900">${employee.FullName}</h3>
+                    <p class="text-sm text-gray-600"><strong>NIC:</strong> ${employee.NIC || '-'}</p>
+                    <p class="text-sm text-gray-600"><strong>Employee ID:</strong> ${employee.EmpId || '-'}</p>
+                    <p class="text-sm text-gray-600"><strong>Address:</strong> ${employee.PermanentAddress || '-'}</p>
+                    <p class="text-sm text-gray-600"><strong>Mobile:</strong> ${employee.Contact || '-'}</p>
+                    <p class="text-sm text-gray-600"><strong>Gender:</strong> ${employee.Gender || '-'}</p>
+                    <p class="text-sm text-gray-600"><strong>Status:</strong> ${employee.EmployeeStatus || '-'}</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="../Employee/EmployeeDetails?id=${employee.Id}" class="text-blue-500 hover:text-blue-700">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        <a href="../Employee/EditEmployee?id=${employee.Id}" class="text-green-500 hover:text-green-700">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
+                </div>
+            `;
+        container.append(card);
+    });
+    }
+
+    // Render pagination
+    function renderPagination(totalItems, itemsPerPage) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const paginationContainer = $('#pagination-container');
+        paginationContainer.empty();
+
+        if (totalPages <= 1) return;
+
+        // Previous Button
+        paginationContainer.append(`
+            <button onclick="changePage(${currentPage - 1})" class="px-4 py-2 rounded ${currentPage === 1 ? 'bg-gray-300' : 'bg-gray-200 hover:bg-gray-300'}" ${currentPage === 1 ? 'disabled' : ''}>
+                Previous
+            </button>
+            `);
+
+    // Page Buttons
+    for (let i = 1; i <= totalPages; i++) {
+        paginationContainer.append(`
+            <button onclick="changePage(${i})" class="px-4 py-2 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}">
+                ${i}
+            </button>
+        `);
+    }
+
+        // Next Button
+    paginationContainer.append(`
+        <button onclick="changePage(${currentPage + 1})" class="px-4 py-2 rounded ${currentPage === totalPages ? 'bg-gray-300' : 'bg-gray-200 hover:bg-gray-300'}" ${currentPage === totalPages ? 'disabled' : ''}>
+            Next
+        </button>
+    `);
+    }
+
+        // Change Page
+window.changePage = function (page) {
+    const totalPages = Math.ceil(employeesData.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderEmployees(page);
+    renderPagination(employeesData.length, itemsPerPage);
+    };
+    });
+</script>
+

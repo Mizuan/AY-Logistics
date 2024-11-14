@@ -1,0 +1,11 @@
+﻿@*<div id="flash-messages" class="alert-message" style="display:none;">*@ @*this is for bootstrap.cs*@
+<div id="flash-messages" class="alert @Html.Raw(ViewBag.type)" style="display:none;">@*this is for My Custom CSS, if you use this one u hav to use ViewbageType in controller*@
+<a class="close" href="#">&times;</a>
+<p></p>
+</div>
+ 
+<script type="text/javascript">
+    $(function () {
+        $("#flash-messages").flashMessage();
+    });
+</script>

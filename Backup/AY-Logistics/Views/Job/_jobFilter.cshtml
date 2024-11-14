@@ -1,0 +1,889 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models;
+
+<div class="formControlContainer margin-right35">
+    <div id="dailyclearance">
+        <div class="control pull-left">
+            <button class="btn btn clear-print" style="width: ;"><i class="icon-print"> Daily Clearance</i></button>
+        </div>
+        <div class="control pull-left space-right">
+            <input type="text" id="clearDate" data-date-format="yyyy-mm-dd" class="datepicker input-small" data-date-today-highlight="true"/>
+        </div>
+         <div class="control pull-left" style="margin-bottom: 19px;">
+             <label class="form-label"></label>
+             <select id="DCMode" style="margin-top: -5px;margin-left: 6px; width:75px">
+                <option value="1">SEA</option>
+                <option value="2">AIR</option>
+            </select>
+      </div>
+    </div>
+
+    <table id="ManifestTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:11px;">
+        <thead>
+            <tr>
+                <th class="hide">ManifestId</th>
+                <th class="hide">ShipmentId</th>
+                <th class="hide">HBLId</th>
+                <th style="width: 12px" class="tableHeadFont">Entry Date</th>
+                <th style="width: "class="tableHeadFont">HBL / AWBL #</th>
+                <th style="width: "class="tableHeadFont">MasterBL #</th>
+                <th style="width: "class="tableHeadFont">Manifest #</th>
+                <th style="width: "class="tableHeadFont">Consignee / Customer</th>
+                <th style="width: "class="tableHeadFont">Voyage</th>
+                <th style="width: " class="tableHeadFont">Vessel</th>
+                 @*<th style="width: 10px;" class="tableHeadFont">Container Type</th>*@
+                <th style="width: " class="tableHeadFont">Container Info</th>
+               @*<th style="width: 10px;" class="tableHeadFont">No.Of Conatiner</th>*@
+                <th style="width: 10px;" class="tableHeadFont">MODE</th>
+                <th style="width: 12px" class="tableHeadFont">Employee</th>
+                <th style="width: 12px" class="tableHeadFont">Arrival Date</th>
+                <th style="width: 12px" class="tableHeadFont">status</th>
+                <th style="width: " class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <table id="JobTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:11px;">
+        <thead>
+            <tr>
+                <th class="hide">JobId</th>
+                <th class="hide">ShipmentId</th>
+                <th class="hide">HBLId</th>
+                <th style="width:auto "class="tableHeadFont">Job #</th>
+                <th style="width:auto " class="tableHeadFont">Reg Date</th>
+                <th style="width:auto "class="tableHeadFont">Consignee / Customer</th>
+                @*<th style="width:auto "class="tableHeadFont">MasterBL No</th>*@
+                <th style="width:auto "class="tableHeadFont">HBL / AWBL</th>
+                <th style="width:auto " class="tableHeadFont">Vessel / Flight</th>
+                <th style="width:auto " class="tableHeadFont">Voyage</th>
+                <th style="width:auto " class="tableHeadFont">Container</th>
+                @*<th style="width:auto " class="tableHeadFont">RNumber</th>*@
+                <th style="width:auto " class="tableHeadFont">RNumber&Date</th>
+                <th style="width:auto " class="tableHeadFont">ANumber&Date</th>
+                <th style="width: auto" class="tableHeadFont">Arrival</th>
+                <th style="width: auto" class="tableHeadFont">Discharge</th>
+                <th style="width: auto" class="tableHeadFont">Demurrage</th>
+                <th style="width: auto" class="tableHeadFont">Mode</th>
+                <th style="width:auto " class="tableHeadFont">ShiftRequest</th>
+                 <th style="width: auto" class="tableHeadFont">Clearance Date</th>
+                <th style="width: auto" class="tableHeadFont">Clearance Mode</th>
+                <th style="width: auto" class="tableHeadFont">Clearance Port</th>
+                <th style="width: auto" class="tableHeadFont">Clearance By</th>
+                <th style="width: auto" class="tableHeadFont">Delivery Place</th>
+                <th style="width: auto" class="tableHeadFont">Entry By</th>
+                <th style="width: auto" class="tableHeadFont">Remarks</th>
+                <th style="width: auto" class="tableHeadFont">Status</th>
+                @*<th style="width: " class="tableHeadFont">Commodity</th>*@
+                @*<th style="width: 80px; "class="tableHeadFont">Project</th>*@
+                <th style="width:auto" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script src="@Url.Content("~/Scripts/knockout-2.2.0.debug.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var SPstatId = 0;
+
+
+    $(document).ready(function () {
+        var date = new Date();
+       // var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      //  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        $('#clearDate').datepicker('setDate', date);
+        $("#clearDate").datepicker({ autoclose: true, });
+    });
+
+    $(".clear-print").click(function () {
+       // alert($('#clearDate').val());
+        //alert($("#DCMode").val());
+        $.download("../Job/PrintDailyClearance", { CLdate: $('#clearDate').val(), ModeofShipment: $("#DCMode").val() }, "POST");
+    });
+
+    function loadManifestTable(value) {
+        try {
+            var oTable = $('#ManifestTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Manifest/GetBLbyStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Manifest/GetBLbyStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#ManifestTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#ManifestTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "DateCreated", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Number", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "ContainerType", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerInfo", "sDefaultContent": "-", "sClass": "eng" },
+                   // {"mDataProp": "TotalNoOfContainer", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ModeOfShipmentName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+
+                       /* return "<a href='../Job/ConvertManifestJob?ManifestId=" + o.aData.Id + "&HBLId=" + o.aData.HBLId + "' class='' ><i class='icon-info-sign icon-2x'></i></a><a href='../JobDocument/Index?ShipmentId="
+                        + o.aData.ShipmentId + "&HBLId=" + o.aData.HBLId + "' class='' ><i class='icon-paper-clip icon-2x' style='margin-left: 14px;'></i></a><span class=''><span class=''><a href='../Manifest/PrintManifest?ManifestId="
+                            + o.aData.Id + "' class=''><i class='icon-print icon-2x' style='margin-left: 14px;'></i></a></span>"*/
+
+                        return "<div class='dropdown show'>"
+                         + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                          + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                            + "<a class='dropdown-item' href='../Job/ConvertManifestJob?ManifestId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Update as a new Job</a>"
+                            + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                          //  + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + o.aData.ShipmentId + ")'>&nbsp;Attachments</a>"
+                            + "<br><a class='dropdown-item' href='../Manifest/PrintManifest?ManifestId=" + row.Id + "'>&nbsp;Print Manifest</a>"
+                            + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                          + "</div></div>"
+                    }
+                    }
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#ManifestTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function loadJobTable(value) {
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Job/GetJobbyStatus/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'print',
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Job/GetJobbyStatus/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegistrationDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RNumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ANumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischargeGreen", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrageRed", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShiftingRequestedDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearancePort", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceBy", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DeliveryPlace", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    // { "mDataProp": "Remarks", "sDefaultContent": "-", "sClass": "eng" },
+                                       {
+                                           "mDataProp": "Remarks", render: function (data, type, row, meta) {
+                                               if (type === 'display') {
+                                                   data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
+                                               }
+                                               return data;
+                                           }
+                                       },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                   // { "mDataProp": "Commodity", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Project", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+
+                       /* return "<a href='../Job/EditJob?JobId=" + o.aData.Id + "&HBLId=" + o.aData.HBLId + "' class='' ><i class='icon-info-sign icon-2x'></i></a><a href='../JobDocument/Index?ShipmentId="
+                        + o.aData.ShipmentId + "&HBLId=" + o.aData.HBLId + "' class='' ><i class='icon-paper-clip icon-2x' style='margin-left: 14px;'></i></a><span class=''><span class=''><a href='../Manifest/PrintManifest?ManifestId="
+                            + o.aData.Id + "' class=''></a></span>"*/
+
+                        return "<div class='dropdown show'>"
+                         + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                          + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                            + "<a class='dropdown-item' href='../Job/EditJob?JobId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Edit Job</a>"
+                           //  + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + o.aData.ShipmentId + ")'>&nbsp;Attachments</a>"
+                            + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                            + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                          + "</div></div>"
+                    }
+                    }
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                       $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function loadNewJobTable(value) {
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Job/GetNewJobs/?StatusId=' + value,
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Job/GetNewJobs/?StatusId=' + value,
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegistrationDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerNo", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "RNumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ANumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischargeGreen", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrageRed", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShiftingRequestedDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceMode", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "ClearancePort", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceBy", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DeliveryPlace", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                    // { "mDataProp": "Remarks", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Commodity", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Project", "sDefaultContent": "-", "sClass": "eng" },
+                   {
+                       "mDataProp": "Remarks", render: function (data, type, row, meta) {
+                           if (type === 'display') {
+                               data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
+                           }
+                           return data;
+                       }
+                   },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+
+                            /* return "<a href='../Job/EditJob?JobId=" + o.aData.Id + "&HBLId=" + o.aData.HBLId + "' class='' ><i class='icon-info-sign icon-2x'></i></a><a href='../JobDocument/Index?ShipmentId="
+                             + o.aData.ShipmentId + "&HBLId=" + o.aData.HBLId + "' class='' ><i class='icon-paper-clip icon-2x' style='margin-left: 14px;'></i></a><span class=''><span class=''><a href='../Manifest/PrintManifest?ManifestId="
+                                 + o.aData.Id + "' class=''></a></span>"*/
+
+                            return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Job/EditJob?JobId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Edit Job</a>"
+                               //  + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + o.aData.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+                        }
+                    }
+
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+    function loadDOPayRequestedJobs() {
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Job/GetDOpayRequestedJobs',
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Job/GetDOpayRequestedJobs',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegistrationDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerNo", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "RNumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "ANumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischargeGreen", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrageRed", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShiftingRequestedDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceMode", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "ClearancePort", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceBy", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DeliveryPlace", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                //     { "mDataProp": "Remarks", "sDefaultContent": "-", "sClass": "eng" },
+                                   {
+                                       "mDataProp": "Remarks", render: function (data, type, row, meta) {
+                                           if (type === 'display') {
+                                               data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
+                                           }
+                                           return data;
+                                       }
+                                   },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                   // { "mDataProp": "Commodity", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Project", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Job/EditJob?JobId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Edit Job</a>"
+                                // + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + o.aData.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+                        }
+                    }
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+    function loadDOPendingJobs() {
+        SPstatId = 101;
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Job/GetDOPendingJobs',
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Job/GetDOPendingJobs',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegistrationDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerNo", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "RNumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "ANumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischargeGreen", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrageRed", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShiftingRequestedDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearancePort", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceBy", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DeliveryPlace", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                  //   { "mDataProp": "Remarks", "sDefaultContent": "-", "sClass": "eng" },
+                                     {
+                                         "mDataProp": "Remarks", render: function (data, type, row, meta) {
+                                             if (type === 'display') {
+                                                 data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
+                                             }
+                                             return data;
+                                         }
+                                     },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                   // { "mDataProp": "Commodity", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Project", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        // "mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Job/EditJob?JobId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Edit Job</a>"
+                              //   + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + o.aData.ShipmentId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' style='color:#FF0000;' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+                        }
+                    }
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+    function loadDOCollectedJobs() {
+        SPstatId = 102;
+        try {
+            var oTable = $('#JobTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": '/Job/GetDOCollectedJobs',
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+                "order": [[0, "desc"]],
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Job/GetDOCollectedJobs',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#JobTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#JobTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "ShipmentId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "HBLId", "sDefaultContent": "-", "sClass": "hide" },
+                    { "mDataProp": "JobNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "RegistrationDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "Customer", "sDefaultContent": "-", "sClass": "eng" },
+                    //{ "mDataProp": "MasterBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "HouseBL", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VesselName", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "VoyageNo", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ContainerNo", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "RNumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                     { "mDataProp": "ANumberDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateArrival", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDischargeGreen", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DateDemurrageRed", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShipmentMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ShiftingRequestedDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceDate", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceMode", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearancePort", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "ClearanceBy", "sDefaultContent": "-", "sClass": "eng" },
+                    { "mDataProp": "DeliveryPlace", "sDefaultContent": "-", "sClass": "eng" },
+                      { "mDataProp": "Employee", "sDefaultContent": "-", "sClass": "eng" },
+                   //  { "mDataProp": "Remarks", "sDefaultContent": "-", "sClass": "eng" },
+                                      {
+                                          "mDataProp": "Remarks", render: function (data, type, row, meta) {
+                                              if (type === 'display') {
+                                                  data = typeof data === 'string' && data.length > 30 ? data.substring(0, 30) + '...' : data;
+                                              }
+                                              return data;
+                                          }
+                                      },
+                    {
+                        "mDataProp": "RecentStatus", render: function (data, type, row, meta) {
+                            return '<mark>' + row.RecentStatus + '</mark>';
+                        }
+                    },
+                   // { "mDataProp": "Commodity", "sDefaultContent": "-", "sClass": "eng" },
+                   // { "mDataProp": "Project", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        //"mDataProp": null, "sDefaultContent": "-", "fnRender": function (o) {
+                        "mDataProp": null, render: function (data, type, row, meta) {
+                            return "<div class='dropdown show'>"
+                             + "<a class='dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='icon-info-sign icon-2x'></i></a>"
+                              + "<div class='dropdown-menu' aria-labelledby='dropdownMenuLink'>"
+                                + "<a class='dropdown-item' href='../Job/EditJob?JobId=" + row.Id + "&HBLId=" + row.HBLId + "'>&nbsp;Edit Job</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='attachOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Attachments</a>"
+                                + "<br><a class='dropdown-item' href='#' onclick='shipmentStatusOpen(" + row.ShipmentId + "," + row.HBLId + ")'>&nbsp;Status</a>"
+                              + "</div></div>"
+                        }
+                    }
+                ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#JobTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+
+    function init() {
+    }
+
+
+    $('#ManifestTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    $('#JobTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    function attachOpen(shipmentId, BLid) {
+        // var myWindow = window.open("../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1100,height=600");
+
+        var page = "../JobDocument/RawIndex?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+        var $dialog = $('<div style="overflow:visible"></div>')
+                       .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                       .dialog({
+                           autoOpen: false,
+                           modal: true,
+                           height: 720,
+                           width: 1240,
+                           resizable: true,
+                           title: "DOCUMENTS",
+                           buttons: {
+                               Close: function () {
+                                   $(this).dialog("close");
+                                   if (SPstatId == 101) {
+                                       dash.init();
+                                       getFilterStatus(101);
+                                   }
+                                   else { }
+
+                               }
+                           }
+                       });
+        $dialog.dialog('open');
+
+        ///after CLose popup window
+        /*myWindow.onbeforeunload = function () {
+            if (SPstatId == 101) {
+                dash.init();
+                getFilterStatus(101);
+            }
+            else { }
+        }*/
+    }
+
+    function shipmentStatusOpen(shipmentId, BLid) {
+       // var myWindow = "";
+      //  myWindow = window.open("../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid, "", "width=1335,height=400");
+        var page = "../Manifest/shipmentStatus?ShipmentId=" + shipmentId + "&HBLId=" + BLid;
+        var $dialog = $('<div style="overflow:visible"></div>')
+                       .html('<iframe style="border: 0px; " src="' + page + '" width="100%" height="100%"></iframe>')
+                       .dialog({
+                           autoOpen: false,
+                           modal: true,
+                           height: 720,
+                           width: 1240,
+                           resizable: true,
+                           title: "STATUS",
+                           buttons: {
+                               Close: function () {
+                                   $(this).dialog("close");
+
+                               }
+                           }
+                       });
+        $dialog.dialog('open');
+    }
+ </script>

@@ -1,0 +1,173 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models;
+@{
+    ViewBag.Title = "Operation";
+}
+
+<!-- Main Container -->
+<div class="min-h-screen">
+    <!-- Dashboard Cards Section -->
+    <div class="max-w-7xl mx-auto w-full px-4 py-8">
+        <h2 class="text-xl font-semibold mb-6 text-gray-900">Operations</h2>
+
+        <!-- Dashboard Cards Grid -->
+        <div id="dashboard-cards" class="grid gap-6 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+            <!-- Dashboard cards will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <!-- Manifest/Job Cards Section -->
+    <div class="max-w-7xl mx-auto w-full px-4">
+        <!-- Dynamic Section Title -->
+        <div class="my-8">
+            <h2 id="dynamic-section-title" class="text-xl font-bold mb-4"></h2>
+            <div id="dynamic-container" class="grid gap-6 lg:grid-cols-2 sm:grid-cols-1">
+                <!-- Dynamic cards (Manifests, Jobs, etc.) will be inserted here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fetch and display dashboard items
+    function loadDashboardItems() {
+        fetch("/Job/GetDashboardItem")
+            .then(response => response.json())
+            .then(data => {
+                const dashboardContainer = document.getElementById("dashboard-cards");
+        dashboardContainer.innerHTML = "";
+
+        // Static card configuration
+                const cardConfig = [
+                    { bg: "bg-red-100", icon: "fa-file-alt", color: "text-red-800", title: "Received From Documentation", statusId: 2 },
+                    { bg: "bg-teal-100", icon: "fa-file-upload", color: "text-teal-800", title: "New Entry & Document Processing", statusId: 4 },
+                    { bg: "bg-orange-100", icon: "fa-plane-arrival", color: "text-orange-800", title: "Clearance & Delivery", statusId: 6 },
+                ];
+
+        data.forEach((item, index) => {
+            const config = cardConfig[index] || { bg: "bg-gray-100", icon: "fa-box", color: "text-gray-800", title: "Unknown" };
+                    const card = `
+                        <div class="${config.bg} rounded-lg shadow-lg p-4 flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
+        onclick="fetchDataByStatus(${config.statusId}, '${config.title}')">
+        <div class="text-center ${config.color}">
+            <i class="fas ${config.icon} text-4xl mb-2"></i>
+            <h3 class="text-2xl font-bold">${item.Total}</h3>
+            <p class="text-base">${config.title}</p>
+        </div>
+    </div>`;
+        dashboardContainer.innerHTML += card;
+    });
+    })
+            .catch(error => console.error("Error loading dashboard items:", error));
+    }
+
+    // Render BL-specific cards
+    function renderBLCards(items) {
+        const container = document.getElementById("dynamic-container");
+        container.innerHTML = "";
+
+        items.forEach(item => {
+            const card = `
+                <div class="border rounded-lg shadow p-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-semibold">BL #${item.HouseBL}</h3>
+                        <span class="text-gray-500 text-sm">
+                            <i class="fas fa-check-circle text-green-500"></i> ${item.RecentStatus || "Unknown"}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+                        <div><strong>Date:</strong> ${item.DateCreated || "-"}</div>
+                        <div><strong>Arrival:</strong> ${item.DateArrival || "-"}</div>
+                        <div><strong>VoyageNo:</strong> ${item.VoyageNo || "-"}</div>
+                        <div><strong>Vessel:</strong> ${item.VesselName || "-"}</div>
+                        <div><strong>Mode:</strong> ${item.ModeOfShipmentName || "-"}</div>
+                        <div><strong>By:</strong> ${item.Employee || "-"}</div>
+                    </div>
+                    
+                </div>`;
+        container.innerHTML += card;
+    });
+    }
+
+    // Render job-related cards
+    function renderCards(items) {
+        const container = document.getElementById("dynamic-container");
+        container.innerHTML = "";
+
+        items.forEach(item => {
+            const card = `
+                <div class="border rounded-lg shadow p-4 bg-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                              <h3 class="text-base font-semibold">Job #${item.JobNo}</h3>
+                        </div>
+                       
+                        <span class="text-gray-500 text-sm">
+                            <i class="fas fa-check-circle text-green-500"></i> ${item.RecentStatus || "Unknown"}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+                        <div><strong>Date:</strong> ${item.RegistrationDate}</div>
+                        <div><strong>BL:</strong>
+                            <span class="block truncate max-w-full cursor-pointer" onclick="toggleBLContent(this)">
+                                ${item.HouseBL || "-"}
+                        </span>
+                    </div>
+                    <div><strong>Mode:</strong> ${item.ShipmentMode}</div>
+                    <div><strong>By:</strong> ${item.Employee}</div>
+                    <div><strong>Commodity:</strong> <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">${item.Commodity}</span></div>
+                    <div><strong>Discharge:</strong> ${item.DateDischarge}</div>
+                    <div><strong>Clearance:</strong> ${item.ClearanceDate} - : <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">${item.ClearanceMode}</span></div>
+                    <div><strong>Clearance By:</strong> ${item.ClearanceBy}</div>
+                    <div><strong>Delivery:</strong> ${item.DeliveryPlace}</div>
+                </div>
+                
+                
+                </div>`;
+                        container.innerHTML += card;
+                    });
+                    }
+
+    // Toggle BL Content
+    function toggleBLContent(element) {
+        element.classList.toggle("truncate");
+    }
+
+    // Fetch data by status
+    function fetchDataByStatus(statusId, name) {
+        let url;
+        let sectionTitle = name;
+        document.getElementById("dynamic-section-title").textContent = sectionTitle;
+
+        switch (statusId) {
+            case 2:
+                url = "/Manifest/GetBLbyStatus/?StatusId=2";
+                break;
+            case 4:
+                url = "/Job/GetNewJobs/?StatusId=4";
+                break;
+            case 6:
+                url = "/Job/GetJobbyStatus/?StatusId=6";
+                break;
+            default:
+                console.error(`Unhandled statusId: ${statusId}`);
+                return;
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (statusId === 2) {
+                    renderBLCards(data.aaData);
+    } else {
+                    renderCards(data.aaData);
+    }
+    })
+            .catch(error => console.error("Error fetching data:", error));
+    }
+
+    // Initialize dashboard on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        loadDashboardItems();
+    });
+</script>

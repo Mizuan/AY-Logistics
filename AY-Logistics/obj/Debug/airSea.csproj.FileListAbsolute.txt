@@ -1,0 +1,26 @@
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\MyACS.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\MyACS.pdb
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\DelegateDecompiler.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\DotNet.Highcharts.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\EntityFramework.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\Mono.Reflection.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\Newtonsoft.Json.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\PerpetuumSoft.Knockout.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\EntityFramework.xml
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\bin\Newtonsoft.Json.xml
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\obj\Debug\airSea.csprojResolveAssemblyReference.cache
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\obj\Debug\MyACS.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\SOHO - Copy\SOHO\obj\Debug\MyACS.pdb
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\MyACS.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\MyACS.pdb
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\DelegateDecompiler.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\DotNet.Highcharts.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\EntityFramework.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\Mono.Reflection.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\Newtonsoft.Json.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\PerpetuumSoft.Knockout.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\EntityFramework.xml
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\bin\Newtonsoft.Json.xml
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\obj\Debug\airSea.csprojResolveAssemblyReference.cache
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\obj\Debug\MyACS.dll
+D:\AMN\DEVELOPMENT\PROJECTS\ASIA FORWARDING-Logistic software\SOURCE\airSea\airSea\obj\Debug\MyACS.pdb

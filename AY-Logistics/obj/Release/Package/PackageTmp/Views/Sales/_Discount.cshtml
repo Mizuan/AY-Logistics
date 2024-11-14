@@ -1,0 +1,125 @@
+﻿@model AYLogistics.Models.SalesDiscount
+@using (Html.BeginForm("AddSalesDiscount", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+        <fieldset>
+            <legend>Add Discount Rate</legend>
+                <div class="control pull-left">
+                    @Html.LabelFor(model => model.Rate)
+                    @Html.EditorFor(model => model.Rate)
+                    @Html.ValidationMessageFor(model => model.Rate)
+                </div>
+        </fieldset>
+    </div>
+    <p>
+       <input type="submit" value="Save" class="btn btn-success" />
+    </p>
+}
+
+<div class="formControlContainer margin-right35">
+    <table id="DiscountTable" class="display table-hover" style="width: 100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr>
+                <th style="width: auto;"class="tableHeadFont hide">Id</th>
+               @* <th style="width: auto;" class="tableHeadFont"></th>*@
+                <th style="width: auto;" class="tableHeadFont">DISCOUNT PERCENTAGE (%)</th>
+                <th style="width: auto;" class="tableHeadFont"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        DiscountDataTable();
+        init();
+    });
+
+    $('#DiscountTable tbody').on('click', 'tr', function () { //one click
+        $(this).toggleClass('selected');
+    });
+
+    function DiscountDataTable() {
+        try {
+
+            var oTable = $('#DiscountTable').dataTable({
+                "bProcessing": true,
+                "sAjaxSource": "/Sales/GetDiscounts",
+                "bFilter": true,
+                "bDestroy": true,
+                // "sScrollY": "350",
+                "bScrollCollapse": true,
+                "bLengthChange": true,
+                "autoWidth": false,
+
+                dom: 'Bfrtip',//*Buttons start
+                buttons: [
+                    //'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                                       {
+                                           extend: 'excel',
+                                           footer: true,
+                                           exportOptions: {
+                                               columns: ':visible'
+                                           }
+                                       },
+                   'pageLength',
+                   'colvis',
+                ],
+                //*Buttons end
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $.ajax({
+                        'dataType': 'json',
+                        'type': 'POST',
+                        "url": '/Sales/GetDiscounts',
+                        "success": function (json) {
+                            fnCallback(json);
+                            $('#DiscountTable').css('width', '100%');
+                            init();
+                        },
+                        "error": function () {
+                            $('#DiscountTable').dataTable().fnClearTable();
+                        }
+                    });
+                },
+                "aoColumns": [
+                    { "mDataProp": "Id", "sDefaultContent": "-", "sClass": "hide" },
+                    //{ "mDataProp": null, "sDefaultContent": "", "sClass": "" },
+                    { "mDataProp": "Rate", "sDefaultContent": "-", "sClass": "eng" },
+                    {
+                        "mDataProp": null, "sDefaultContent": "", "fnRender": function (o)
+                        {
+                       // return "<a href='../Employee/EditEmployee?id=" + o.aData.Id + "'><i class='icon-edit icon-2x' style='margin-left: 14px;'></i></a></span>"
+                        }
+                    }
+
+                 ],
+                "fnDrawCallback": function (oSettings) {
+                    //*Buttons hide start
+                    var hasRows = this.api().rows({ filter: 'applied' }).data().length > 0;
+                    // $('.buttons-copy')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //  $('.buttons-csv')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    $('.buttons-excel')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-pdf')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //   $('.buttons-print')[0].style.visibility = hasRows ? 'visible' : 'hidden'
+                    //Buttons hide end
+                    init();
+                }
+
+            });
+
+        } catch (e) {
+            $('#DiscountTable').dataTable({ "bDestroy": true }).fnClearTable();
+        }
+    }
+
+    function init() {
+
+    }
+     
+</script>

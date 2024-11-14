@@ -1,0 +1,114 @@
+﻿@model AYLogistics.Models.EmployeeModel
+
+@{
+    ViewBag.Title = "Employee Details";
+}
+
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-900">Employee Details</h2>
+
+    <!-- Back Button -->
+    <div class="mb-6">
+        <a href="@Url.Action("Index", "Employee")" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none">
+            <i class="fas fa-arrow-left mr-2"></i> Back
+        </a>
+    </div>
+
+    <!-- Details Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <fieldset>
+            <legend class="text-lg font-semibold mb-4">Employee Information</legend>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- NIC -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">NIC</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.NIC)
+                    </div>
+                </div>
+
+                <!-- Employee ID -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Employee ID</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.EmpId)
+                    </div>
+                </div>
+
+                <!-- First Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.FirstName)
+                    </div>
+                </div>
+
+                <!-- Middle Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Middle Name</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.MiddleName)
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.LastName)
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.Gender)
+                    </div>
+                </div>
+
+                <!-- Designation -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Designation</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.Designation)
+                    </div>
+                </div>
+
+                <!-- Permanent Address -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Permanent Address</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.PermanentAddress)
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Contact</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.Contact)
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.Email)
+                    </div>
+                </div>
+
+                <!-- Employee Status -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Employee Status</label>
+                    <div class="p-2 w-full rounded-md border border-gray-300 bg-gray-100">
+                        @Html.DisplayFor(model => model.EmployeeStatusName)
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

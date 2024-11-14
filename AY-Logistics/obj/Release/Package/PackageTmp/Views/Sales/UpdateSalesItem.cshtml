@@ -1,0 +1,65 @@
+﻿@model AYLogistics.Models.SalesItems
+
+@{
+    //Layout = "~/Views/Shared/_blank2.cshtml";
+    ViewBag.Title = "UpdateSalesItem";
+}
+
+@using (Html.BeginForm("UpdateSalesItem", "Sales", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="span12">
+        <fieldset>
+            <legend>Update Item</legend>
+            @Html.HiddenFor(model => model.Id)
+                <div class="control pull-left">
+                    @Html.LabelFor(model => model.SalesCAT)
+                    @Html.DropDownListFor(m => m.SalesCAT, new SelectList(AYLogistics.Models.SalesCategory.GetCategoryDropD(), "SalesCatId", "SalesCatName"), "-Select-", new { @class = "chosen_select_L" ,style = "width:540px"})
+                    @Html.ValidationMessageFor(model => model.SalesCAT)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.GST)
+                     @Html.DropDownListFor(m => m.GST, new SelectList(AYLogistics.Models.SalesCurrency.GSTOption(), "Id", "Option"), new { @style = "width:90px", id = "Id", name = "Option" })
+                    @Html.ValidationMessageFor(model => model.GST)
+                </div>
+                <div class="control pull-left clear">
+                    @Html.LabelFor(model => model.ItemName)
+                    @Html.TextBoxFor(model => model.ItemName ,  new {style = "width:540px"})
+                    @Html.ValidationMessageFor(model => model.ItemName)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.UnitId)       
+                    @Html.DropDownListFor(m => m.UnitId, new SelectList(AYLogistics.Models.SalesUnit.GetUnitList(), "Id", "UnitName"), "", new { @style = "width:136px", id = "Id", name = "UnitName" })
+                    @Html.ValidationMessageFor(model => model.UnitId)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.UnitPrice)
+                    @Html.TextBoxFor(model => model.UnitPrice ,  new {style = "width:80px"})
+                    @Html.ValidationMessageFor(model => model.UnitPrice)
+                </div>
+                <div class="control pull-left space-right">
+                    @Html.LabelFor(model => model.CurrencyId)
+                     @Html.DropDownListFor(m => m.CurrencyId, new SelectList(AYLogistics.Models.SalesCurrency.GetCurrencyList(), "Id", "Currency"), "", new { @style = "width:90px", id = "Id", name = "Currency" })
+                    @Html.ValidationMessageFor(model => model.CurrencyId)
+                </div>
+        </fieldset>
+    </div>
+    <p>
+       <input type="submit" value="Save" class="btn btn-success" />
+    </p>
+}
+
+<script type="text/javascript">
+
+//$(".chosen_select_L").chosen({
+//    disable_search_threshold: 5,
+//    no_results_text: "Oops, nothing found!"
+//  });
+
+     
+$(document).ready(function () {
+    $(".chosen_select_L").chosen('destroy');
+    $(".chosen_select_L").chosen({ width: "552px" }); //~
+});
+
+</script>

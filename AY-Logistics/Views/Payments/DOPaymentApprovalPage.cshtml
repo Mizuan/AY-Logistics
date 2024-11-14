@@ -1,0 +1,63 @@
+@{
+    ViewBag.Title = "D/O Payment Approval";
+}
+
+<div class="min-h-screen bg-gray-100 p-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">D/O Payment Approval</h2>
+    
+    <form id="DOPaymentForm" class="bg-white p-6 rounded-lg shadow">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Shipment ID</label>
+            <input type="text" id="shipmentId" class="w-full px-3 py-2 border border-gray-300 rounded" readonly
+                   value="@Request.QueryString["ShipmentId"]" />
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Requested Payment</label>
+            <input type="text" id="RequestedPayment" class="w-full px-3 py-2 border border-gray-300 rounded" readonly
+                   value="@Request.QueryString["RequestedPayment"]" />
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">D/O Collect Voucher No</label>
+            <input type="text" id="DOcollectVoucherNo" class="w-full px-3 py-2 border border-gray-300 rounded" />
+        </div>
+        <div class="flex justify-end gap-4">
+            <button type="button" id="approveBtn" class="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600">Approve</button>
+            <a href="javascript:history.back()" class="px-4 py-2 bg-gray-500 text-white rounded shadow hover:bg-gray-600">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#approveBtn').on('click', function () {
+            const shipmentId = $('#shipmentId').val();
+            const RequestedPayment = $('#RequestedPayment').val();
+            const DOcollectVoucherNo = $('#DOcollectVoucherNo').val();
+
+            if (!DOcollectVoucherNo) {
+                alert('Please enter the D/O Collect Voucher No.');
+                return;
+            }
+
+            const PaymentInfo = {
+                DOcollectVoucherNo: DOcollectVoucherNo,
+                shipmentId: shipmentId,
+                RequestedPaymentType: RequestedPayment
+            };
+
+            $.ajax({
+                url: '/Payments/ApproveDOPayement',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(PaymentInfo),
+                success: function () {
+                    alert('Payment has been approved successfully.');
+                    window.location.href = '/Payments/Dashboard'; // Redirect to the dashboard or another page
+                },
+                error: function () {
+                    alert('Failed to approve payment. Please try again.');
+                }
+            });
+        });
+    });
+</script>
