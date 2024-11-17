@@ -277,7 +277,7 @@
         <div data-bind="foreach: HouseBLItems" class="space-y-6">
             <!-- Each Row -->
 
-            <div>
+            <div">
                 <div class="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-md">
 
                     <!-- Action Buttons (Top Right, Positioned within the Container) -->
@@ -292,12 +292,6 @@
                         <button type="button" class="bg-blue-600 text-white hover:bg-blue-800 text-xs px-4 py-1.5 rounded flex items-center space-x-2" data-bind="click: $root.BLPrint">
                             <i class="fas fa-print"></i>
                             <span class="hidden lg:block">Print BOL</span>
-                        </button>
-
-                        <!-- Add Container Button -->
-                        <button type="button" class="bg-yellow-500 text-white hover:bg-yellow-700 text-xs px-3 py-1 rounded flex items-center space-x-2" data-bind="click: $data.addContainerItem">
-                            <i class="fas fa-plus"></i>
-                            <span>Add Container</span>
                         </button>
 
                         <!-- Send Arrival Notice Button -->
@@ -468,19 +462,32 @@
                 </div>
 
 
-                <div class="mt-4 p-6 border rounded-md">
+                <div class="mt-4 p-6 border rounded-md involver">
 
                     <div class="flex justify-between items-center">
                         <div>
                             <h2 class="text-base font-semibold text-gray-900 mb-4">Container Details</h2>
-                        </div>
-                        <div>
-                            <a class="text-red-600 hover:text-red-800" data-bind="click: $parent.deleteContainerItem">
-                                <i class="fas fa-trash"></i>
+                            <!-- Add Container Button -->
+                            <a class="mb-4 bg-yellow-500 text-white hover:bg-yellow-700 text-xs px-3 py-1 rounded flex items-center space-x-2" data-bind="click: $data.addContainerItem">
+                                <i class="fas fa-plus"></i>
+                                <span>Add Container</span>
                             </a>
                         </div>
+     
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" data-bind='foreach: $data.ContainerItems'>
+
+                    <div class="mb-4" data-bind='foreach: $data.ContainerItems'>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4 border border-gray-400 p-4 rounded-lg">
+
+                        <input type="text" class="hidden" data-bind='value: ContainerId,uniqueName: true'/>
+
+                        <!-- Remove Button -->
+                        <div class="col-span-full flex justify-end">
+                            <a class="text-red-600 hover:text-red-800" data-bind="click: $parent.deleteContainerItem">
+                                <i class="fas fa-trash"></i> Remove
+                            </a>
+                        </div>
+
                         <!-- Container Items -->
                             <div class="flex flex-col">
                                 <label class="flex items-center space-x-2 mb-1 text-sm">
@@ -545,8 +552,9 @@
                                 </label>
                                 <input type="text" class="text-sm p-2 border rounded" data-bind='value: CMeasure, uniqueName: false'>
                             </div>
-
                         </div>
+
+                    </div>
                         
                         <!-- BL Summary Fields -->
                         <div class="mt-4 bg-gray-100 p-4 rounded-md">
