@@ -13,7 +13,7 @@
 </div>
 
 <div class="dialogParty" id="dialogParty">
-    <div class="px-6 pt-6 pb-10 space-y-4 bg-white">
+    <div class="px-6 pt-6 pb-10 space-y-4 bg-white shadow-lg">
          <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Party</h2>
         <!-- Type Field -->
         <div class="mb-4">
@@ -230,7 +230,8 @@
                         text: "Close",
                         'class': 'bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm py-1.5 px-4 rounded',
                         click: function () {
-                            $(this).dialog("close");
+                            //$(this).dialog("close");
+                            $(this).dialog("destroy");
                    }
                     }],
 
