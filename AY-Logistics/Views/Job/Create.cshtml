@@ -212,7 +212,7 @@
 
                     </div>
 
-                     <!-- House BL/AWB No -->
+                    <!-- House BL/AWB No -->
                     <div class="flex flex-col">
                         <label for="HouseBLno" class="flex items-center space-x-2 mb-2 text-sm">
                             <i class="fas fa-file-invoice"></i>
@@ -235,7 +235,7 @@
                         <input id="shipperNew" type="text" class="text-sm p-2 border rounded w-full" placeholder="Search..." data-bind="value: ShipperNew.value, PartySelect: ShipperNew, uniqueName: false">
                     </div>
 
-                     <!-- Consignee/Customer -->
+                    <!-- Consignee/Customer -->
                     <div class="flex flex-col relative">
                         <label for="customerNew" class="flex items-center justify-between mb-2 text-sm">
                             <span class="flex items-center space-x-2">
@@ -281,7 +281,7 @@
                         <select id="blNature" class="text-sm p-2 border rounded w-full" data-bind="options: BLNatures, value:BLNature, optionsText: 'value', optionsValue: 'key', optionsCaption: '--select--'"></select>
                     </div>
 
-                     <!-- BL Type -->
+                    <!-- BL Type -->
                     <div class="flex flex-col">
                         <label for="blType" class="flex items-center space-x-2 mb-2 text-sm">
                             <i class="fas fa-boxes"></i>
@@ -512,8 +512,10 @@
 
             </div>
       
+        </div>
 
       </div>
+
       
 
        <fieldset class="border border-gray-300 p-4 rounded-md">
@@ -604,7 +606,6 @@ $(".chosen_select_L").chosen({
 
 $(document).ready(function () {
       $(".chosen_select_L").chosen('destroy');
-      $(".bt_datetime").datetimepicker({format: 'dd/mm/yyyy hh:ii'});
  }); 
 
 

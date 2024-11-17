@@ -48,18 +48,18 @@
             const config = cardConfig[index] || { bg: "bg-gray-100", icon: "fa-box", color: "text-gray-800", title: "Unknown" };
                     const card = `
                         <div class="${config.bg} rounded-lg shadow-lg p-4 flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-        onclick="fetchDataByStatus(${config.statusId}, '${config.title}')">
-        <div class="text-center ${config.color}">
-            <i class="fas ${config.icon} text-4xl mb-2"></i>
-            <h3 class="text-2xl font-bold">${item.Total}</h3>
-            <p class="text-base">${config.title}</p>
-        </div>
-    </div>`;
-        dashboardContainer.innerHTML += card;
-    });
-    })
+                        onclick="fetchDataByStatus(${config.statusId}, '${config.title}')">
+                        <div class="text-center ${config.color}">
+                            <i class="fas ${config.icon} text-4xl mb-2"></i>
+                            <h3 class="text-2xl font-bold">${item.Total}</h3>
+                            <p class="text-base">${config.title}</p>
+                        </div>
+                    </div>`;
+                dashboardContainer.innerHTML += card;
+            });
+            })
             .catch(error => console.error("Error loading dashboard items:", error));
-    }
+        }
 
     // Render BL-specific cards
     function renderBLCards(items) {
@@ -82,6 +82,11 @@
                         <div><strong>Vessel:</strong> ${item.VesselName || "-"}</div>
                         <div><strong>Mode:</strong> ${item.ModeOfShipmentName || "-"}</div>
                         <div><strong>By:</strong> ${item.Employee || "-"}</div>
+                        <div class="mt-4 flex gap-2">
+                        <a href="../Manifest/EditManifest?ManifestId=${item.Id}" class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        </div>
                     </div>
                     
                 </div>`;
@@ -120,6 +125,10 @@
                     <div><strong>Clearance:</strong> ${item.ClearanceDate} - : <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">${item.ClearanceMode}</span></div>
                     <div><strong>Clearance By:</strong> ${item.ClearanceBy}</div>
                     <div><strong>Delivery:</strong> ${item.DeliveryPlace}</div>
+                    </div>
+                    <a href="../Job/EditJob?JobId=${item.Id}&HBLId=${item.HBLId}" class="mt-4 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600">
+                        <i class="fas fa-edit"></i>
+                    </a>
                 </div>
                 
                 

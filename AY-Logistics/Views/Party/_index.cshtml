@@ -5,86 +5,95 @@
  @Html.HiddenFor(m => m.AddressId)
  @Html.HiddenFor(m => m.ContactId)
 
-
-<div class="form_control_line mb-4">
+<div class="form_control_line">
     <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 text-sm hover:bg-blue-700" id="btnAddParty">
-        <i class="fas fa-plus"></i>
+        <i class="icon-plus-sign-alt"></i>
         <span>Legal Body / Individual</span>
     </button>
 </div>
 
-<div class="" id="dialogParty">
-    <div class="formControlContainer p-6 bg-white rounded shadow-lg space-y-4">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Party</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Type *</label>
-                @Html.DropDownListFor(
-                    m => m.PartyTypeId,
-                    new SelectList(AYLogistics.Models.Party.GetPartyType(), "PartyTypeId", "PartyTypeName"),
-                    "-select-",
-                    new { @class = "block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" }
-                )
-                @Html.ValidationMessageFor(model => model.PartyTypeId, "", new { @class = "text-red-500 text-xs mt-1" })
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
-                <input type="text" id="PartyName" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-            </div>
+<div class="dialogParty" id="dialogParty">
+    <div class="px-6 pt-6 pb-10 space-y-4 bg-white">
+         <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Party</h2>
+        <!-- Type Field -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Type *</label>
+            @Html.DropDownListFor(
+                m => m.PartyTypeId,
+                new SelectList(AYLogistics.Models.Party.GetPartyType(), "PartyTypeId", "PartyTypeName"),
+                "-select-",
+                new { @class = "p-2 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" }
+            )
+            @Html.ValidationMessageFor(model => model.PartyTypeId)
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">RegNo/NIC</label>
-                <input type="text" id="RegNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tin No.</label>
-                <input type="text" id="TinNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-            </div>
+        <!-- Name Field -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Name *</label>
+            <input type="text" id="PartyName" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">CNumber (Import/Export)</label>
-                <input type="text" id="CNumber" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Country *</label>
-                @Html.DropDownListFor(
-                    m => m.NationalityId,
-                    new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"),
-                    "-Select-",
-                    new { @class = "block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" }
-                )
-                @Html.ValidationMessageFor(model => model.NationalityId, "", new { @class = "text-red-500 text-xs mt-1" })
-            </div>
+        <!-- Registration Number -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">RegNo/NIC</label>
+            <input type="text" id="RegNo" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
         </div>
 
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Address 1 *</label>
-                <input type="text" id="Address1" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">TEL No.</label>
-                    <input type="text" id="TelNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input type="email" id="Email" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Mobile No</label>
-                    <input type="text" id="MobileNo" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
-                </div>
-            </div>
+        <!-- Tin Number -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Tin No.</label>
+            <input type="text" id="TinNo" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- CNumber -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">CNumber (Import/Export)</label>
+            <input type="text" id="CNumber" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        </div>
+
+        <!-- Country -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Country *</label>
+            @Html.DropDownListFor(
+                m => m.NationalityId,
+                new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"),
+                "-Select-",
+                new { @class = "p-2 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" }
+            )
+            @Html.ValidationMessageFor(model => model.NationalityId)
+        </div>
+
+        <!-- Address -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Address 1 *</label>
+            <input type="text" id="Address1" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        </div>
+
+        <!-- Telephone -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">TEL No.</label>
+            <input type="text" id="TelNo" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" id="Email" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        </div>
+
+        <!-- Contact Name -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Contact Name</label>
+            <input type="text" id="ContactName" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Mobile No</label>
+            <input type="text" id="MobileNo" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        </div>
+
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium text-blue-700 mb-2">MYBANDHARU user</label>
                 <input type="text" id="MBuser" class="block w-full px-3 py-2 border rounded-md text-sm shadow-sm focus:ring focus:ring-blue-500" />
@@ -114,69 +123,15 @@
             </div>
         </div>
 
-        <div class="flex justify-end space-x-3 mt-6">
-            <!-- Cancel Button -->
-            <button type="button" id="btnCancel" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm py-1.5 px-4 rounded">
-                Cancel
-            </button>
-
-            <!-- Save Button -->
-            <button type="button" id="btnSave" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm py-1.5 px-4 rounded">
-                Save
-            </button>
-        </div>
-
     </div>
 </div>
-
 
 <script type="text/javascript">
 
     var $dialige = $(".dialogParty");
 
     $(document).ready(function () {
-        // Initialize the dialog
-        $("#dialogParty").dialog({
-            autoOpen: false, // Do not open on page load
-            width: 760,
-            modal: true,
-            height: 505,
-        });
-
-        // Show dialog when the button is clicked
-        $("#btnAddParty").click(function () {
-            $("#dialogParty").dialog("open");
-        });
-
-        // Save button functionality
-        $("#btnSave").click(function () {
-            if ($('#PartyName').val() === "" || $('#PartyTypeId').val() === "0") {
-                $.pnotify({
-                    title: 'Validation Error',
-                    text: 'Please fill the required information!',
-                    type: 'error',
-
-                });
-            } else {
-                $.pnotify({
-                    title: 'Success',
-                    text: 'Party saved successfully!',
-                    type: 'success',
-
-                });
-                $("#dialogParty").dialog("close");
-            }
-        });
-
-        // Cancel button functionality
-        $("#btnCancel").click(function () {
-            $.pnotify({
-                title: 'Cancelled',
-                text: 'Operation cancelled by the user.',
-                type: 'info',
-            });
-            $("#dialogParty").dialog("close");
-        });
+        $(".dialogParty").hide();
     });
 
     function ClearDialog() {
@@ -210,11 +165,15 @@
         $dialige.dialog({
             width: 760,
             modal: true,
-            height: 505,
-            title: "Add New Party",
+            height: 1160,
+            classes: {
+                "ui-dialog": "bg-white shadow-lg rounded-lg border border-gray-300",
+                "ui-dialog-titlebar": "bg-blue-500 text-white font-bold rounded-t-lg",
+                "ui-dialog-content": "p-6",
+            },
             buttons: [{
                 text: "Save",
-                'class': 'btn btn-primary',
+                'class': 'bg-green-500 hover:bg-green-600 text-white font-semibold text-sm py-1.5 px-4 rounded mr-2 mt-4',
                 click: function () {
                     if ($('#PartyName').val() == null || $('#NationalityId').val() == 0) {
                         $.pnotify({
@@ -225,18 +184,29 @@
                     } else {
                         //  e.preventDefault();
                         SaveParty();
-                        $dialige.dialog('close');
+                        //$dialige.dialog('close');
+                        $(this).dialog("destroy");
                         // window.location.href = "/Manifest/Create";
                     }
                 }},
-                                {
-                                    text: "Close",
-                                    'class': 'btn btn-default',
-                                    click: function () {
-                                        $(this).dialog("close");
-                                    }
-            }]
+                        {
+                            text: "Close",
+                            'class': 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-1.5 text-sm px-4 rounded mt-4',
+                            click: function () {
+                                //$(this).dialog("close");
+                                $(this).dialog("destroy");
+                        }
+                        }],
+
+            create: function () {
+                // Target and style the button pane
+                var buttonPane = $(this).parent().find(".ui-dialog-buttonpane");
+                buttonPane.addClass("bg-white flex justify-end pb-6 pt-10 px-6 border-t");
+            }
+
         });
+
+       
         $(".chosen_select_L").chosen('destroy'); // reset chosen
         $(".chosen_select_L").chosen(); //~
     });
@@ -245,24 +215,31 @@
         $dialige.dialog({
             width: 760,
             modal: true,
-            height: 505,
+            height: 1160,
             title: "Edit Party",
             buttons: [{
                 text: "Update",
-                'class': 'btn btn-primary',
+                'class': 'bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm py-1.5 px-4 rounded mr-2',
                 click: function () {
                     /*TO DO: give a condition with Role to disable update button*/
                     UpdateParty(Id);
                     $dialige.dialog('close');
 
                 }},
-                                {
-                                    text: "Close",
-                                    'class': 'btn btn-default',
-                                    click: function () {
-                                        $(this).dialog("close");
-                                    }
-            }]
+                    {
+                        text: "Close",
+                        'class': 'bg-gray-500 hover:bg-gray-600 text-white font-semibold text-sm py-1.5 px-4 rounded',
+                        click: function () {
+                            $(this).dialog("close");
+                   }
+                    }],
+
+            create: function () {
+                // Target and style the button pane
+                var buttonPane = $(this).parent().find(".ui-dialog-buttonpane");
+                buttonPane.addClass("bg-white flex justify-end pb-6 pt-10 px-6 border-t");
+            }
+
         });
         GetSelectedParty(Id);
     }

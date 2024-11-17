@@ -27,13 +27,13 @@
             </div>
             <!-- Buttons -->
             <div class="flex items-end gap-2">
-                <button id="searchBtn" class="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 focus:outline-none">
+                <button id="searchBtn" class="rounded-full size-10 bg-blue-500 text-white rounded shadow hover:bg-blue-600 focus:outline-none">
                     <i class="fas fa-search"></i>
                 </button>
-                <button id="filterByDateBtn" class="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-600 focus:outline-none">
+                <button id="filterByDateBtn" class="rounded-full size-10 bg-green-500 text-white rounded shadow hover:bg-green-600 focus:outline-none">
                     <i class="fas fa-calendar"></i>
                 </button>
-                <button id="resetBtn" class="px-4 py-2 bg-gray-500 text-white rounded shadow hover:bg-gray-600 focus:outline-none">
+                <button id="resetBtn" class="rounded-full size-10 bg-gray-500 text-white rounded shadow hover:bg-gray-600 focus:outline-none">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -104,10 +104,18 @@
         });
     }
 
-        // Fetch jobs by date range
+    function formatDateForServer(dateStr) {
+    const date = new Date(dateStr);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero to month
+    const day = date.getDate().toString().padStart(2, '0'); // Add leading zero to day
+    const year = date.getFullYear();
+        return `${month}/${day}/${year}`; // Format as MM/dd/yyyy
+    }
+
+    // Fetch jobs by date range
     function fetchJobsByDate() {
-        const startDate = $('#StartDate').val();
-        const endDate = $('#EndDate').val();
+        const startDate = formatDateForServer($('#StartDate').val());
+        const endDate = formatDateForServer($('#EndDate').val());
 
         $.ajax({
             url: `/Job/FilterJob/`,
@@ -124,6 +132,7 @@
         }
     });
     }
+
 
     // Render job cards
     function renderJobs(page) {
