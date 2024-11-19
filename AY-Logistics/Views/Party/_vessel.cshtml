@@ -11,28 +11,27 @@
     </button>
 </div>
 
-<!-- Modal Content -->
-<div class="dialogVessel hidden" id="dialogVessel">
-    <div class="p-6 bg-white rounded-lg shadow-lg">
+<div class="dialogVessel" id="dialogVessel">
+   <div class="px-6 pt-6 pb-12 bg-white rounded-lg shadow-lg">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Add/Edit Vessel</h2>
         <div class="grid grid-cols-1 gap-4">
             <!-- Vessel Name -->
             <div>
-                <label for="VesselName" class="block text-sm font-medium text-gray-700">Vessel Name</label>
-                <input type="text" id="VesselName" class="w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500" />
+                <label for="VesselName" class="block text-sm font-medium text-gray-700 mb-1">Vessel Name</label>
+                <input type="text" id="VesselName" class="text-sm w-full border-gray-300 rounded-lg p-2 focus:ring-blue-500" />
             </div>
 
             <!-- Operator -->
             <div>
-                <label for="Operator" class="block text-sm font-medium text-gray-700">Operator</label>
+                <label for="Operator" class="block text-sm font-medium text-gray-700 mb-1">Operator</label>
                 <input type="text" placeholder="Search..." 
-                       class="w-full border-gray-300 rounded-lg p-2 selectedCompany" 
+                       class="w-full text-sm border-gray-300 rounded-lg p-2 selectedCompany" 
                        data-bind="value: Vessel.Company.value, OperatorSelect: Vessel.Company, uniqueName: false" />
             </div>
 
             <!-- Registered Country -->
             <div>
-                <label for="VesselRegCountry" class="block text-sm font-medium text-gray-700">Registered Country</label>
+                <label for="VesselRegCountry" class="block text-sm font-medium text-gray-700 mb-1">Registered Country</label>
                 @Html.DropDownListFor(
                     m => m.VesselRegCountry,
                     new SelectList(AYLogistics.Models.Nationality.GetCountries(), "Id", "Name"),
@@ -41,177 +40,249 @@
                 @Html.ValidationMessageFor(model => model.VesselRegCountry, null, new { @class = "text-red-500 text-sm" })
             </div>
         </div>
-
-        <div class="flex justify-end mt-6">
-            <!-- Buttons styled with TailwindCSS -->
-            <button id="saveVessel" 
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                Save
-            </button>
-            <button id="cancelVesselModal" 
-                    class="ml-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
-                Cancel
-            </button>
-        </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var $Vesseldialog;
+    var $Vesseldialog = $(".dialogVessel");
+    var selectedCompanyId;
 
     $(document).ready(function () {
-        // Initialize the jQuery UI dialog without buttons
-        $Vesseldialog = $("#dialogVessel").dialog({
-            autoOpen: false,
-            modal: true,
-            width: 500,
-            height: 400,
-        });
-
-        // Open modal on button click
-        $("#btnAddVessel").click(function () {
-            ClearVesselDialog();
-            $Vesseldialog.dialog("open");
-        });
-
-        // Close modal on cancel button click
-        $("#cancelVesselModal").click(function () {
-            ClearVesselDialog();
-            $Vesseldialog.dialog("close");
-        });
-
-        // Save vessel on save button click
-        $("#saveVessel").click(function () {
-            if (validateVesselFields()) {
-                SaveVessel();
-                $Vesseldialog.dialog("close");
-            } else {
-                $.pnotify({
-                    title: "Validation Error",
-                    text: "Please fill in all required fields!",
-                    type: "warning"
-                });
-            }
-        });
-
-        // Initialize chosen plugin for dropdowns
-        $(".chosen_select_L").chosen();
+        $(".dialogVessel").hide();
     });
 
     function ClearVesselDialog() {
-        // Reset all input fields
-        $("#VesselName").val("");
-        $(".selectedCompany").val("");
-        $(".chosen_select_L").val("").trigger("chosen:updated"); // Reset chosen dropdown
-    }
-
-    function validateVesselFields() {
-        var VesselName = $("#VesselName").val() || "";
-        var Company = (koMM.Vessel?.Company?.id || "").toString();
-        var VesselRegCountry = $("#VesselRegCountry").val() || "";
-
-        console.log("Validating Fields:", { VesselName, Company, VesselRegCountry });
-
-        return VesselName.trim() !== "" && Company.trim() !== "" && VesselRegCountry.trim() !== "";
+        $('#VesselName').val("");
+        $('.selectedCompany').val("");
+        $(".chosen_select_L").chosen('destroy'); // reset chosen
+        $('#VesselRegCountry').val(0);
+        $(".chosen_select_L").chosen(); //~
     }
 
     function EditVessel(Id) {
-        ClearVesselDialog();
-        GetSelectedVessel(Id);
-        $Vesseldialog.dialog("open");
-    }
-
-    function GetSelectedVessel(Id) {
-        var URL = "/Party/GetSelectedVessel";
-
-        $.getJSON(`${URL}/?VesselId=${Id}`, function (data) {
-            try {
-                $("#VesselName").val(data.Name);
-                $(".selectedCompany").val(data.CompanyName);
-                koMM.Vessel.Company.id = data.CompanyId;
-                $(".chosen_select_L").val(data.VesselRegCountry).trigger("chosen:updated");
-            } catch (e) {
-                ClearVesselDialog();
-                console.error("Error fetching vessel data:", e);
-            }
-        });
-    }
-
-    function SaveVessel() {
-        var VesselName = $("#VesselName").val() || "";
-        var Company = (koMM.Vessel?.Company?.id || "").toString();
-        var VesselRegCountry = $("#VesselRegCountry").val() || "";
-
-        var VesselInfo = { Name: VesselName, Company: Company, VesselRegCountry: VesselRegCountry };
-
-        console.log("Saving Vessel Info:", VesselInfo);
-
-        $.ajax({
-            url: "/Party/SaveVessel",
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(VesselInfo),
-            contentType: "application/json; charset=utf-8",
-            success: function () {
-                $.pnotify({
-                    title: "Success",
-                    text: "Vessel information saved successfully!",
-                    type: "success"
-                });
-                ClearVesselDialog();
+        $Vesseldialog.dialog({
+            width: 400,
+            modal: true,
+            height: 360,
+            classes: {
+                "ui-dialog": "bg-white shadow-lg rounded-lg border border-gray-300",
+                "ui-dialog-titlebar": "bg-blue-500 text-white font-bold rounded-t-lg",
+                "ui-dialog-content": "p-6",
             },
-            error: function () {
-                $.pnotify({
-                    title: "Error",
-                    text: "Failed to save vessel information. Please try again.",
-                    type: "error"
-                });
-            }
+            buttons: [{
+                text: "Update",
+                'class': 'ml-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm py-1.5 px-4 rounded mr-2',
+                click: function () {
+                    /*TO DO: give a condition with Role to disable update button*/
+                    UpdateVessel(Id);
+                    $Vesseldialog.dialog('close');
+                }},
+                                {
+                                    text: "Close",
+                                    'class': 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-1.5 text-sm px-4 rounded mt-4',
+                                    click: function () {
+                                        //$(this).dialog("close");
+                                        $(this).dialog("destroy");
+                                    }
+            }]
         });
-    }
+        GetSelectedVessel(Id);
+     }
 
-    // Knockout.js binding handler for operator select
-    ko.bindingHandlers.OperatorSelect = {
-        init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-            $(element).autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "../Party/SearchParty",
-                        dataType: "json",
-                        data: { query: request.term, type: 1, subtype: 2 },
-                        success: function (data) {
-                            const results = data.map(x => ({
-                                id: x.Id,
-                                label: x.Name,
-                                value: x.Name
-                            }));
-                            response(results);
-                        }
-                    });
+     function GetSelectedVessel(Id) {
+     ClearVesselDialog();
+         var URL = '/Party/GetSelectedVessel';
+
+         $.getJSON(URL + '/?VesselId=' + Id, function (data) {
+             try {
+                 $('#VesselName').val(data.Name);
+                 $('.selectedCompany').val(data.CompanyName);
+                 koMM.Vessel.Company.id = data.CompanyId;
+                 $(".chosen_select_L").chosen('destroy'); // reset chosen
+                 $('#VesselRegCountry').val(data.VesselRegCountry);
+                 $(".chosen_select_L").chosen(); //~
+             }
+             catch (e) {
+                 ClearVesselDialog();
+             }
+         });
+     }
+
+     function UpdateVessel(Id) {
+         var VesselName = $('#VesselName').val();
+         var Company = koMM.Vessel.Company.id;
+         var VesselRegCountry = $('#VesselRegCountry').val();
+
+         var VesselInfo = {Id:Id, Name: VesselName, Company: Company, VesselRegCountry:VesselRegCountry};
+
+         var json = JSON.stringify(VesselInfo);
+
+         $.ajax({
+             url: '/Party/UpdateVessel',
+             type: 'POST',
+             dataType: 'json',
+             data: json,
+             contentType: 'application/json; charset=utf-8',
+             success: function () {
+                 $.pnotify({
+                     title: 'Update Vessel info',
+                     text: ' New Vessel info has been Updated!',
+                     type: 'success'
+                 });
+                 ClearVesselDialog();
+             },
+             error: function () {
+                 $.pnotify({
+                     title: 'Update Vessel info',
+                     text: 'Vessel info has not been Updated, please try again!',
+                     type: 'error'
+                 });
+             }
+         });
+     }
+
+
+
+  function VesselModel(){
+       var self = this;
+       self.Company = new selectAuto();
+
+       $("#btnAddVessel").click(function (e) {
+          ClearVesselDialog();
+            $('.chosen-container').css({ 'width': '160px' }); //to fixed chosen css bug in dialogbox
+            $Vesseldialog.dialog({
+                width: 400,
+                modal: true,
+                height: 360,
+                classes: {
+                    "ui-dialog": "bg-white shadow-lg rounded-lg border border-gray-300",
+                    "ui-dialog-titlebar": "bg-blue-500 text-white font-bold rounded-t-lg",
+                    "ui-dialog-content": "p-6",
                 },
-                minLength: 2,
-                select: function (event, ui) {
-                    const accessor = valueAccessor();
-                    accessor.id = ui.item.id;
-                    accessor.value = ui.item.value;
-                }
+                buttons: [{
+                    text: "Save",
+                    'class': 'ml-6 bg-green-500 hover:bg-green-600 text-white font-semibold text-sm py-1.5 px-4 rounded mr-2 mt-4',
+                    click: function () {
+                        if ($('#VesselName').val() == null || $('#Company').val() == 0) {
+                            $.pnotify({
+                                title: 'Add Vessel',
+                                text: ' Please fill the required information!',
+                                type: 'warning'
+                            });
+                        } else {;
+                            //  e.preventDefault();
+                            SaveVessel();
+                            $Vesseldialog.dialog('close');
+                            // window.location.href = "/Manifest/Create";
+                        }
+                    }},
+                                    {
+                                        text: "Close",
+                                        'class': 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-1.5 text-sm px-4 rounded mt-4',
+                                        click: function () {
+                                            //$(this).dialog("close");
+                                            $(this).dialog("destroy");
+                                        }
+                }]
             });
-        },
-        update: function (element, valueAccessor) {
-            // Optional: Logic to update the element based on observable changes
-        }
-    };
+         });
 
-    function VesselModel() {
-        var self = this;
-        self.Company = new selectAuto();
+//        function ClearVesselDialog() {
+//          $('#VesselName').val("");
+//          //self.Company = 1;
+//         // self.Company.value = 2;
+//       }
 
-        $("#btnAddVessel").click(function () {
-            ClearVesselDialog();
-            $Vesseldialog.dialog("open");
-        });
+        function SaveVessel(e) {
+            var comp;
+                    if(self.Company.id > 0)
+                    {
+                    comp = self.Company.id;
+                    }
+                    else if(self.Company.id() > 0)
+                    {
+                    comp = self.Company.id();
+                    }
+
+                var VesselName = $('#VesselName').val();
+                var Company = comp;
+                var VesselRegCountry = $('#VesselRegCountry').val();
+
+                var VesselInfo = { Name: VesselName, Company: Company, VesselRegCountry:VesselRegCountry};
+
+                var json = JSON.stringify(VesselInfo);
+
+                $.ajax({
+                    url: '/Party/SaveVessel',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: json,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        $.pnotify({
+                            title: 'Add Vessel info',
+                            text: ' New Vessel info has been Saved!',
+                            type: 'success'
+                        });
+                        ClearVesselDialog();
+                    },
+                    error: function () {
+                        $.pnotify({
+                            title: 'Add Vessel info',
+                            text: 'Vessel info has not been save, please try again!',
+                            type: 'error'
+                        });
+                    }
+                });
+          }
     }
+
+
+//Operator Selecet Function
+ko.bindingHandlers.OperatorSelect = {
+    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called when the binding is first applied to an element
+        // Set up any initial state, event handlers, etc. here
+
+          $(element).autocomplete({
+              source: function( request, response ) {
+                $.ajax( {
+                  url: "../Party/SearchParty",
+                  dataType: "json",
+                  data:{ 'query':request.term ,"type":1, subtype: 2 },
+                  success: function( data ) {
+                    var test = [];
+
+
+
+                    // pass a function to map
+                    const map1 = data.map(x => ({
+                    id:x.Id,
+                    label:x.Name,
+                    value:x.Name
+                    }));
+
+                    console.log(map1);
+                    response( map1 );
+                  }
+                } );
+            },
+          minLength: 2,
+           select: function( event, ui ) {
+       
+          valueAccessor().id =  ui.item.id;
+           valueAccessor().value =  ui.item.value;
+             console.log(valueAccessor());    
+            console.log(viewModel);
+            console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+    },
+    update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        // This will be called once when the binding is first applied to an element,
+        // and again whenever any observables/computeds that are accessed change
+        // Update the DOM element based on the supplied values here.
+    }
+};
+
 </script>
-
-
-

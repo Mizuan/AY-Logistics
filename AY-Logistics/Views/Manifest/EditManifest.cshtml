@@ -275,6 +275,7 @@
     <!-- HouseBLItems Table as a Grid (with Knockout.js binding) -->
     <div data-bind="visible: HouseBLItems().length > 0">
         <div data-bind="foreach: HouseBLItems" class="space-y-6">
+            <input type="text" data-bind='value: HouseBLId'/>
             <!-- Each Row -->
 
             <div">

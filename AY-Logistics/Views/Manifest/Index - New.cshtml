@@ -1,0 +1,162 @@
+﻿@using System.Web.Security;
+@using AYLogistics.Models;
+@{
+    ViewBag.Title = "Documentation";
+}
+
+    <!-- Main Container -->
+    <div class="min-h-screen">
+        <!-- Dashboard Cards Section -->
+        <div class="max-w-7xl mx-auto w-full px-4 py-8">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900">Documentation Dashboard</h2>
+            
+            <!-- Dashboard Cards Grid -->
+            <div id="dashboard-cards" class="grid gap-6 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+                <!-- Dashboard cards will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <!-- Manifest/Job Cards Section -->
+        <div class="max-w-7xl mx-auto w-full px-4">
+            <!-- Dynamic Section Title -->
+            <div class="my-8">
+                <h2 id="dynamic-section-title" class="text-xl font-bold mb-4"></h2>
+                <div id="dynamic-container" class="grid gap-6 lg:grid-cols-2 sm:grid-cols-1">
+                    <!-- Dynamic cards (Manifests, Jobs, etc.) will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch and display dashboard items
+        function loadDashboardItems() {
+            fetch("/Manifest/GetDashboardItem")
+            .then(response => response.json())
+            .then(data => {
+                const dashboardContainer = document.getElementById("dashboard-cards");
+            dashboardContainer.innerHTML = '';
+
+            // Static card configuration
+                const cardConfig = [
+                    { bg: "bg-red-100", icon: "fa-file-alt", color: "text-red-800", title: "NEW Entry", statusId: 1 },
+                    { bg: "bg-teal-100", icon: "fa-file-upload", color: "text-teal-800", title: "Manifest Submitted", statusId: 2 },
+                    { bg: "bg-orange-100", icon: "fa-plane-arrival", color: "text-orange-800", title: "DO Payment Requested", statusId: 3 },
+                    { bg: "bg-blue-100", icon: "fa-receipt", color: "text-blue-800", title: "DO Payment Approved", statusId: 5 },
+                    { bg: "bg-gray-100", icon: "fa-check-circle", color: "text-gray-800", title: "DO Releasing / OPERATION", statusId: 4 },
+                    { bg: "bg-yellow-100", icon: "fa-box", color: "text-yellow-800", title: "DO Released & POD Uploading", statusId: 6 }
+                ];
+
+            data.forEach((item, index) => {
+                const config = cardConfig[index] || { bg: "bg-gray-100", icon: "fa-box", color: "text-gray-800", title: "Unknown" };
+                    const card = `
+                        <div class="${config.bg} rounded-lg shadow-lg p-4 flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
+            onclick="fetchDataByStatus(${config.statusId}, '${config.title}')">
+            <div class="text-center ${config.color}">
+                <i class="fas ${config.icon} text-4xl mb-2"></i>
+                <h3 class="text-2xl font-bold">${item.Total}</h3>
+                <p class="text-base">${config.title}</p>
+            </div>
+        </div>`;
+            dashboardContainer.innerHTML += card;
+        });
+        });
+        }
+
+        // Render the cards with dynamic RecentStatus and collapsible BL field
+        function renderCards(items) {
+            const container = document.getElementById('dynamic-container');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const statusText = item.RecentStatus || 'Unknown'; // Fallback if no status is provided
+
+                const card = `
+                    <div class="border rounded-lg shadow p-4 bg-white">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-base font-semibold">Manifest #${item.Number}</h3>
+                            <span class="text-gray-500 text-sm">
+                                <i class="fas fa-check-circle text-green-500"></i> ${statusText}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+                            <div><strong>Date:</strong> ${item.DateCreated}</div>
+                            <div>
+                                <strong>BL:</strong>
+                                <span class="block truncate max-w-full cursor-pointer" onclick="toggleBLContent(this)">
+                                    ${item.HouseBL || '-'}
+            </span>
+        </div>
+        <div><strong>Mode:</strong> ${item.ModeOfShipmentName}</div>
+        <div><strong>By:</strong> ${item.Employee}</div>
+    </div>
+
+    <!-- Action Links -->
+    <div class="mt-4 flex space-x-4">
+        <a href="/Manifest/EditManifest?ManifestId=${item.Id}" 
+            class="text-blue-500 hover:text-blue-700 p-2 rounded-full hover:bg-blue-50 transition-colors duration-200">
+            <i class="fas fa-edit"></i>
+        </a>
+        <a href="/JobDocument/RawIndex?ShipmentId=${item.ShipmentId}" 
+            class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-50 transition-colors duration-200">
+            <i class="fas fa-paperclip"></i>
+        </a>
+        <a href="/Manifest/PrintManifest?ManifestId=${item.Id}" 
+            class="text-green-500 hover:text-green-700 p-2 rounded-full hover:bg-green-50 transition-colors duration-200">
+            <i class="fas fa-print"></i>
+        </a>
+        <a href="/Manifest/PrintDispatchOrderSheet?ManifestId=${item.Id}" 
+            class="text-purple-500 hover:text-purple-700 p-2 rounded-full hover:bg-purple-50 transition-colors duration-200">
+            <i class="fas fa-file-alt"></i>
+        </a>
+        <a href="/XML/SerializeManifestToXML?ManifestId=${item.Id}" 
+            class="text-yellow-500 hover:text-yellow-700 p-2 rounded-full hover:bg-yellow-50 transition-colors duration-200">
+            <i class="fas fa-file-code"></i>
+        </a>
+        <a href="/Manifest/shipmentStatus?ShipmentId=${item.ShipmentId}&HBLId=${item.HouseBL || 'undefined'}" 
+            class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors duration-200" target="_blank">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        </div>
+    </div>`;
+            container.innerHTML += card;
+        });
+        }
+
+        // Toggle BL Content
+        function toggleBLContent(element) {
+            element.classList.toggle('truncate');
+        }
+
+        // Fetch data by status
+        function fetchDataByStatus(statusId, name) {
+            let url;
+            let sectionTitle = name;
+            document.getElementById('dynamic-section-title').textContent = sectionTitle;
+
+            switch (statusId) {
+                case 1: url = "/Manifest/GetShipmentByStatus/?StatusId=1"; break;
+                case 2: url = "/Manifest/GetShipmentByStatus/?StatusId=2"; break;
+                case 3: url = "/Manifest/GetShipmentByStatus/?StatusId=3"; break;
+                case 5: url = "/Manifest/GetBLbyStatus/?StatusId=5"; break;
+                case 4: url = "/Manifest/GetShipmentBy/?SPstatus=4&BLstatus=8"; break;
+                case 6: url = "/Manifest/GetBLbyStatus/?StatusId=3"; break;
+                default: url = "/Manifest/GetShipmentByStatus/?StatusId=1"; break;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    renderCards(data.aaData);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            loadDashboardItems();
+        });
+    </script>
+
+
+

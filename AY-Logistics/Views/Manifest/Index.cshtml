@@ -4,11 +4,23 @@
     ViewBag.Title = "Documentation";
 }
 
+
     <!-- Main Container -->
     <div class="min-h-screen">
         <!-- Dashboard Cards Section -->
         <div class="max-w-7xl mx-auto w-full px-4 py-8">
-            <h2 class="text-xl font-semibold mb-6 text-gray-900">Documentation Dashboard</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold text-gray-900">Documentation Dashboard</h2>
+                <div class="relative">
+                    <input
+                        type="text"
+                        id="global-search"
+                        placeholder="Search manifests..."
+                        class="pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                </div>
+            </div>
             
             <!-- Dashboard Cards Grid -->
             <div id="dashboard-cards" class="grid gap-6 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1">
@@ -24,116 +36,133 @@
                 <div id="dynamic-container" class="grid gap-6 lg:grid-cols-2 sm:grid-cols-1">
                     <!-- Dynamic cards (Manifests, Jobs, etc.) will be inserted here -->
                 </div>
+                <div id="pagination-container">
+                    <!-- Pagination controls will be inserted here -->
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Fetch and display dashboard items
-        function loadDashboardItems() {
-            fetch("/Manifest/GetDashboardItem")
-            .then(response => response.json())
-            .then(data => {
+        // Global variables
+        let allManifests = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentStatusId = null;
+        let currentStatusName = '';
+        let originalManifests = []; // Store original manifests for the current status
+
+        // Card configuration
+        const cardConfig = [
+            { bg: "bg-red-100", icon: "fa-file-alt", color: "text-red-800", title: "NEW Entry", statusId: 1 },
+            { bg: "bg-teal-100", icon: "fa-file-upload", color: "text-teal-800", title: "Manifest Submitted", statusId: 2 },
+            { bg: "bg-orange-100", icon: "fa-plane-arrival", color: "text-orange-800", title: "DO Payment Requested", statusId: 3 },
+            { bg: "bg-blue-100", icon: "fa-receipt", color: "text-blue-800", title: "DO Payment Approved", statusId: 5 },
+            { bg: "bg-gray-100", icon: "fa-check-circle", color: "text-gray-800", title: "DO Releasing / OPERATION", statusId: 4 },
+            { bg: "bg-yellow-100", icon: "fa-box", color: "text-yellow-800", title: "DO Released & POD Uploading", statusId: 6 }
+        ];
+
+        // Load dashboard items
+        async function loadDashboardItems() {
+            try {
+                const response = await fetch("/Manifest/GetDashboardItem");
+                const data = await response.json();
                 const dashboardContainer = document.getElementById("dashboard-cards");
-            dashboardContainer.innerHTML = '';
+                dashboardContainer.innerHTML = '';
 
-            // Static card configuration
-                const cardConfig = [
-                    { bg: "bg-red-100", icon: "fa-file-alt", color: "text-red-800", title: "NEW Entry", statusId: 1 },
-                    { bg: "bg-teal-100", icon: "fa-file-upload", color: "text-teal-800", title: "Manifest Submitted", statusId: 2 },
-                    { bg: "bg-orange-100", icon: "fa-plane-arrival", color: "text-orange-800", title: "DO Payment Requested", statusId: 3 },
-                    { bg: "bg-blue-100", icon: "fa-receipt", color: "text-blue-800", title: "DO Payment Approved", statusId: 5 },
-                    { bg: "bg-gray-100", icon: "fa-check-circle", color: "text-gray-800", title: "DO Releasing / OPERATION", statusId: 4 },
-                    { bg: "bg-yellow-100", icon: "fa-box", color: "text-yellow-800", title: "DO Released & POD Uploading", statusId: 6 }
-                ];
-
-            data.forEach((item, index) => {
-                const config = cardConfig[index] || { bg: "bg-gray-100", icon: "fa-box", color: "text-gray-800", title: "Unknown" };
+                data.forEach((item, index) => {
+                    const config = cardConfig[index];
                     const card = `
                         <div class="${config.bg} rounded-lg shadow-lg p-4 flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-            onclick="fetchDataByStatus(${config.statusId}, '${config.title}')">
-            <div class="text-center ${config.color}">
-                <i class="fas ${config.icon} text-4xl mb-2"></i>
-                <h3 class="text-2xl font-bold">${item.Total}</h3>
-                <p class="text-base">${config.title}</p>
-            </div>
-        </div>`;
-            dashboardContainer.innerHTML += card;
-        });
-        });
+                onclick="fetchDataByStatus(${config.statusId}, '${config.title}')">
+                <div class="text-center ${config.color}">
+                    <i class="fas ${config.icon} text-4xl mb-2"></i>
+                    <h3 class="text-2xl font-bold">${item.Total}</h3>
+                    <p class="text-base">${config.title}</p>
+                </div>
+            </div>`;
+                dashboardContainer.innerHTML += card;
+            });
+        } catch (error) {
+            console.error('Error loading dashboard items:', error);
+        }
         }
 
-        // Render the cards with dynamic RecentStatus and collapsible BL field
-        function renderCards(items) {
-            const container = document.getElementById('dynamic-container');
-            container.innerHTML = '';
+        // Fetch all manifests
+        async function fetchAllManifests() {
+            try {
+                const endpoints = [
+                    { url: "/Manifest/GetShipmentByStatus/?StatusId=1", status: 1 },
+                    { url: "/Manifest/GetShipmentByStatus/?StatusId=2", status: 2 },
+                    { url: "/Manifest/GetShipmentByStatus/?StatusId=3", status: 3 },
+                    { url: "/Manifest/GetBLbyStatus/?StatusId=5", status: 5 },
+                    { url: "/Manifest/GetShipmentBy/?SPstatus=4&BLstatus=8", status: 4 },
+                    { url: "/Manifest/GetBLbyStatus/?StatusId=3", status: 6 }
+                ];
 
-            items.forEach(item => {
-                const statusText = item.RecentStatus || 'Unknown'; // Fallback if no status is provided
+                const responses = await Promise.all(
+                    endpoints.map(endpoint => 
+                        fetch(endpoint.url)
+                            .then(response => response.json())
+                            .then(data => ({
+                                ...data,
+                                    aaData: data.aaData.map(item => ({
+                                        ...item,
+                                            StatusId: endpoint.status
+            }))
+                            }))
+                    )
+                );
 
-                const card = `
-                    <div class="border rounded-lg shadow p-4 bg-white">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-base font-semibold">Manifest #${item.Number}</h3>
-                            <span class="text-gray-500 text-sm">
-                                <i class="fas fa-check-circle text-green-500"></i> ${statusText}
-                            </span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
-                            <div><strong>Date:</strong> ${item.DateCreated}</div>
-                            <div>
-                                <strong>BL:</strong>
-                                <span class="block truncate max-w-full cursor-pointer" onclick="toggleBLContent(this)">
-                                    ${item.HouseBL || '-'}
-            </span>
-        </div>
-        <div><strong>Mode:</strong> ${item.ModeOfShipmentName}</div>
-        <div><strong>By:</strong> ${item.Employee}</div>
-    </div>
-
-    <!-- Action Links -->
-    <div class="mt-4 flex space-x-4">
-        <a href="/Manifest/EditManifest?ManifestId=${item.Id}" 
-            class="text-blue-500 hover:text-blue-700 p-2 rounded-full hover:bg-blue-50 transition-colors duration-200">
-            <i class="fas fa-edit"></i>
-        </a>
-        <a href="/JobDocument/RawIndex?ShipmentId=${item.ShipmentId}" 
-            class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-50 transition-colors duration-200">
-            <i class="fas fa-paperclip"></i>
-        </a>
-        <a href="/Manifest/PrintManifest?ManifestId=${item.Id}" 
-            class="text-green-500 hover:text-green-700 p-2 rounded-full hover:bg-green-50 transition-colors duration-200">
-            <i class="fas fa-print"></i>
-        </a>
-        <a href="/Manifest/PrintDispatchOrderSheet?ManifestId=${item.Id}" 
-            class="text-purple-500 hover:text-purple-700 p-2 rounded-full hover:bg-purple-50 transition-colors duration-200">
-            <i class="fas fa-file-alt"></i>
-        </a>
-        <a href="/XML/SerializeManifestToXML?ManifestId=${item.Id}" 
-            class="text-yellow-500 hover:text-yellow-700 p-2 rounded-full hover:bg-yellow-50 transition-colors duration-200">
-            <i class="fas fa-file-code"></i>
-        </a>
-        <a href="/Manifest/shipmentStatus?ShipmentId=${item.ShipmentId}&HBLId=${item.HouseBL || 'undefined'}" 
-            class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors duration-200" target="_blank">
-            <i class="fas fa-info-circle"></i>
-        </a>
-        </div>
-    </div>`;
-            container.innerHTML += card;
-        });
+        allManifests = responses.flatMap(response => response.aaData || []);
+        console.log('All manifests loaded:', allManifests.length);
+        } catch (error) {
+            console.error('Error fetching all manifests:', error);
+        }
         }
 
-        // Toggle BL Content
-        function toggleBLContent(element) {
-            element.classList.toggle('truncate');
+        // Handle search
+        function handleSearch(event) {
+            const searchTerm = event.target.value.toLowerCase().trim();
+            let filteredManifests = currentStatusId ? originalManifests : [...allManifests];
+
+            if (searchTerm) {
+                filteredManifests = filteredManifests.filter(manifest => {
+                    const searchFields = [
+                        manifest.Number?.toString(),
+                        manifest.HouseBL,
+                        manifest.Employee,
+                        manifest.ModeOfShipmentName,
+                        manifest.RecentStatus
+                    ];
+                return searchFields.some(field => 
+                    field?.toLowerCase().includes(searchTerm)
+                );
+            });
+        }
+
+        currentPage = 1;
+        renderManifests(filteredManifests);
+        updateSectionTitle(searchTerm);
+        }
+
+        // Update section title
+        function updateSectionTitle(searchTerm) {
+            const titleElement = document.getElementById('dynamic-section-title');
+            let title = currentStatusName || 'All Manifests';
+            if (searchTerm) {
+                title += ` - Search results for "${searchTerm}"`;
+                }
+            titleElement.textContent = title;
         }
 
         // Fetch data by status
-        function fetchDataByStatus(statusId, name) {
-            let url;
-            let sectionTitle = name;
-            document.getElementById('dynamic-section-title').textContent = sectionTitle;
+        async function fetchDataByStatus(statusId, name) {
+            currentStatusId = statusId;
+            currentStatusName = name;
+            document.getElementById('dynamic-section-title').textContent = name;
 
+            let url;
             switch (statusId) {
                 case 1: url = "/Manifest/GetShipmentByStatus/?StatusId=1"; break;
                 case 2: url = "/Manifest/GetShipmentByStatus/?StatusId=2"; break;
@@ -144,19 +173,147 @@
                 default: url = "/Manifest/GetShipmentByStatus/?StatusId=1"; break;
             }
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    renderCards(data.aaData);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                originalManifests = data.aaData.map(item => ({ ...item, StatusId: statusId }));
+            currentPage = 1;
+
+            // Apply current search filter if exists
+                const searchTerm = document.getElementById('global-search').value;
+            if (searchTerm) {
+                handleSearch({ target: { value: searchTerm } });
+            } else {
+                renderManifests(originalManifests);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
         }
 
-        // Initialize dashboard on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            loadDashboardItems();
+        // Toggle BL Content
+        function toggleBLContent(element) {
+            element.classList.toggle('truncate');
+        }
+
+        // Render manifests with pagination
+        function renderManifests(manifests) {
+            const container = document.getElementById('dynamic-container');
+            const totalPages = Math.ceil(manifests.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedManifests = manifests.slice(startIndex, endIndex);
+
+            container.innerHTML = '';
+            paginatedManifests.forEach(item => {
+                container.innerHTML += createManifestCard(item);
+        });
+
+            const paginationContainer = document.getElementById('pagination-container');
+        if (totalPages > 1) {
+            paginationContainer.innerHTML = createPaginationControls(totalPages, manifests.length);
+            addPaginationEventListeners(manifests);
+        } else {
+            paginationContainer.innerHTML = '';
+        }
+        }
+
+        // Add pagination event listeners
+        function addPaginationEventListeners(manifests) {
+            document.querySelectorAll('.pagination-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.dataset.action === 'prev') {
+                        currentPage = Math.max(1, currentPage - 1);
+        } else if (button.dataset.action === 'next') {
+            const totalPages = Math.ceil(manifests.length / itemsPerPage);
+            currentPage = Math.min(totalPages, currentPage + 1);
+        }
+        renderManifests(manifests);
+        });
+        });
+        }
+
+        // Create manifest card HTML
+        function createManifestCard(item) {
+            return `
+            <div class="border rounded-lg shadow p-4 bg-white">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold">Manifest #${item.Number}</h3>
+                    <span class="text-gray-500 text-sm">
+                        <i class="fas fa-check-circle text-green-500"></i> ${item.RecentStatus || 'Unknown'}
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+                    <div><strong>Date:</strong> ${item.DateCreated}</div>
+                    <div>
+                        <strong>BL:</strong>
+                        <span class="block truncate max-w-full cursor-pointer" onclick="toggleBLContent(this)">
+                            ${item.HouseBL || '-'}
+            </span>
+        </div>
+        <div><strong>Mode:</strong> ${item.ModeOfShipmentName}</div>
+        <div><strong>By:</strong> ${item.Employee}</div>
+    </div>
+
+    <div class="mt-4 flex space-x-4">
+        <a href="/Manifest/EditManifest?ManifestId=${item.Id}" 
+                            class="text-blue-500 hover:text-blue-700 p-2 rounded-full hover:bg-blue-50 transition-colors duration-200">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="/JobDocument/RawIndex?ShipmentId=${item.ShipmentId}" 
+                            class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-50 transition-colors duration-200">
+                            <i class="fas fa-paperclip"></i>
+                        </a>
+                        <a href="/Manifest/PrintManifest?ManifestId=${item.Id}" 
+                            class="text-green-500 hover:text-green-700 p-2 rounded-full hover:bg-green-50 transition-colors duration-200">
+                            <i class="fas fa-print"></i>
+                        </a>
+                        <a href="/Manifest/PrintDispatchOrderSheet?ManifestId=${item.Id}" 
+                            class="text-purple-500 hover:text-purple-700 p-2 rounded-full hover:bg-purple-50 transition-colors duration-200">
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                        <a href="/XML/SerializeManifestToXML?ManifestId=${item.Id}" 
+                            class="text-yellow-500 hover:text-yellow-700 p-2 rounded-full hover:bg-yellow-50 transition-colors duration-200">
+                            <i class="fas fa-file-code"></i>
+                        </a>
+                        <a href="/Manifest/shipmentStatus?ShipmentId=${item.ShipmentId}&HBLId=${item.HouseBL || 'undefined'}" 
+                            class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors duration-200" target="_blank">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create pagination controls HTML
+        function createPaginationControls(totalPages, totalItems) {
+            return `
+            <div class="mt-6 flex justify-center gap-2">
+                <button 
+                        class="pagination-button px-4 py-2 border rounded-lg ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}"
+                        data-action="prev"
+            ${currentPage === 1 ? 'disabled' : ''}
+            >
+                Previous
+            </button>
+            <span class="px-4 py-2">
+                Page ${currentPage} of ${totalPages} (${totalItems} items)
+                    </span>
+                    <button 
+                        class="pagination-button px-4 py-2 border rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'}"
+                        data-action="next"
+        ${currentPage === totalPages ? 'disabled' : ''}
+        >
+            Next
+        </button>
+    </div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadDashboardItems();
+        await fetchAllManifests();
+        document.getElementById('global-search').addEventListener('input', handleSearch);
         });
     </script>
-
-
-
