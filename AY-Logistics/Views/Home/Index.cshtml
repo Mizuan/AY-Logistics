@@ -90,15 +90,15 @@
                         <span class="text-gray-500 text-sm">${manifest.RecentStatus === 'New Manifest' ? 
                             '<i class="fas fa-check-circle text-green-500"></i> New Manifest' : 
                             '<i class="fas fa-clock text-yellow-500"></i> Pending'}
-        </span>
-    </div>
-    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
-        <div><strong>Date:</strong> ${manifest.DateCreated}</div>
-        <div><strong>BL:</strong> ${manifest.HouseBL || '-'}</div>
-        <div><strong>Mode:</strong> ${manifest.ModeOfShipmentName}</div>
-        <div><strong>By:</strong> ${manifest.Employee}</div>
-    </div>
-</div>
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-sm">
+                        <div><strong>Date:</strong> ${manifest.DateCreated}</div>
+                        <div><strong>BL:</strong> ${manifest.HouseBL || '-'}</div>
+                        <div><strong>Mode:</strong> ${manifest.ModeOfShipmentName}</div>
+                        <div><strong>By:</strong> ${manifest.Employee}</div>
+                    </div>
+                </div>
             `;
         container.innerHTML += card;
     });
