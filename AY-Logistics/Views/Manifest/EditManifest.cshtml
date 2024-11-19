@@ -275,7 +275,7 @@
     <!-- HouseBLItems Table as a Grid (with Knockout.js binding) -->
     <div data-bind="visible: HouseBLItems().length > 0">
         <div data-bind="foreach: HouseBLItems" class="space-y-6">
-            <input type="text" data-bind='value: HouseBLId'/>
+            <input class="hidden" type="text" data-bind='value: HouseBLId'/>
             <!-- Each Row -->
 
             <div">
@@ -597,13 +597,26 @@
     </div>
 
 </div>
-
-        <button id="SaveManifest" 
+        <div class="flex items-center space-x-4">
+            <button id="SaveManifest" 
                 class="mt-4 bg-green-500 text-white px-4 py-1.5 text-sm rounded-lg flex items-center space-x-2 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed" 
                 data-bind="click:Save, enable:saveEnabled()">
             <i class="fas fa-save"></i>
             <span>Save</span>
-        </button>
+            </button>
+            <button
+                class="mt-4 bg-blue-500 text-white px-4 py-1.5 text-sm rounded-lg flex items-center space-x-2 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed" 
+                data-bind="click: addHouseBL"">
+                <i class="fas fa-plus"></i>
+                <span>Add HBL</span>
+            </button>
+        </div>
+        @*<button id="SaveManifest" 
+                class="mt-4 bg-green-500 text-white px-4 py-1.5 text-sm rounded-lg flex items-center space-x-2 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed" 
+                data-bind="click:Save, enable:saveEnabled()">
+            <i class="fas fa-save"></i>
+            <span>Save</span>
+        </button>*@
 
 
 
